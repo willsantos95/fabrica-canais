@@ -1,7 +1,12 @@
 """API HTTP do worker. O n8n cria jobs aqui e recebe o resultado pelo callback."""
 from __future__ import annotations
 
+import base64
+import binascii
+import json
 import secrets
+import tempfile
+from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException
@@ -16,7 +21,7 @@ from .settings import settings
 
 app = FastAPI(title="Fábrica de Canais · Worker de render", version="0.1.0")
 
-JobType = Literal["tts", "align", "kenburns", "assemble", "shorts", "thumbnail", "checks"]
+JobType = Literal["voice", "images", "tts", "align", "kenburns", "assemble", "shorts", "thumbnail", "checks"]
 
 
 def _redis() -> Redis:
@@ -92,11 +97,61 @@ def get_job(job_id: str) -> dict:
 
 
 class PresignIn(BaseModel):
-    url: str
+    url: str | None = None
+    urls: list[str | None] | None = None
     expires_s: int = 172800
 
 
 @app.post("/files/presign", dependencies=[Depends(auth)])
 def presign(body: PresignIn) -> dict:
-    """Link temporário para o preview no WhatsApp."""
+    """Links temporários (preview no WhatsApp). Aceita `url` ou uma lista `urls`."""
+    if body.urls is not None:
+        return {"urls": [storage.presign(u, body.expires_s) if u else None for u in body.urls]}
+    if not body.url:
+        raise HTTPException(400, "envie url ou urls")
     return {"url": storage.presign(body.url, body.expires_s)}
+
+
+class PutIn(BaseModel):
+    key: str = Field(pattern=r"^[A-Za-z0-9._\-/]+$")
+    json_body: Any | None = Field(default=None, alias="json")
+    base64: str | None = None
+    content_type: str | None = None
+
+
+@app.post("/files/put", dependencies=[Depends(auth)])
+def put_file(body: PutIn) -> dict:
+    """Grava um JSON ou um arquivo em base64 no armazenamento (usado pelo n8n
+    para o video_spec e para as imagens geradas)."""
+    if ".." in body.key or body.key.startswith("/"):
+        raise HTTPException(400, "chave inválida")
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "f"
+        if body.json_body is not None:
+            path.write_text(json.dumps(body.json_body, ensure_ascii=False), "utf-8")
+            ctype = "application/json"
+        elif body.base64:
+            try:
+                path.write_bytes(base64.b64decode(body.base64, validate=True))
+            except binascii.Error:
+                raise HTTPException(400, "base64 inválido")
+            ctype = body.content_type or "application/octet-stream"
+        else:
+            raise HTTPException(400, "envie json ou base64")
+        url = storage.upload(path, body.key, ctype)
+        return {"url": url, "bytes": path.stat().st_size}
+
+
+class GetIn(BaseModel):
+    url: str
+
+
+@app.post("/files/get-json", dependencies=[Depends(auth)])
+def get_json(body: GetIn) -> Any:
+    """Lê um JSON do armazenamento (ex.: o video_spec atual)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            path = storage.download(body.url, Path(tmp) / "f.json")
+        except Exception as exc:
+            raise HTTPException(404, f"não encontrado: {exc}")
+        return json.loads(path.read_text("utf-8"))

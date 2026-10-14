@@ -12,7 +12,7 @@ from pathlib import Path
 
 import httpx
 
-from . import align, media, storage, thumbnail, tts
+from . import align, images, media, storage, thumbnail, tts
 from .settings import settings
 
 BLOCK_GAP_S = 0.35  # respiro entre blocos de narração
@@ -80,6 +80,111 @@ def h_tts(job: dict, inp: dict, wd: Path) -> dict:
     dur = media.duration(out)
     url = storage.upload(out, _key(job, f"audio/{out.name}"), "audio/mpeg")
     return {"url": url, "duration_s": round(dur, 3), "words": words}
+
+
+def h_voice(job: dict, inp: dict, wd: Path) -> dict:
+    """Narra todos os blocos do video_spec (edge-tts), checa silêncios e devolve o spec atualizado."""
+    spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
+    voice, rate = inp["voice"], inp.get("rate", "+0%")
+    checks, total = [], 0.0
+    for b in spec["blocks"]:
+        out = wd / "audio" / f"{b['block_id']}.mp3"
+        words = []
+        for attempt in range(3):  # edge-tts às vezes devolve áudio vazio; tenta de novo
+            words = tts.synthesize(b["narration"], voice, out, rate=rate)
+            if out.exists() and out.stat().st_size > 1000 and words:
+                break
+            time.sleep(2 * (attempt + 1))
+        else:
+            raise RuntimeError(f"edge-tts falhou no bloco {b['block_id']}")
+        dur = media.duration(out)
+        total += dur
+        sil = media.silences(out)
+        checks.append({"stage": "voice", "name": f"no_long_silence:{b['block_id']}", "passed": not sil,
+                       "detail": {"silences": sil}})
+        b["audio"] = {
+            "url": storage.upload(out, _key(job, f"audio/{out.name}"), "audio/mpeg"),
+            "duration_s": round(dur, 3), "offset_s": None, "words": words,
+        }
+    spec["checks"] = (spec.get("checks") or []) + checks
+    spec_path = wd / "spec.voice.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False), "utf-8")
+    spec_url = storage.upload(spec_path, _key(job, "video_spec.json"), "application/json")
+    return {"spec_url": spec_url, "spec": spec, "narration_s": round(total, 2), "checks": checks}
+
+
+def h_images(job: dict, inp: dict, wd: Path) -> dict:
+    """Gera a imagem de cada plano que ainda não tem uma (Gemini), em paralelo."""
+    spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
+    style = inp.get("style_block", "").strip()
+    negative = inp.get("negative_prompt", "").strip()
+    model = inp.get("model")
+    shots = sorted((s for b in spec["blocks"] for s in b["shots"]), key=lambda s: s["order"])
+    todo = [s for s in shots if not (s.get("image") or {}).get("url")]
+
+    def prompt_for(shot: dict, extra: str = "") -> str:
+        p = f"{style}\n\nScene: {shot['visual_prompt']}{extra}"
+        if negative:
+            p += f"\n\nAvoid: {negative}."
+        return p + "\nNo text, letters or watermarks in the image."
+
+    def one(shot: dict) -> dict:
+        out = wd / "img" / f"{shot['order']:03d}-{shot['shot_id']}.jpg"
+        try:
+            raw, used = images.generate(prompt_for(shot), model)
+            images.to_jpeg(raw, out)
+            return {"shot": shot, "path": out, "model": used, "error": None}
+        except Exception as exc:
+            return {"shot": shot, "path": None, "model": None, "error": str(exc)}
+
+    workers = int(os.environ.get("IMAGE_CONCURRENCY", "3"))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        results = list(pool.map(one, todo))
+
+    # imagens quase idênticas: refaz uma vez pedindo variação
+    seen: list[tuple[int, str]] = []
+    for r in results:
+        if not r["path"]:
+            continue
+        h = images.ahash(r["path"])
+        if any(images.hamming(h, prev) <= 4 for prev, _ in seen):
+            try:
+                raw, used = images.generate(prompt_for(r["shot"], " Different camera angle and composition."), model)
+                images.to_jpeg(raw, r["path"])
+                h = images.ahash(r["path"])
+                r["model"] = used
+            except Exception:
+                pass
+        seen.append((h, r["shot"]["shot_id"]))
+
+    failed = []
+    for r in results:
+        shot = r["shot"]
+        if r["path"]:
+            url = storage.upload(r["path"], _key(job, f"images/{r['path'].name}"), "image/jpeg")
+            shot["image"] = {"url": url, "provider": r["model"]}
+        else:
+            failed.append({"shot_id": shot["shot_id"], "error": r["error"]})
+
+    # plano sem imagem herda a do plano vizinho para o vídeo não travar (a checagem acusa)
+    by_order = {s["order"]: s for s in shots}
+    for f in failed:
+        shot = next(s for s in shots if s["shot_id"] == f["shot_id"])
+        for o in [shot["order"] - 1, shot["order"] + 1, shot["order"] - 2, shot["order"] + 2]:
+            nb = by_order.get(o)
+            if nb and (nb.get("image") or {}).get("url"):
+                shot["image"] = {"url": nb["image"]["url"], "provider": "reused-neighbor"}
+                break
+    if len(failed) > max(2, len(todo) // 10):
+        raise RuntimeError(f"{len(failed)} de {len(todo)} imagens falharam; primeira: {failed[0]['error']}")
+
+    checks = [{"stage": "images", "name": "all_images_generated", "passed": not failed,
+               "detail": {"generated": len(todo) - len(failed), "failed": failed}}]
+    spec["checks"] = (spec.get("checks") or []) + checks
+    spec_path = wd / "spec.images.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False), "utf-8")
+    spec_url = storage.upload(spec_path, _key(job, "video_spec.json"), "application/json")
+    return {"spec_url": spec_url, "spec": spec, "generated": len(todo) - len(failed), "failed": failed, "checks": checks}
 
 
 def h_align(job: dict, inp: dict, wd: Path) -> dict:
@@ -182,7 +287,7 @@ def h_assemble(job: dict, inp: dict, wd: Path) -> dict:
     spec_path = wd / "spec.out.json"
     spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), "utf-8")
     spec_url = storage.upload(spec_path, _key(job, "video_spec.json"), "application/json")
-    return {"outputs": outputs, "spec_url": spec_url, "checks": checks, "words": all_words}
+    return {"outputs": outputs, "spec_url": spec_url, "spec": spec, "checks": checks, "words": all_words}
 
 
 def h_shorts(job: dict, inp: dict, wd: Path) -> dict:
@@ -243,6 +348,8 @@ def h_checks(job: dict, inp: dict, wd: Path) -> dict:
 
 
 HANDLERS = {
+    "voice": h_voice,
+    "images": h_images,
     "tts": h_tts,
     "align": h_align,
     "kenburns": h_kenburns,
