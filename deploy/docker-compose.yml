@@ -8,10 +8,11 @@ services:
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
-    # Exposto só se um worker do seu PC for usar a fila (ver README, "Workers no seu PC").
-    # Prefira ligar ao IP da Tailscale do servidor em vez de 0.0.0.0.
-    ports:
-      - "${REDIS_BIND:-127.0.0.1}:6379:6379"
+    # Para workers no seu PC (README, "Workers no seu PC"), descomente e use o IP
+    # da Tailscale do servidor em REDIS_BIND. Fica comentado para não colidir com
+    # outro Redis que já use a porta 6379 no servidor.
+    # ports:
+    #   - "${REDIS_BIND:-127.0.0.1}:6379:6379"
     restart: unless-stopped
 
   minio:
