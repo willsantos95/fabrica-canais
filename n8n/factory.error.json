@@ -1,0 +1,171 @@
+{
+  "name": "factory.error",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "0d8a518b-ed50-42e4-b3cb-3bf9786c901b",
+      "name": "Erro em workflow",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "579c3d47-9894-4892-b721-e0dfa918823b",
+              "name": "alert_number",
+              "value": "55DDDNUMERO",
+              "type": "string"
+            },
+            {
+              "id": "088c5639-9171-4182-864f-a15bf3f89307",
+              "name": "evolution_url",
+              "value": "https://SEU-EVOLUTION",
+              "type": "string"
+            },
+            {
+              "id": "40d5b035-98d1-403c-854b-209701ec0213",
+              "name": "evolution_instance",
+              "value": "SUA-INSTANCIA",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b79a7248-414a-42bf-83ef-a9160974861a",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH v AS (\n  UPDATE videos SET status = 'failed', error = $2\n  WHERE n8n_execution_id = $1 AND status NOT IN ('published', 'scheduled', 'awaiting_approval')\n  RETURNING topic_id\n), tp AS (\n  UPDATE topics SET status = 'queued', priority = priority + 1000\n  WHERE id IN (SELECT topic_id FROM v)\n  RETURNING id\n)\nSELECT (SELECT count(*) FROM v) AS videos_marcados;",
+        "options": {
+          "queryReplacement": "={{ [ String($json.execution.id), ($json.execution.lastNodeExecuted || '') + ': ' + ($json.execution.error?.message || 'erro desconhecido') ] }}"
+        }
+      },
+      "id": "db1cfa01-d565-444a-a13b-4c84bccac4d8",
+      "name": "Marcar falha",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [
+        480,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "",
+          "name": "Fabrica DB"
+        }
+      },
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $('Config').first().json;\nconst text = [\n  `🚨 *Falha na fábrica*`,\n  `Workflow: ${e.workflow?.name || '?'}`,\n  `Nó: ${e.execution?.lastNodeExecuted || '?'}`,\n  `Erro: ${(e.execution?.error?.message || 'sem mensagem').slice(0, 500)}`,\n  e.execution?.url ? `Execução: ${e.execution.url}` : '',\n  'O tema voltou para o fim da fila.',\n].filter(Boolean).join('\\n');\nreturn [{ json: { number: e.alert_number, text } }];\n"
+      },
+      "id": "02b83417-c3e7-40a0-a44c-1edcce74018b",
+      "name": "Mensagem",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').first().json.evolution_url }}/message/sendText/{{ $('Config').first().json.evolution_instance }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ number: $json.number, text: $json.text }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "b4c55bf3-e6ca-4b3f-a1c2-02c2fcf90314",
+      "name": "WhatsApp: alerta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Evolution API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "Erro em workflow": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Marcar falha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar falha": {
+      "main": [
+        [
+          {
+            "node": "Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: alerta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
