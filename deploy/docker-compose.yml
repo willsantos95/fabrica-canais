@@ -8,11 +8,11 @@ services:
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
-    # Para workers no seu PC (README, "Workers no seu PC"), descomente e use o IP
-    # da Tailscale do servidor em REDIS_BIND. Fica comentado para não colidir com
-    # outro Redis que já use a porta 6379 no servidor.
-    # ports:
-    #   - "${REDIS_BIND:-127.0.0.1}:6379:6379"
+    # Para workers no seu PC (README, "Workers no seu PC"): REDIS_BIND = IP da
+    # Tailscale do servidor (100.x.y.z). Padrão 127.0.0.1 = fila fechada para fora.
+    # REDIS_PORT muda a porta no servidor se a 6379 já estiver em uso.
+    ports:
+      - "${REDIS_BIND:-127.0.0.1}:${REDIS_PORT:-6379}:6379"
     restart: unless-stopped
 
   # A imagem oficial minio/minio saiu do Docker Hub (set/2026). Usamos o build
