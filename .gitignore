@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.env.local
+deploy/.env
+deploy/.env.local
+.venv/

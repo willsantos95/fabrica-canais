@@ -1,0 +1,56 @@
+# Fábrica de Canais — servidor (EasyPanel / Hostinger)
+# API do worker + fila Redis + MinIO + 1 worker de render.
+# Postgres: use o que já existe no EasyPanel (rode db/migrations/*.sql nele).
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    # Exposto só se um worker do seu PC for usar a fila (ver README, "Workers no seu PC").
+    # Prefira ligar ao IP da Tailscale do servidor em vez de 0.0.0.0.
+    ports:
+      - "${REDIS_BIND:-127.0.0.1}:6379:6379"
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    volumes:
+      - minio-data:/data
+    restart: unless-stopped
+
+  api:
+    build: ../worker
+    env_file: .env
+    environment:
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      S3_ENDPOINT: http://minio:9000
+    depends_on: [redis, minio]
+    restart: unless-stopped
+
+  render:
+    build: ../worker
+    command: ["rq", "worker", "render", "--url", "redis://:${REDIS_PASSWORD}@redis:6379/0", "--with-scheduler"]
+    env_file: .env
+    environment:
+      S3_ENDPOINT: http://minio:9000
+    volumes:
+      - work:/data/work
+      - models:/data/models
+    healthcheck:
+      disable: true
+    depends_on: [redis, minio]
+    restart: unless-stopped
+    deploy:
+      replicas: ${RENDER_REPLICAS:-1}
+
+volumes:
+  redis-data:
+  minio-data:
+  work:
+  models:

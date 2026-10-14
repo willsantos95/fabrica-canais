@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fabrica-canais/contracts/channel_config.schema.json",
+  "title": "Configuração de canal",
+  "type": "object",
+  "required": ["slug", "name", "language", "niche", "tone", "format", "voice", "visual", "audio", "schedule", "approval"],
+  "additionalProperties": false,
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "youtube_channel_id": { "type": "string" },
+    "language": { "type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$" },
+    "niche": { "type": "string", "minLength": 3 },
+    "tone": { "type": "string" },
+    "point_of_view": { "type": "string", "description": "O que torna o canal original; entra no prompt do roteiro." },
+    "format": {
+      "type": "object",
+      "required": ["long_minutes", "words_per_minute", "shots_per_video", "shorts_per_video"],
+      "additionalProperties": false,
+      "properties": {
+        "long_minutes": { "type": "array", "items": { "type": "number", "minimum": 1 }, "minItems": 2, "maxItems": 2 },
+        "words_per_minute": { "type": "integer", "minimum": 100, "maximum": 260 },
+        "shots_per_video": { "type": "integer", "minimum": 10, "maximum": 120 },
+        "shorts_per_video": { "type": "integer", "minimum": 0, "maximum": 5 }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "required": ["provider", "fallback", "edge_voice"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "enum": ["elevenlabs", "edge-tts"] },
+        "fallback": { "enum": ["elevenlabs", "edge-tts"] },
+        "voice_id": { "type": "string", "description": "ID da voz na ElevenLabs" },
+        "edge_voice": { "type": "string", "description": "Ex.: en-US-AndrewNeural, pt-BR-AntonioNeural" },
+        "rate": { "type": "string", "pattern": "^[+-][0-9]{1,2}%$", "default": "+0%" }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "required": ["style_block", "negative_prompt", "image_provider", "image_fallback", "video_provider", "video_fallback", "ai_motion_shots_max", "brand"],
+      "additionalProperties": false,
+      "properties": {
+        "style_block": { "type": "string", "minLength": 20 },
+        "negative_prompt": { "type": "string" },
+        "image_provider": { "type": "string" },
+        "image_fallback": { "type": "string" },
+        "video_provider": { "type": "string" },
+        "video_fallback": { "type": "string" },
+        "ai_motion_shots_max": { "type": "integer", "minimum": 0, "maximum": 50 },
+        "brand": {
+          "type": "object",
+          "required": ["primary", "font"],
+          "additionalProperties": false,
+          "properties": {
+            "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "secondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "font": { "type": "string" },
+            "logo_url": { "type": "string" }
+          }
+        }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "required": ["loudness_lufs"],
+      "additionalProperties": false,
+      "properties": {
+        "music_library": { "type": "string", "description": "Prefixo no MinIO com trilhas licenciadas" },
+        "music_volume_db": { "type": "number", "maximum": 0, "default": -22 },
+        "loudness_lufs": { "type": "number", "minimum": -24, "maximum": -9 }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "required": ["timezone", "production_cron", "publish_times"],
+      "additionalProperties": false,
+      "properties": {
+        "timezone": { "type": "string" },
+        "production_cron": { "type": "string" },
+        "publish_times": { "type": "array", "items": { "type": "string", "pattern": "^[0-2][0-9]:[0-5][0-9]$" }, "minItems": 1 }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["channel", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "channel": { "enum": ["whatsapp", "telegram"] },
+        "to": { "type": "string" },
+        "timeout_hours": { "type": "integer", "minimum": 1, "default": 24 }
+      }
+    },
+    "youtube": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "category_id": { "type": "string", "default": "27" },
+        "default_tags": { "type": "array", "items": { "type": "string" } },
+        "contains_synthetic_media": { "type": "boolean", "default": false },
+        "made_for_kids": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

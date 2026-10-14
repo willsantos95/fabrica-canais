@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fabrica-canais/contracts/video_spec.schema.json",
+  "title": "video_spec — contrato central de um vídeo",
+  "description": "Criado pelo agente de roteiro. As etapas seguintes só preenchem campos nulos (audio, image, clip, start_s, end_s, etc.).",
+  "type": "object",
+  "required": ["video_id", "channel", "topic", "language", "titles", "hook_options", "sources", "blocks"],
+  "additionalProperties": false,
+  "$defs": {
+    "nullableUrl": { "type": ["string", "null"] },
+    "word": {
+      "type": "object",
+      "required": ["w", "s", "e"],
+      "additionalProperties": false,
+      "properties": {
+        "w": { "type": "string" },
+        "s": { "type": "number", "minimum": 0 },
+        "e": { "type": "number", "minimum": 0 }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "required": ["shot_id", "order", "narration_span", "visual_prompt", "motion", "is_hook"],
+      "additionalProperties": false,
+      "properties": {
+        "shot_id": { "type": "string", "pattern": "^b[0-9]{2}-s[0-9]{2}$" },
+        "order": { "type": "integer", "minimum": 1 },
+        "narration_span": { "type": "string", "minLength": 3 },
+        "visual_prompt": { "type": "string", "minLength": 10 },
+        "text_overlay": { "type": ["string", "null"], "maxLength": 40 },
+        "motion": {
+          "type": "object",
+          "required": ["mode"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["ai", "kenburns", "template"] },
+            "prompt": { "type": "string" },
+            "negative": { "type": "string" },
+            "kenburns": { "enum": ["push_in", "pull_out", "pan_left", "pan_right", "pan_up", "pan_down"] }
+          }
+        },
+        "is_hook": { "type": "boolean" },
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "url": { "$ref": "#/$defs/nullableUrl" }, "provider": { "type": ["string", "null"] } }
+        },
+        "clip": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "url": { "$ref": "#/$defs/nullableUrl" }, "provider": { "type": ["string", "null"] } }
+        },
+        "start_s": { "type": ["number", "null"] },
+        "end_s": { "type": ["number", "null"] }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": ["block_id", "title", "narration", "source_ids", "shots"],
+      "additionalProperties": false,
+      "properties": {
+        "block_id": { "type": "string", "pattern": "^b[0-9]{2}$" },
+        "title": { "type": "string" },
+        "narration": { "type": "string", "minLength": 20 },
+        "source_ids": { "type": "array", "items": { "type": "string" } },
+        "audio": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": { "$ref": "#/$defs/nullableUrl" },
+            "duration_s": { "type": ["number", "null"] },
+            "offset_s": { "type": ["number", "null"], "description": "Início do bloco na linha do tempo final" },
+            "words": { "type": "array", "items": { "$ref": "#/$defs/word" } }
+          }
+        },
+        "shots": { "type": "array", "items": { "$ref": "#/$defs/shot" }, "minItems": 1 }
+      }
+    }
+  },
+  "properties": {
+    "video_id": { "type": "string" },
+    "channel": { "type": "string" },
+    "topic": { "type": "string" },
+    "language": { "type": "string" },
+    "titles": { "type": "array", "items": { "type": "string", "maxLength": 100 }, "minItems": 1 },
+    "chosen_title": { "type": ["string", "null"] },
+    "hook_options": { "type": "array", "items": { "type": "string" } },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "url", "claim"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "url": { "type": "string", "pattern": "^https?://" },
+          "claim": { "type": "string" }
+        }
+      }
+    },
+    "blocks": { "type": "array", "items": { "$ref": "#/$defs/block" }, "minItems": 1 },
+    "shorts_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start_s", "end_s", "hook"],
+        "additionalProperties": false,
+        "properties": {
+          "start_s": { "type": "number" },
+          "end_s": { "type": "number" },
+          "hook": { "type": "string" },
+          "url": { "$ref": "#/$defs/nullableUrl" }
+        }
+      }
+    },
+    "thumbnail": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phrases": { "type": "array", "items": { "type": "string" } },
+        "image_prompt": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } },
+        "chosen": { "type": ["integer", "null"] }
+      }
+    },
+    "publishing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": ["string", "null"] },
+        "chapters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["t", "title"],
+            "additionalProperties": false,
+            "properties": { "t": { "type": "number" }, "title": { "type": "string" } }
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "pinned_comment": { "type": ["string", "null"] }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "final_url": { "$ref": "#/$defs/nullableUrl" },
+        "srt_url": { "$ref": "#/$defs/nullableUrl" },
+        "preview_url": { "$ref": "#/$defs/nullableUrl" },
+        "duration_s": { "type": ["number", "null"] }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage", "name", "passed"],
+        "properties": {
+          "stage": { "type": "string" },
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "detail": {}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "slug": "career-levels",
+  "name": "Career Levels",
+  "youtube_channel_id": "PREENCHER_UC...",
+  "language": "en-US",
+  "niche": "Every Level of a [Profession]'s Career: from the first day to the very top, level by level",
+  "tone": "curious, warm, light humor, factual, never mocking the profession",
+  "point_of_view": "Each level shows what really changes: daily routine, money, responsibility and the skill that unlocks the next level. Real numbers with sources, no hype.",
+  "format": {
+    "long_minutes": [10, 12],
+    "words_per_minute": 160,
+    "shots_per_video": 50,
+    "shorts_per_video": 3
+  },
+  "voice": {
+    "provider": "edge-tts",
+    "fallback": "edge-tts",
+    "voice_id": "",
+    "edge_voice": "en-US-AndrewNeural",
+    "rate": "+0%"
+  },
+  "visual": {
+    "style_block": "[STYLE] clean modern 2D animated illustration, flat colors with soft shading, friendly characters with simple faces, consistent character design across the series, warm workplace lighting, 16:9 composition, high readability",
+    "negative_prompt": "photorealistic, real person, celebrity, logo, watermark, gibberish text, morphing, warping, extra limbs, distorted hands",
+    "image_provider": "nano-banana",
+    "image_fallback": "flux",
+    "video_provider": "veo",
+    "video_fallback": "kling",
+    "ai_motion_shots_max": 0,
+    "brand": {
+      "primary": "#1F6FEB",
+      "secondary": "#F2B705",
+      "font": "Inter",
+      "logo_url": ""
+    }
+  },
+  "audio": {
+    "music_library": "fabrica/channels/career-levels/music/",
+    "music_volume_db": -24,
+    "loudness_lufs": -14
+  },
+  "schedule": {
+    "timezone": "America/Sao_Paulo",
+    "production_cron": "0 2 * * *",
+    "publish_times": ["18:00"]
+  },
+  "approval": {
+    "channel": "whatsapp",
+    "to": "55DDDNUMERO",
+    "timeout_hours": 24
+  },
+  "youtube": {
+    "category_id": "27",
+    "default_tags": ["careers", "jobs", "career levels"],
+    "contains_synthetic_media": false,
+    "made_for_kids": false
+  }
+}

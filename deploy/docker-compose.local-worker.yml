@@ -1,0 +1,23 @@
+# Worker de render extra no SEU PC (Docker Desktop no Windows/Mac ou Docker no Linux).
+# Ele puxa jobs da mesma fila do servidor e grava no mesmo MinIO.
+# Ligue quando quiser mais velocidade; desligue e o servidor continua sozinho.
+#
+#   docker compose -f docker-compose.local-worker.yml --env-file .env.local up -d --build
+
+services:
+  render-local:
+    build: ../worker
+    command: ["sh", "-c", "rq worker render --url \"$$REDIS_URL\" --name pc-$${HOSTNAME}"]
+    env_file: .env.local
+    volumes:
+      - work:/data/work
+      - models:/data/models
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+    deploy:
+      replicas: ${LOCAL_REPLICAS:-2}
+
+volumes:
+  work:
+  models:

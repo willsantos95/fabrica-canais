@@ -1,0 +1,71 @@
+{
+  "video_id": "00000000-0000-0000-0000-000000000001",
+  "channel": "career-levels",
+  "topic": "DEMO - Every Level of a Chef's Career",
+  "language": "en-US",
+  "titles": ["Every Level of a Chef's Career"],
+  "chosen_title": "Every Level of a Chef's Career",
+  "hook_options": ["Every great chef started with a sink full of dirty pans."],
+  "sources": [
+    { "id": "src1", "title": "Exemplo de fonte (fixture de teste)", "url": "https://example.com/chef-careers", "claim": "Fixture de teste, sem afirmação real." }
+  ],
+  "blocks": [
+    {
+      "block_id": "b01",
+      "title": "Level 1 - Dishwasher",
+      "narration": "Every great chef started somewhere. Level one is the dish pit, where the night never ends and the plates never stop.",
+      "source_ids": [],
+      "shots": [
+        {
+          "shot_id": "b01-s01",
+          "order": 1,
+          "narration_span": "Every great chef started somewhere.",
+          "visual_prompt": "A young dishwasher seen from behind at a steaming sink in a busy restaurant kitchen at night",
+          "text_overlay": "LEVEL 1",
+          "motion": { "mode": "kenburns", "kenburns": "push_in" },
+          "is_hook": true
+        },
+        {
+          "shot_id": "b01-s02",
+          "order": 2,
+          "narration_span": "where the night never ends and the plates never stop.",
+          "visual_prompt": "A towering stack of dirty plates next to a sink, warm kitchen light, motion blur of cooks in the background",
+          "text_overlay": null,
+          "motion": { "mode": "kenburns", "kenburns": "pan_right" },
+          "is_hook": false
+        }
+      ]
+    },
+    {
+      "block_id": "b02",
+      "title": "Level 2 - Line Cook",
+      "narration": "Level two is the line. Now you cook, and every ticket is a race against the clock.",
+      "source_ids": [],
+      "shots": [
+        {
+          "shot_id": "b02-s01",
+          "order": 3,
+          "narration_span": "Level two is the line.",
+          "visual_prompt": "A line cook at a hot grill station with flames, seen from the side, focused expression",
+          "text_overlay": "LEVEL 2",
+          "motion": { "mode": "kenburns", "kenburns": "pull_out" },
+          "is_hook": false
+        },
+        {
+          "shot_id": "b02-s02",
+          "order": 4,
+          "narration_span": "every ticket is a race against the clock.",
+          "visual_prompt": "Close-up of order tickets hanging above a kitchen pass, a clock on the wall behind",
+          "text_overlay": null,
+          "motion": { "mode": "kenburns", "kenburns": "pan_up" },
+          "is_hook": false
+        }
+      ]
+    }
+  ],
+  "shorts_candidates": [],
+  "thumbnail": { "phrases": ["DISH PIT", "TO MICHELIN"], "image_prompt": "A chef silhouette on the right third, dark empty left half", "options": [], "chosen": null },
+  "publishing": { "description": null, "chapters": [], "tags": [], "pinned_comment": null },
+  "outputs": { "final_url": null, "srt_url": null, "preview_url": null, "duration_s": null },
+  "checks": []
+}
