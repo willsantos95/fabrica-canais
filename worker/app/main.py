@@ -10,13 +10,14 @@ from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from redis import Redis
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
 
-from . import storage
+from . import pages, storage
 from .settings import settings
 
 app = FastAPI(title="Fábrica de Canais · Worker de render", version="0.1.0")
@@ -55,6 +56,21 @@ def _status(job: Job) -> dict:
     if job.is_failed:
         body["error"] = (job.latest_result().exc_string or "")[-2000:] if job.latest_result() else "falhou"
     return body
+
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def home_page() -> str:
+    return pages.home()
+
+
+@app.get("/privacidade", response_class=HTMLResponse, include_in_schema=False)
+def privacy_page() -> str:
+    return pages.privacy()
+
+
+@app.get("/termos", response_class=HTMLResponse, include_in_schema=False)
+def terms_page() -> str:
+    return pages.terms()
 
 
 @app.get("/health")
