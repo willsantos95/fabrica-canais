@@ -1,0 +1,522 @@
+"""Gera o código do Workflow SDK (n8n) da Fase 2:
+
+- factory.package  : Shorts, thumbnails e metadados (worker) + mensagem de aprovação no WhatsApp
+- factory.approval : recebe a resposta no WhatsApp (Evolution) e aprova, rejeita ou troca thumbnail/título
+- factory.publish  : envia vídeo, thumbnail e Shorts ao YouTube, agendados
+
+Saída: n8n/sdk/*.js (criados no n8n pelo conector MCP com create_workflow_from_code).
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+OUT = Path(__file__).parent / "sdk"
+WORKER_URL = "https://render.relampagodeofertas.shop"
+INSTANCE = "fabrica-videos"
+YOUTUBE_SCOPE_NOTE = ""
+
+CRED = {
+    "pg": {"postgres": {"id": "CgrwOpkbdW4VgyTc", "name": "Postgres - Fabrica"}},
+    "worker": {"httpHeaderAuth": {"id": "R96vQrkAjGn3GHEt", "name": "Auth - Fabrica Worker"}},
+    "callback": {"httpHeaderAuth": {"id": "dBAcX42kLwL5n3eW", "name": "Auth - Fabrica Callback"}},
+    "evo": {"evolutionApi": {"id": "570ZlMjp90Xd9ZZk", "name": "Evolution API"}},
+    "yt": {"youTubeOAuth2Api": {"id": "sXpaiZq0Ag6vg3cy", "name": "YouTube account"}},
+}
+RETRY = {"retryOnFail": True, "maxTries": 3, "waitBetweenTries": 5000}
+
+
+def js(v, ind=0):
+    pad = "  " * ind
+    if isinstance(v, str):
+        if v.startswith("="):
+            return "expr(" + json.dumps(v[1:], ensure_ascii=False) + ")"
+        return json.dumps(v, ensure_ascii=False)
+    if isinstance(v, bool) or v is None or isinstance(v, (int, float)):
+        return json.dumps(v)
+    if isinstance(v, dict):
+        if not v:
+            return "{}"
+        return "{\n" + ",\n".join(f"{pad}  {json.dumps(k)}: {js(x, ind + 1)}" for k, x in v.items()) + f"\n{pad}}}"
+    if isinstance(v, list):
+        if not v:
+            return "[]"
+        return "[\n" + ",\n".join(f"{pad}  {js(x, ind + 1)}" for x in v) + f"\n{pad}]"
+    raise TypeError(v)
+
+
+class WF:
+    def __init__(self, wid, name):
+        self.wid, self.name, self.decls, self.n = wid, name, [], 0
+
+    def node(self, var, typ, ver, name, params, pos, creds=None, fn="node", output=None, **settings):
+        cfg = {"name": name, "parameters": params}
+        if creds:
+            cfg["credentials"] = creds
+        cfg.update(settings)
+        cfg["position"] = pos
+        out = js(output if output is not None else [{}], 1)
+        self.decls.append(f"const {var} = {fn}({{\n  type: {json.dumps(typ)},\n  version: {ver},\n"
+                          f"  config: {js(cfg, 1)},\n  output: {out}\n}});\n")
+        return var
+
+    def render(self, chain: str) -> str:
+        head = "import { workflow, node, trigger, switchCase, expr } from '@n8n/workflow-sdk';\n\n"
+        return head + "\n".join(self.decls) + f"\nexport default workflow({json.dumps(self.wid)}, {json.dumps(self.name)})\n{chain};\n"
+
+
+def pg(query, replacement):
+    return {"operation": "executeQuery", "query": query, "options": {"queryReplacement": replacement}}
+
+
+def worker_job(job_type, body_expr):
+    return {
+        "method": "POST", "url": "={{ $('Config').first().json.worker_url }}/jobs/" + job_type,
+        "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth",
+        "sendBody": True, "specifyBody": "json", "jsonBody": "={{ JSON.stringify(" + body_expr + ") }}",
+        "options": {"timeout": 120000},
+    }
+
+
+def wait(hours):
+    return {"resume": "webhook", "httpMethod": "POST", "authentication": "headerAuth", "limitWaitTime": True,
+            "limitType": "afterTimeInterval", "resumeAmount": hours, "resumeUnit": "hours", "options": {}}
+
+
+def check_code(label):
+    return {"jsCode": (
+        "// O worker chama a URL de retomada do Wait com o resultado do job.\n"
+        "const b = $input.first().json.body;\n"
+        f"if (!b) throw new Error('{label}: tempo esgotado esperando o worker');\n"
+        f"if (b.status !== 'succeeded') throw new Error('{label} falhou no worker: ' + (b.error || 'sem detalhe'));\n"
+        "return [{ json: b.result }];\n")}
+
+
+def send_text(number_expr, text_expr):
+    return {"resource": "messages-api", "operation": "send-text", "instanceName": "={{ $('Config').first().json.evolution_instance }}",
+            "remoteJid": number_expr, "messageText": text_expr}
+
+
+def config_node(wf, extra=None, pos=(240, 0)):
+    assigns = [
+        {"id": "c-worker", "name": "worker_url", "value": WORKER_URL, "type": "string"},
+        {"id": "c-instance", "name": "evolution_instance", "value": INSTANCE, "type": "string"},
+    ] + (extra or [])
+    return wf.node("config", "n8n-nodes-base.set", 3.4, "Config",
+                   {"assignments": {"assignments": assigns}, "includeOtherFields": True, "options": {}}, list(pos))
+
+
+# ===========================================================================
+# factory.package
+# ===========================================================================
+def build_package() -> str:
+    wf = WF("factory-package", "factory.package")
+    wf.node("t_sub", "n8n-nodes-base.executeWorkflowTrigger", 1.2, "Chamado pelo produce",
+            {"inputSource": "workflowInputs", "workflowInputs": {"values": [{"name": "video_id", "type": "string"}]}},
+            [0, -100], fn="trigger", output=[{"video_id": "uuid"}])
+    wf.node("t_manual", "n8n-nodes-base.manualTrigger", 1, "Testar com o último vídeo", {}, [0, 100], fn="trigger")
+    config_node(wf)
+    wf.node("load", "n8n-nodes-base.postgres", 2.5, "Carregar vídeo", pg(
+        "SELECT v.id AS video_id, v.spec, c.config,\n"
+        "  (SELECT a.url FROM assets a WHERE a.video_id = v.id AND a.kind = 'spec' ORDER BY a.created_at DESC LIMIT 1) AS spec_url\n"
+        "FROM videos v JOIN channels c ON c.id = v.channel_id\n"
+        "WHERE v.id = COALESCE(NULLIF($1::text, '')::uuid,\n"
+        "  (SELECT id FROM videos WHERE status IN ('derivatives', 'awaiting_approval') ORDER BY created_at DESC LIMIT 1));",
+        "={{ [ $json.video_id || '' ] }}"), [480, 0], CRED["pg"], output=[{"video_id": "v", "spec": {}, "config": {}, "spec_url": "s3://x"}], **RETRY)
+    wf.node("st", "n8n-nodes-base.postgres", 2.5, "Status: pacote", pg(
+        "UPDATE videos SET status = 'derivatives', updated_at = now() WHERE id = $1::uuid;",
+        "={{ [ $('Carregar vídeo').first().json.video_id ] }}"), [720, 0], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("job", "n8n-nodes-base.httpRequest", 4.2, "Worker: pacote", worker_job("package",
+        "{ video_id: $('Carregar vídeo').first().json.video_id, idempotency_key: $('Carregar vídeo').first().json.video_id + '-package-' + $execution.id, "
+        "callback_url: $execution.resumeUrl, input: { spec_url: $('Carregar vídeo').first().json.spec_url, config: $('Carregar vídeo').first().json.config } }"),
+        [960, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
+    wf.node("wait", "n8n-nodes-base.wait", 1.1, "Aguardar pacote", wait(2), [1200, 0], CRED["callback"],
+            output=[{"body": {"status": "succeeded", "result": {}}}])
+    wf.node("chk", "n8n-nodes-base.code", 2, "Checar pacote", check_code("Pacote"), [1440, 0],
+            output=[{"spec": {}, "shorts": [], "thumbnails": [], "outputs": {}, "checks": []}])
+    wf.node("links", "n8n-nodes-base.httpRequest", 4.2, "Links temporários", {
+        "method": "POST", "url": "={{ $('Config').first().json.worker_url }}/files/presign",
+        "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth",
+        "sendBody": True, "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ urls: [ $json.outputs.preview_url, $json.outputs.final_url, ...$json.thumbnails.map(t => t.url), ...$json.shorts.map(s => s.url) ], expires_s: 172800 }) }}",
+        "options": {"timeout": 120000}}, [1680, 0], CRED["worker"], output=[{"urls": []}], **RETRY)
+    wf.node("save", "n8n-nodes-base.postgres", 2.5, "Salvar pacote", pg(
+        "WITH v AS (\n"
+        "  UPDATE videos SET status = 'awaiting_approval', spec = $2::jsonb, updated_at = now() WHERE id = $1::uuid RETURNING id\n"
+        "), ck AS (\n"
+        "  INSERT INTO checks (video_id, stage, name, passed, detail)\n"
+        "  SELECT $1::uuid, c->>'stage', c->>'name', (c->>'passed')::boolean, COALESCE(c->'detail', '{}'::jsonb)\n"
+        "  FROM jsonb_array_elements($3::jsonb) c\n"
+        ")\n"
+        "INSERT INTO assets (video_id, kind, url, meta)\n"
+        "SELECT $1::uuid, (a->>'k')::asset_kind, a->>'u', COALESCE(a->'meta', '{}'::jsonb)\n"
+        "FROM jsonb_array_elements($4::jsonb) a;",
+        "={{ (() => { const r = $('Checar pacote').first().json; const assets = [ ...r.thumbnails.map(t => ({ k: 'thumb', u: t.url, meta: { n: t.n, check: t.check } })), ...r.shorts.map(s => ({ k: 'short', u: s.url, meta: { n: s.n, start_s: s.start_s, end_s: s.end_s } })) ]; "
+        "return [ $('Carregar vídeo').first().json.video_id, JSON.stringify(r.spec), JSON.stringify(r.checks || []), JSON.stringify(assets) ]; })() }}"),
+        [1920, 0], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("msg", "n8n-nodes-base.code", 2, "Mensagem de aprovação", {"jsCode": r"""const r = $('Checar pacote').first().json;
+const urls = $('Links temporários').first().json.urls;
+const [preview, final] = urls;
+const nT = r.thumbnails.length;
+const thumbLinks = urls.slice(2, 2 + nT);
+const shortLinks = urls.slice(2 + nT);
+const spec = r.spec;
+const cfg = $('Carregar vídeo').first().json.config;
+const d = Math.round(r.outputs.duration_s || 0);
+const dur = `${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}`;
+const failed = (spec.checks || []).filter(c => !c.passed).map(c => `• ${c.stage}/${c.name}`);
+const titles = (spec.titles || []).slice(0, 5);
+const current = spec.publishing?.title || spec.chosen_title;
+const lines = [
+  '🎬 *Vídeo pronto para revisão*',
+  `*${current}*`,
+  `Duração: ${dur} · ${spec.blocks.length} blocos · ${(spec.sources || []).length} fontes`,
+  failed.length ? `⚠️ Checagens com alerta:\n${failed.join('\n')}` : '✅ Todas as checagens passaram',
+  '',
+  `▶️ Preview (480p): ${preview}`,
+  `⬇️ Vídeo final: ${final}`,
+  '',
+  '📱 *Shorts*',
+  ...r.shorts.map((s, i) => `${i + 1}. ${s.hook} (${Math.round(s.duration_s)}s): ${shortLinks[i]}`),
+  '',
+  '📝 *Títulos*',
+  ...titles.map((t, i) => `${i + 1}. ${t}${t === spec.chosen_title ? ' ✅' : ''}`),
+  '',
+  `🖼️ Thumbnails nas próximas mensagens (sugerida: ${spec.thumbnail?.chosen || 1})`,
+  '',
+  '*Responda:*',
+  '1 → aprovar e agendar no YouTube',
+  '2 motivo → rejeitar (ex.: 2 imagens fracas)',
+  '3 N → usar a thumbnail N',
+  '4 N → usar o título N',
+  '',
+  'Links válidos por 48 h.',
+];
+return [{ json: {
+  number: cfg.approval.to,
+  text: lines.join('\n'),
+  thumbs: r.thumbnails.map((t, i) => ({ n: t.n, url: thumbLinks[i], legible: t.check?.passed })),
+  chosen: spec.thumbnail?.chosen || 1,
+} }];
+"""}, [2160, 0], output=[{"number": "55", "text": "x", "thumbs": [], "chosen": 1}])
+    wf.node("wa", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: pedir aprovação",
+            send_text("={{ $json.number }}", "={{ $json.text }}"), [2400, 0], CRED["evo"], **RETRY)
+    wf.node("thumbs", "n8n-nodes-base.code", 2, "Uma mensagem por thumbnail", {"jsCode": r"""const m = $('Mensagem de aprovação').first().json;
+return m.thumbs.map(t => ({ json: {
+  number: m.number,
+  media: t.url,
+  caption: `Thumbnail ${t.n}${t.n === m.chosen ? ' (sugerida)' : ''}${t.legible === false ? ' · ⚠️ texto pequeno' : ''}`,
+} }));
+"""}, [2640, 0], output=[{"number": "55", "media": "https://x", "caption": "Thumbnail 1"}])
+    wf.node("wa_img", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: thumbnails", {
+        "resource": "messages-api", "operation": "send-image",
+        "instanceName": "={{ $('Config').first().json.evolution_instance }}",
+        "remoteJid": "={{ $json.number }}", "media": "={{ $json.media }}", "caption": "={{ $json.caption }}"},
+        [2880, 0], CRED["evo"], **RETRY)
+    return wf.render(
+        "  .add(t_sub)\n  .to(config)\n  .to(load)\n  .to(st)\n  .to(job)\n  .to(wait)\n  .to(chk)\n  .to(links)\n"
+        "  .to(save)\n  .to(msg)\n  .to(wa)\n  .to(thumbs)\n  .to(wa_img)\n  .add(t_manual)\n  .to(config)")
+
+
+# ===========================================================================
+# factory.approval
+# ===========================================================================
+def build_approval(publish_id: str) -> str:
+    wf = WF("factory-approval", "factory.approval")
+    wf.node("hook", "n8n-nodes-base.webhook", 2.1, "Evolution: mensagem recebida", {
+        "httpMethod": "POST", "path": "fabrica-aprovacao", "responseMode": "onReceived", "options": {}},
+        [0, 0], fn="trigger", output=[{"body": {"event": "messages.upsert", "data": {"key": {"remoteJid": "5511999999999@s.whatsapp.net", "fromMe": False}, "message": {"conversation": "1"}}}}])
+    config_node(wf, pos=(240, 0))
+    wf.node("read", "n8n-nodes-base.code", 2, "Ler resposta", {"jsCode": r"""// Só segue para mensagens de texto recebidas que sejam um comando 1, 2, 3 ou 4.
+const b = $input.first().json.body || {};
+const ev = String(b.event || '').toLowerCase().replace(/_/g, '.');
+const d = Array.isArray(b.data) ? b.data[0] || {} : (b.data || {});
+const key = d.key || {};
+const text = String(d.message?.conversation || d.message?.extendedTextMessage?.text || '').trim();
+if (!ev.includes('messages.upsert') || key.fromMe || !text) return [];
+const cmd = text.match(/^\s*([1-4])(?:[\s.,:-]+([\s\S]*))?$/);
+if (!cmd) return [];
+// o WhatsApp pode mandar o número em campos diferentes (remoteJid, remoteJidAlt, senderPn)
+const digits = [key.remoteJid, key.remoteJidAlt, key.senderPn, key.participant]
+  .filter(j => j && !String(j).endsWith('@g.us') && !String(j).endsWith('@lid'))
+  .map(j => String(j).split('@')[0].replace(/\D/g, ''))
+  .filter(x => x.length >= 10);
+if (!digits.length) return [];
+return [{ json: {
+  cmd: Number(cmd[1]),
+  arg: (cmd[2] || '').trim(),
+  sender: digits[0],
+  last8: '{' + [...new Set(digits.map(x => x.slice(-8)))].join(',') + '}',
+} }];
+"""}, [480, 0], output=[{"cmd": 1, "arg": "", "sender": "5511999999999", "last8": "{99999999}"}])
+    wf.node("find", "n8n-nodes-base.postgres", 2.5, "Vídeo aguardando", pg(
+        "SELECT v.id AS video_id, v.spec, c.config\n"
+        "FROM videos v JOIN channels c ON c.id = v.channel_id\n"
+        "WHERE v.status = 'awaiting_approval'\n"
+        "  AND right(regexp_replace(c.config->'approval'->>'to', '\\D', '', 'g'), 8) = ANY($1::text[])\n"
+        "ORDER BY v.created_at DESC LIMIT 1;",
+        "={{ [ $json.last8 ] }}"), [720, 0], CRED["pg"], alwaysOutputData=True,
+        output=[{"video_id": "v", "spec": {}, "config": {}}], **RETRY)
+    wf.node("decide", "n8n-nodes-base.code", 2, "Interpretar", {"jsCode": r"""const m = $('Ler resposta').first().json;
+const v = $input.first().json;
+if (!v.video_id) {
+  return [{ json: { action: 'none', reply: 'Não há vídeo aguardando aprovação agora.', number: m.sender } }];
+}
+const spec = typeof v.spec === 'string' ? JSON.parse(v.spec) : v.spec;
+const cfg = typeof v.config === 'string' ? JSON.parse(v.config) : v.config;
+const number = cfg.approval?.to || m.sender;
+const title = spec.publishing?.title || spec.chosen_title;
+let action = 'help';
+let reply = '';
+if (m.cmd === 1) {
+  action = 'approve';
+  reply = `✅ Aprovado: *${title}*\nVou agendar no YouTube e te aviso com os links.`;
+} else if (m.cmd === 2) {
+  action = 'reject';
+  reply = `🗑️ Rejeitado: *${title}*${m.arg ? `\nMotivo: ${m.arg}` : ''}`;
+} else if (m.cmd === 3) {
+  const n = parseInt(m.arg, 10);
+  const opts = spec.thumbnail?.options || [];
+  if (!(n >= 1 && n <= opts.length)) reply = `Escolha uma thumbnail de 1 a ${opts.length}. Ex.: 3 2`;
+  else { spec.thumbnail.chosen = n; action = 'edit'; reply = `🖼️ Thumbnail ${n} escolhida.`; }
+} else if (m.cmd === 4) {
+  const n = parseInt(m.arg, 10);
+  const titles = (spec.titles || []).slice(0, 5);
+  if (!(n >= 1 && n <= titles.length)) reply = `Escolha um título de 1 a ${titles.length}. Ex.: 4 3`;
+  else {
+    spec.chosen_title = titles[n - 1];
+    spec.publishing = { ...(spec.publishing || {}), title: titles[n - 1].replace(/[<>]/g, '').slice(0, 100) };
+    action = 'edit';
+    reply = `📝 Título ${n}: *${titles[n - 1]}*`;
+  }
+}
+if (action === 'edit') reply += '\n\nResponda 1 para aprovar, 2 para rejeitar, 3 N (thumbnail) ou 4 N (título).';
+return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender } }];
+"""}, [960, 0], output=[{"action": "approve", "reply": "ok", "number": "55", "video_id": "v", "spec": {}, "reason": "", "sender": "55"}])
+    wf.node("route", "n8n-nodes-base.switch", 3.4, "Ação", {
+        "mode": "expression", "numberOutputs": 4,
+        "output": "={{ ({ approve: 0, reject: 1, edit: 2 })[$json.action] ?? 3 }}"}, [1200, 0], fn="switchCase")
+    wf.node("ok", "n8n-nodes-base.postgres", 2.5, "Registrar aprovação", pg(
+        "INSERT INTO approvals (video_id, decision, decided_by) VALUES ($1::uuid, 'approved', $2);",
+        "={{ [ $json.video_id, $json.sender ] }}"), [1440, -200], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("pub", "n8n-nodes-base.executeWorkflow", 1.3, "Publicar no YouTube", {
+        "mode": "once", "source": "database",
+        "workflowId": {"__rl": True, "mode": "id", "value": publish_id},
+        "workflowInputs": {"mappingMode": "defineBelow",
+                           "value": {"video_id": "={{ $('Interpretar').first().json.video_id }}"},
+                           "matchingColumns": [], "schema": [{"id": "video_id", "displayName": "video_id", "required": False,
+                                                              "defaultMatch": False, "display": True, "canBeUsedToMatch": True, "type": "string"}]},
+        "options": {"waitForSubWorkflow": False}}, [1680, -200], output=[{}])
+    wf.node("no", "n8n-nodes-base.postgres", 2.5, "Registrar rejeição", pg(
+        "WITH a AS (\n  INSERT INTO approvals (video_id, decision, reason, decided_by) VALUES ($1::uuid, 'rejected', NULLIF($2, ''), $3)\n)\n"
+        "UPDATE videos SET status = 'rejected', updated_at = now() WHERE id = $1::uuid;",
+        "={{ [ $json.video_id, $json.reason || '', $json.sender ] }}"), [1440, 0], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("edit", "n8n-nodes-base.postgres", 2.5, "Salvar escolha", pg(
+        "UPDATE videos SET spec = $2::jsonb, updated_at = now() WHERE id = $1::uuid;",
+        "={{ [ $json.video_id, JSON.stringify($json.spec) ] }}"), [1440, 200], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("reply", "n8n-nodes-evolution-api.evolutionApi", 1, "Responder", send_text(
+        "={{ $('Interpretar').first().json.number }}", "={{ $('Interpretar').first().json.reply }}"),
+        [1920, 0], CRED["evo"], **RETRY)
+    return wf.render(
+        "  .add(hook)\n  .to(config)\n  .to(read)\n  .to(find)\n  .to(decide)\n"
+        "  .to(route\n    .onCase(0, ok.to(pub.to(reply)))\n    .onCase(1, no.to(reply))\n    .onCase(2, edit.to(reply))\n    .onCase(3, reply))")
+
+
+# ===========================================================================
+# factory.publish
+# ===========================================================================
+YT_SESSION_URL = "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status"
+
+
+def yt_session(url, content_type, body_expr=None):
+    p = {"method": "POST", "url": url, "authentication": "predefinedCredentialType", "nodeCredentialType": "youTubeOAuth2Api",
+         "sendHeaders": True, "headerParameters": {"parameters": [{"name": "X-Upload-Content-Type", "value": content_type}]},
+         "options": {"timeout": 60000, "response": {"response": {"fullResponse": True, "responseFormat": "text"}}}}
+    if body_expr:
+        p.update({"sendBody": True, "specifyBody": "json", "jsonBody": "={{ JSON.stringify(" + body_expr + ") }}"})
+    return p
+
+
+def build_publish() -> str:
+    wf = WF("factory-publish", "factory.publish")
+    wf.node("t_sub", "n8n-nodes-base.executeWorkflowTrigger", 1.2, "Vídeo aprovado",
+            {"inputSource": "workflowInputs", "workflowInputs": {"values": [{"name": "video_id", "type": "string"}]}},
+            [0, 0], fn="trigger", output=[{"video_id": "uuid"}])
+    config_node(wf, extra=[{"id": "c-lead", "name": "lead_hours", "value": 3, "type": "number"}])
+    wf.node("load", "n8n-nodes-base.postgres", 2.5, "Carregar e travar", pg(
+        "-- muda para scheduled só se ainda estiver aguardando: um segundo \"1\" não publica duas vezes\n"
+        "WITH v AS (\n"
+        "  UPDATE videos SET status = 'scheduled', updated_at = now()\n"
+        "  WHERE id = $1::uuid AND status = 'awaiting_approval'\n"
+        "  RETURNING id, channel_id, spec\n"
+        ")\n"
+        "SELECT v.id AS video_id, v.spec, c.config, c.id AS channel_id,\n"
+        "  COALESCE((SELECT json_agg(p.publish_at) FROM publications p JOIN videos v2 ON v2.id = p.video_id\n"
+        "            WHERE v2.channel_id = c.id AND p.kind = 'long' AND p.publish_at > now()), '[]'::json) AS taken\n"
+        "FROM v JOIN channels c ON c.id = v.channel_id;",
+        "={{ [ $json.video_id ] }}"), [480, 0], CRED["pg"], output=[{"video_id": "v", "spec": {}, "config": {}, "taken": []}], **RETRY)
+    wf.node("plan", "n8n-nodes-base.code", 2, "Plano de publicação", {"jsCode": r"""const r = $input.first().json;
+const spec = typeof r.spec === 'string' ? JSON.parse(r.spec) : r.spec;
+const cfg = typeof r.config === 'string' ? JSON.parse(r.config) : r.config;
+const pub = spec.publishing || {};
+const tz = cfg.schedule?.timezone || 'America/Sao_Paulo';
+const times = [...(cfg.schedule?.publish_times?.length ? cfg.schedule.publish_times : ['18:00'])].sort();
+const shortsTime = cfg.schedule?.shorts_time || '12:00';
+const fmt = dt => dt.toUTC().toFormat("yyyy-MM-dd'T'HH:mm");
+const taken = new Set((r.taken || []).map(t => fmt(DateTime.fromISO(String(t).replace(' ', 'T')))));
+const earliest = DateTime.now().setZone(tz).plus({ hours: Number($('Config').first().json.lead_hours) || 3 });
+
+// próximo horário livre de publish_times, a partir de agora + folga
+let slot = null;
+for (let d = 0; d < 60 && !slot; d++) {
+  for (const t of times) {
+    const [h, mi] = t.split(':').map(Number);
+    const c = earliest.startOf('day').plus({ days: d }).set({ hour: h, minute: mi });
+    if (c > earliest && !taken.has(fmt(c))) { slot = c; break; }
+  }
+}
+if (!slot) throw new Error('Nenhum horário livre nos próximos 60 dias');
+
+const [sh, sm] = shortsTime.split(':').map(Number);
+const iso = dt => dt.toUTC().toISO({ suppressMilliseconds: true });
+const status = (at) => ({
+  privacyStatus: 'private',
+  publishAt: iso(at),
+  selfDeclaredMadeForKids: !!pub.made_for_kids,
+  containsSyntheticMedia: !!pub.contains_synthetic_media,
+});
+const snippet = (title, description) => ({
+  title, description, tags: pub.tags || [], categoryId: pub.category_id || '27',
+  defaultLanguage: pub.language || 'en', defaultAudioLanguage: pub.language || 'en',
+});
+const thumbs = spec.thumbnail?.options || [];
+const thumb = thumbs.find(t => t.n === spec.thumbnail?.chosen) || thumbs[0];
+const shorts = (spec.shorts_candidates || []).map((s, i) => {
+  const at = slot.plus({ days: i + 1 }).set({ hour: sh, minute: sm });
+  return { n: s.n, url: s.url, publish_at: iso(at), title: s.title, description: s.description, status: status(at) };
+});
+return [{ json: {
+  video_id: r.video_id,
+  title: pub.title || spec.chosen_title,
+  publish_at: iso(slot),
+  publish_local: slot.toFormat('dd/MM HH:mm'),
+  final_url: spec.outputs.final_url,
+  thumb_url: thumb?.url || null,
+  long_body: { snippet: snippet((pub.title || spec.chosen_title).slice(0, 100), pub.description || ''), status: status(slot) },
+  shorts,
+  snippet_base: snippet('', ''),
+  number: cfg.approval?.to,
+  tz,
+} }];
+"""}, [720, 0], output=[{"video_id": "v", "title": "t", "publish_at": "2026-10-16T21:00:00Z", "publish_local": "16/10 18:00",
+                         "final_url": "s3://x", "thumb_url": "s3://y", "long_body": {}, "shorts": [], "snippet_base": {}, "number": "55", "tz": "America/Sao_Paulo"}])
+    wf.node("s_long", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessão do vídeo",
+            yt_session(YT_SESSION_URL, "video/mp4", "$json.long_body"), [960, 0], CRED["yt"],
+            output=[{"headers": {"location": "https://upload"}, "statusCode": 200}], **RETRY)
+    wf.node("up_long", "n8n-nodes-base.httpRequest", 4.2, "Worker: enviar vídeo", worker_job("youtube_upload",
+        "{ video_id: $('Plano de publicação').first().json.video_id, idempotency_key: $('Plano de publicação').first().json.video_id + '-yt-long-' + $execution.id, "
+        "callback_url: $execution.resumeUrl, input: { uploads: [ { ref: 'long', upload_url: $json.headers.location, "
+        "media_url: $('Plano de publicação').first().json.final_url, content_type: 'video/mp4' } ] } }"),
+        [1200, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
+    wf.node("w_long", "n8n-nodes-base.wait", 1.1, "Aguardar envio do vídeo", wait(3), [1440, 0], CRED["callback"],
+            output=[{"body": {"status": "succeeded", "result": {"uploads": [{"ref": "long", "id": "abc"}]}}}])
+    wf.node("c_long", "n8n-nodes-base.code", 2, "Checar envio do vídeo", {"jsCode": """const b = $input.first().json.body;
+if (!b) throw new Error('Envio do vídeo: tempo esgotado esperando o worker');
+if (b.status !== 'succeeded') throw new Error('Envio do vídeo ao YouTube falhou: ' + (b.error || 'sem detalhe'));
+const id = b.result.uploads[0].id;
+if (!id) throw new Error('O YouTube não devolveu o id do vídeo');
+return [{ json: { youtube_id: id } }];
+"""}, [1680, 0], output=[{"youtube_id": "abc"}])
+    wf.node("s_thumb", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessão da thumbnail", yt_session(
+        "=https://www.googleapis.com/upload/youtube/v3/thumbnails/set?uploadType=resumable&videoId={{ $json.youtube_id }}", "image/jpeg"),
+        [1920, 0], CRED["yt"], onError="continueRegularOutput", alwaysOutputData=True,
+        output=[{"headers": {"location": "https://upload"}, "statusCode": 200}])
+    wf.node("shorts", "n8n-nodes-base.code", 2, "Shorts a enviar", {"jsCode": r"""const p = $('Plano de publicação').first().json;
+const id = $('Checar envio do vídeo').first().json.youtube_id;
+return p.shorts.map(s => ({ json: {
+  n: s.n,
+  url: s.url,
+  publish_at: s.publish_at,
+  body: {
+    snippet: { ...p.snippet_base, title: s.title, description: String(s.description || '').replace('{{LONG_URL}}', `https://youtu.be/${id}`) },
+    status: s.status,
+  },
+} }));
+"""}, [2160, 0], output=[{"n": 1, "url": "s3://x", "publish_at": "2026-10-17T15:00:00Z", "body": {}}])
+    wf.node("s_shorts", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessões dos Shorts",
+            yt_session(YT_SESSION_URL, "video/mp4", "$json.body"), [2400, 0], CRED["yt"],
+            output=[{"headers": {"location": "https://upload"}, "statusCode": 200}], **RETRY)
+    wf.node("uploads", "n8n-nodes-base.code", 2, "Montar envios", {"jsCode": r"""const p = $('Plano de publicação').first().json;
+const shorts = $('Shorts a enviar').all().map(i => i.json);
+const sessions = $('YouTube: sessões dos Shorts').all().map(i => i.json);
+const thumbSession = $('YouTube: sessão da thumbnail').first().json;
+const uploads = shorts.map((s, i) => ({ ref: `short${s.n}`, upload_url: sessions[i].headers.location, media_url: s.url, content_type: 'video/mp4' }));
+const thumbUrl = thumbSession?.headers?.location;
+if (thumbUrl && p.thumb_url) uploads.unshift({ ref: 'thumb', upload_url: thumbUrl, media_url: p.thumb_url, content_type: 'image/jpeg' });
+return [{ json: {
+  uploads,
+  thumb_error: thumbUrl ? null : (thumbSession?.error?.message || JSON.stringify(thumbSession?.error || thumbSession).slice(0, 300)),
+} }];
+"""}, [2640, 0], output=[{"uploads": [], "thumb_error": None}])
+    wf.node("up_rest", "n8n-nodes-base.httpRequest", 4.2, "Worker: enviar Shorts e thumbnail", worker_job("youtube_upload",
+        "{ video_id: $('Plano de publicação').first().json.video_id, idempotency_key: $('Plano de publicação').first().json.video_id + '-yt-rest-' + $execution.id, "
+        "callback_url: $execution.resumeUrl, input: { uploads: $json.uploads } }"),
+        [2880, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
+    wf.node("w_rest", "n8n-nodes-base.wait", 1.1, "Aguardar envio dos Shorts", wait(3), [3120, 0], CRED["callback"],
+            output=[{"body": {"status": "succeeded", "result": {"uploads": []}}}])
+    wf.node("c_rest", "n8n-nodes-base.code", 2, "Checar envio dos Shorts", {"jsCode": r"""const b = $input.first().json.body;
+if (!b) throw new Error('Envio dos Shorts: tempo esgotado esperando o worker');
+if (b.status !== 'succeeded') throw new Error('Envio dos Shorts ao YouTube falhou: ' + (b.error || 'sem detalhe'));
+const p = $('Plano de publicação').first().json;
+const longId = $('Checar envio do vídeo').first().json.youtube_id;
+const shorts = $('Shorts a enviar').all().map(i => i.json);
+const byRef = Object.fromEntries(b.result.uploads.map(u => [u.ref, u]));
+const pubs = [{ kind: 'long', id: longId, publish_at: p.publish_at }];
+for (const s of shorts) pubs.push({ kind: 'short', id: byRef[`short${s.n}`]?.id || null, publish_at: s.publish_at, n: s.n });
+return [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb } }];
+"""}, [3360, 0], output=[{"long_id": "abc", "pubs": [], "thumb_ok": True}])
+    wf.node("save", "n8n-nodes-base.postgres", 2.5, "Registrar publicação", pg(
+        "WITH v AS (\n"
+        "  UPDATE videos SET spec = jsonb_set(COALESCE(spec, '{}'::jsonb), '{publishing,youtube_id}', to_jsonb($2::text)), updated_at = now()\n"
+        "  WHERE id = $1::uuid\n"
+        ")\n"
+        "INSERT INTO publications (video_id, platform, external_id, kind, publish_at, status)\n"
+        "SELECT $1::uuid, 'youtube', p->>'id', (p->>'kind')::publication_kind, (p->>'publish_at')::timestamptz,\n"
+        "       CASE WHEN p->>'id' IS NULL THEN 'failed' ELSE 'scheduled' END::publication_status\n"
+        "FROM jsonb_array_elements($3::jsonb) p;",
+        "={{ [ $('Plano de publicação').first().json.video_id, $json.long_id, JSON.stringify($json.pubs) ] }}"),
+        [3600, 0], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("msg", "n8n-nodes-base.code", 2, "Mensagem", {"jsCode": r"""const p = $('Plano de publicação').first().json;
+const r = $('Checar envio dos Shorts').first().json;
+const thumbErr = $('Montar envios').first().json.thumb_error;
+const local = iso => DateTime.fromISO(iso).setZone(p.tz).toFormat('dd/MM HH:mm');
+const lines = [
+  '📅 *Agendado no YouTube*',
+  `*${p.title}*`,
+  `Vídeo: ${p.publish_local} — https://youtu.be/${r.long_id}`,
+  '',
+  '📱 Shorts:',
+  ...r.pubs.filter(x => x.kind === 'short').map(x => x.id
+    ? `${x.n}. ${local(x.publish_at)} — https://youtube.com/shorts/${x.id}`
+    : `${x.n}. ⚠️ não enviado`),
+  '',
+  r.thumb_ok ? '🖼️ Thumbnail aplicada.' : `⚠️ Thumbnail não aplicada${thumbErr ? `: ${thumbErr}` : ''}. Envie pelo YouTube Studio.`,
+  '',
+  'Tudo fica privado até o horário agendado. Confira no YouTube Studio > Conteúdo.',
+];
+return [{ json: { number: p.number, text: lines.join('\n') } }];
+"""}, [3840, 0], output=[{"number": "55", "text": "x"}])
+    wf.node("wa", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: avisar",
+            send_text("={{ $json.number }}", "={{ $json.text }}"), [4080, 0], CRED["evo"], **RETRY)
+    return wf.render(
+        "  .add(t_sub)\n  .to(config)\n  .to(load)\n  .to(plan)\n  .to(s_long)\n  .to(up_long)\n  .to(w_long)\n  .to(c_long)\n"
+        "  .to(s_thumb)\n  .to(shorts)\n  .to(s_shorts)\n  .to(uploads)\n  .to(up_rest)\n  .to(w_rest)\n  .to(c_rest)\n  .to(save)\n  .to(msg)\n  .to(wa)")
+
+
+if __name__ == "__main__":
+    import sys
+    OUT.mkdir(exist_ok=True)
+    (OUT / "factory.package.js").write_text(build_package(), "utf-8")
+    (OUT / "factory.publish.js").write_text(build_publish(), "utf-8")
+    (OUT / "factory.approval.js").write_text(build_approval(sys.argv[1] if len(sys.argv) > 1 else "PUBLISH_ID"), "utf-8")
+    print("ok", [p.name for p in OUT.iterdir()])

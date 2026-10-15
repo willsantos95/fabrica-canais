@@ -60,3 +60,28 @@ Quando estiver satisfeito com o resultado, ative o nó `Agenda diária` (desativ
 - Estado de cada vídeo: tabela `videos` (`status`, `spec`, `error`, `n8n_execution_id`)
 - Arquivos: MinIO em `videos/<video_id>/` (áudio, imagens, `FINAL.mp4`, `FINAL.srt`, `preview.mp4`, `video_spec.json`)
 - Checagens: tabela `checks`; custo por vídeo: view `video_costs` (preenchida a partir da Fase 2)
+
+## Fase 2 — pacote, aprovação e publicação
+
+Fluxos criados no n8n (código do SDK em `n8n/sdk/`, gerado por `n8n/build_fase2.py`):
+
+| Fluxo | Gatilho | O que faz |
+| --- | --- | --- |
+| `factory.package` | chamado pelo `factory.produce` (ou manual: pega o último vídeo pronto) | job `package` no worker: 3 Shorts, 3 thumbnails, título, descrição com capítulos e fontes, tags. Manda no WhatsApp os links, os títulos e as thumbnails, com as opções de resposta |
+| `factory.approval` | webhook `POST /webhook/fabrica-aprovacao` (Evolution, evento `MESSAGES_UPSERT`) | `1` aprova e chama o `factory.publish`; `2 motivo` rejeita; `3 N` escolhe a thumbnail; `4 N` escolhe o título |
+| `factory.publish` | chamado pela aprovação | abre sessões de upload no YouTube com a credencial OAuth do n8n; o worker (`youtube_upload`) envia os arquivos direto do MinIO. Vídeo privado com `publishAt` no próximo horário livre de `schedule.publish_times`; Shorts nos dias seguintes em `schedule.shorts_time` (padrão 12:00); thumbnail por `thumbnails.set` |
+
+Nenhuma etapa da Fase 2 chama a OpenAI: título, descrição, capítulos e tags saem do `video_spec`.
+
+**Evolution:** na instância usada pela fábrica, configure o webhook para `https://<seu-n8n>/webhook/fabrica-aprovacao` com o evento `MESSAGES_UPSERT`. A instância só aceita um webhook; se ela já atende outro fluxo, use uma instância separada para a fábrica.
+
+**YouTube:**
+- Enquanto o projeto da API não passar pela auditoria do YouTube, os vídeos enviados pela API ficam travados como privados, mesmo com `publishAt`.
+- Thumbnail personalizada exige o canal verificado por telefone.
+- A credencial `YouTube account` precisa ter sido autorizada escolhendo o canal Career Levels (conta de marca), não o canal pessoal.
+
+**Se a publicação falhar no meio:** o vídeo já foi marcado como `scheduled`. Para tentar de novo, volte o status e responda `1` outra vez:
+
+```sql
+UPDATE videos SET status = 'awaiting_approval' WHERE id = '<video_id>';
+```
