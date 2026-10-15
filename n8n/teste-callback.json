@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "bdbd97ea-2bfa-4887-a0c8-a8b13dec63b4",
+      "id": "dee52a99-36b1-4ce4-8dac-273850da41e4",
       "name": "Testar callback",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
@@ -17,13 +17,13 @@
         "assignments": {
           "assignments": [
             {
-              "id": "5eb61512-d5f8-4215-8af4-b62b1e4f81a9",
+              "id": "9256c957-9c90-40c5-89fa-12ef22238de0",
               "name": "worker_url",
               "value": "https://render.relampagodeofertas.shop",
               "type": "string"
             },
             {
-              "id": "b437783c-b1ce-41b8-b052-bbee4e49f73d",
+              "id": "9323b30d-20f1-4dec-b6ce-d9d574c2dbae",
               "name": "media_url",
               "value": "s3://fabrica/testes/callback.wav",
               "type": "string"
@@ -32,7 +32,7 @@
         },
         "options": {}
       },
-      "id": "4b1a764c-d4de-4d99-ac46-4ad1b835c7bc",
+      "id": "66154313-2e2b-4db6-b1e3-02c7e20ad01f",
       "name": "Config",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -45,7 +45,7 @@
       "parameters": {
         "jsCode": "// A URL precisa começar com o domínio público do n8n (WEBHOOK_URL), nunca com localhost.\nconst url = $execution.resumeUrl;\nif (/localhost|127\\.0\\.0\\.1/.test(url)) throw new Error('WEBHOOK_URL do n8n não configurada: ' + url);\nreturn [{ json: { ...$input.first().json, resume_url: url } }];\n"
       },
-      "id": "f9f35ff8-943f-454b-a8ba-bc8efb798f2a",
+      "id": "b425e53a-7a65-4528-aa67-588fde2870bc",
       "name": "Mostrar URL de retomada",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -67,7 +67,7 @@
           "timeout": 120000
         }
       },
-      "id": "fe13e0b2-abcc-4777-ac30-b3578db7c50e",
+      "id": "bd414865-75af-4961-b7d1-038b8f912e73",
       "name": "Worker: job de teste",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -93,7 +93,7 @@
         "resumeUnit": "minutes",
         "options": {}
       },
-      "id": "830c845b-f2f1-43e8-a905-9cd8c18017c5",
+      "id": "a61702fb-1462-407b-9bbc-c0982e0f3840",
       "name": "Aguardar worker",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -107,13 +107,13 @@
           "name": "Fabrica Callback"
         }
       },
-      "webhookId": "8d7e6c12-1f2f-45dc-95c8-ca664dc5e54f"
+      "webhookId": "80216a2c-c5eb-4fda-a77f-108afeabf100"
     },
     {
       "parameters": {
         "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('O worker não conseguiu avisar o n8n em 10 min. Veja a linha \"callback falhou\" no log do serviço api/render.');\nreturn [{ json: { callback: 'OK — o n8n recebeu o aviso do worker', status: b.status, worker_result: b.result, erro: b.error || null } }];\n"
       },
-      "id": "b54c76ea-8742-48e6-9cda-7ff07dcf2988",
+      "id": "0f89d7ad-2dc3-4ffa-9294-33b285c29174",
       "name": "Resultado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

@@ -237,7 +237,8 @@ return [{ json: { ...ctx, body: undefined, script: {
   subject: clean(s.subject).slice(0, 60) || null,
   tags: (s.tags || []).map(clean).filter(Boolean).slice(0, 15),
   hashtags: (s.hashtags || []).map(x => clean(x).replace(/^#/, '')).filter(Boolean).slice(0, 5),
-  sources, blocks }, checks, words } }];
+  sources, blocks }, checks, words,
+  usage_script: { ...(resp.usage || {}), model: resp.model, web_searches: (resp.output || []).filter(o => o.type === 'web_search_call').length } } }];
 """), y=0)
     f.link("OpenAI: pesquisa e roteiro", "Validar roteiro")
 
@@ -316,6 +317,19 @@ const blocks = c.script.blocks.map(b => {
   return { ...b, audio: { url: null, duration_s: null, offset_s: null, words: [] }, shots };
 });
 
+// custo estimado em US$ (preço por 1M tokens; config.prices sobrescreve se a OpenAI mudar o preço)
+const P = { 'gpt-5.5': { in: 5, cached: 0.5, out: 30 }, web_search: 0.01, ...(c.config.prices || {}) };
+const cost = (u, model) => {
+  if (!u || !u.input_tokens) return 0;
+  const k = Object.keys(P).find(x => String(model || '').startsWith(x));
+  const pr = (k && P[k].in != null) ? P[k] : P['gpt-5.5'];
+  const cached = u.input_tokens_details?.cached_tokens || 0;
+  return ((u.input_tokens - cached) * pr.in + cached * pr.cached + u.output_tokens * pr.out) / 1e6;
+};
+const su = c.usage_script || {};
+const usage = { script: su, shotlist: { ...(resp.usage || {}), model: resp.model } };
+usage.cost_usd = Math.round((cost(su, su.model) + (su.web_searches || 0) * P.web_search + cost(resp.usage, resp.model)) * 1000) / 1000;
+
 const spec = {
   video_id: c.video_id,
   channel: c.config.slug,
@@ -323,6 +337,7 @@ const spec = {
   subject: c.script.subject || null,
   tags: c.script.tags || [],
   hashtags: c.script.hashtags || [],
+  usage,
   language: c.config.language,
   titles: c.script.titles,
   chosen_title: c.script.chosen_title,
