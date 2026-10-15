@@ -224,29 +224,35 @@ return m.thumbs.map(t => ({ json: {
 def build_approval(publish_id: str) -> str:
     wf = WF("factory-approval", "factory.approval")
     wf.node("hook", "n8n-nodes-base.webhook", 2.1, "Evolution: mensagem recebida", {
-        "httpMethod": "POST", "path": "fabrica-aprovacao", "responseMode": "onReceived", "options": {}},
+        "httpMethod": "POST", "path": "fabrica-aprovacao", "responseMode": "onReceived",
+        "options": {"onlyRunIf": "={{ $json.body.event === 'messages.upsert' && !String($json.body.data?.key?.remoteJid || '').endsWith('@g.us') }}"}},
         [0, 0], fn="trigger", output=[{"body": {"event": "messages.upsert", "data": {"key": {"remoteJid": "5511999999999@s.whatsapp.net", "fromMe": False}, "message": {"conversation": "1"}}}}])
     config_node(wf, pos=(240, 0))
-    wf.node("read", "n8n-nodes-base.code", 2, "Ler resposta", {"jsCode": r"""// Só segue para mensagens de texto recebidas que sejam um comando 1, 2, 3 ou 4.
+    wf.node("read", "n8n-nodes-base.code", 2, "Ler resposta", {"jsCode": r"""// Só segue para mensagens de texto que sejam um comando 1, 2, 3 ou 4.
+// A instância da fábrica é o próprio número do Will: as respostas vêm do chat "Você" (mensagem para si mesmo),
+// que chegam como fromMe = true. Mensagens de outras pessoas e de grupos são ignoradas.
 const b = $input.first().json.body || {};
 const ev = String(b.event || '').toLowerCase().replace(/_/g, '.');
 const d = Array.isArray(b.data) ? b.data[0] || {} : (b.data || {});
 const key = d.key || {};
 const text = String(d.message?.conversation || d.message?.extendedTextMessage?.text || '').trim();
-if (!ev.includes('messages.upsert') || key.fromMe || !text) return [];
+if (!ev.includes('messages.upsert') || !text) return [];
 const cmd = text.match(/^\s*([1-4])(?:[\s.,:-]+([\s\S]*))?$/);
 if (!cmd) return [];
-// o WhatsApp pode mandar o número em campos diferentes (remoteJid, remoteJidAlt, senderPn)
-const digits = [key.remoteJid, key.remoteJidAlt, key.senderPn, key.participant]
-  .filter(j => j && !String(j).endsWith('@g.us') && !String(j).endsWith('@lid'))
-  .map(j => String(j).split('@')[0].replace(/\D/g, ''))
-  .filter(x => x.length >= 10);
-if (!digits.length) return [];
+const num = j => String(j || '').split('@')[0].replace(/\D/g, '');
+const isPhone = j => j && /@s\.whatsapp\.net$/.test(String(j));
+const chat = [key.remoteJid, key.remoteJidAlt, key.senderPn].filter(isPhone).map(num).filter(x => x.length >= 10);
+if (String(key.remoteJid || '').endsWith('@g.us') || !chat.length) return [];
+const owner = num(b.sender);
+if (key.fromMe) {
+  // só vale se for o chat com você mesmo
+  if (!owner || !chat.some(x => x.slice(-8) === owner.slice(-8))) return [];
+}
 return [{ json: {
   cmd: Number(cmd[1]),
   arg: (cmd[2] || '').trim(),
-  sender: digits[0],
-  last8: '{' + [...new Set(digits.map(x => x.slice(-8)))].join(',') + '}',
+  sender: chat[0],
+  last8: '{' + [...new Set(chat.map(x => x.slice(-8)))].join(',') + '}',
 } }];
 """}, [480, 0], output=[{"cmd": 1, "arg": "", "sender": "5511999999999", "last8": "{99999999}"}])
     wf.node("find", "n8n-nodes-base.postgres", 2.5, "Vídeo aguardando", pg(
@@ -259,9 +265,8 @@ return [{ json: {
         output=[{"video_id": "v", "spec": {}, "config": {}}], **RETRY)
     wf.node("decide", "n8n-nodes-base.code", 2, "Interpretar", {"jsCode": r"""const m = $('Ler resposta').first().json;
 const v = $input.first().json;
-if (!v.video_id) {
-  return [{ json: { action: 'none', reply: 'Não há vídeo aguardando aprovação agora.', number: m.sender } }];
-}
+// sem vídeo aguardando para esse número: não responde (evita responder "1" de qualquer contato)
+if (!v.video_id) return [];
 const spec = typeof v.spec === 'string' ? JSON.parse(v.spec) : v.spec;
 const cfg = typeof v.config === 'string' ? JSON.parse(v.config) : v.config;
 const number = cfg.approval?.to || m.sender;
