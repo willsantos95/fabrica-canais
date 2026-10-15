@@ -3,6 +3,7 @@ baixa o que precisa, processa, sobe o resultado e avisa o n8n pelo callback."""
 from __future__ import annotations
 
 import json
+import logging
 import os
 import shutil
 import time
@@ -14,6 +15,9 @@ import httpx
 
 from . import align, images, media, storage, thumbnail, tts
 from .settings import settings
+
+log = logging.getLogger("fabrica.worker")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 BLOCK_GAP_S = 0.35  # respiro entre blocos de narração
 CLIP_WORKERS = int(os.environ.get("CLIP_WORKERS", "2"))
@@ -33,17 +37,27 @@ def _callback(job: dict, body: dict) -> None:
     if not url:
         return
     headers = {"Authorization": f"Bearer {settings.callback_token}"} if settings.callback_token else {}
+    host = url.split("/webhook")[0]
     for attempt in range(3):
         try:
-            httpx.post(url, json=body, headers=headers, timeout=30).raise_for_status()
+            r = httpx.post(url, json=body, headers=headers, timeout=30)
+            r.raise_for_status()
+            log.info("callback ok: %s job=%s status=%s", host, job.get("type"), body.get("status"))
             return
-        except Exception:
-            time.sleep(2 * (attempt + 1))
+        except httpx.HTTPStatusError as exc:
+            hint = {401: "CALLBACK_TOKEN diferente da credencial do Wait", 403: "CALLBACK_TOKEN diferente da credencial do Wait",
+                    404: "execução não está mais esperando (cancelada, expirada ou já retomada)"}.get(exc.response.status_code, "")
+            log.error("callback falhou (tentativa %d): HTTP %s em %s %s", attempt + 1, exc.response.status_code, host, hint)
+        except Exception as exc:
+            log.error("callback falhou (tentativa %d): %s em %s", attempt + 1, exc, host)
+        time.sleep(2 * (attempt + 1))
+    log.error("callback DESISTIU depois de 3 tentativas: %s", host)
 
 
 def execute(job: dict) -> dict:
     """Ponto de entrada da fila."""
     started = time.time()
+    log.info("job iniciado: %s video=%s key=%s", job["type"], job.get("video_id"), job.get("idempotency_key"))
     wd = _workdir(job)
     handler = HANDLERS[job["type"]]
     try:
@@ -60,6 +74,8 @@ def execute(job: dict) -> dict:
         "idempotency_key": job.get("idempotency_key"),
         "elapsed_s": round(time.time() - started, 1),
     })
+    log.info("job %s: %s em %.1fs%s", job["type"], body["status"], body["elapsed_s"],
+             f" — {body['error'][:300]}" if body["status"] == "failed" else "")
     _callback(job, body)
     if body["status"] == "failed":
         raise RuntimeError(body["error"])
