@@ -167,12 +167,6 @@ const s_long = node({
       "specifyBody": "json",
       "jsonBody": expr("{{ JSON.stringify($json.long_body) }}")
     },
-    "credentials": {
-      "youTubeOAuth2Api": {
-        "id": "nnKxTYcW1aFdkd4a",
-        "name": "YouTube - Fabrica"
-      }
-    },
     "retryOnFail": true,
     "maxTries": 3,
     "waitBetweenTries": 5000,
@@ -238,18 +232,11 @@ const w_long = node({
     "parameters": {
       "resume": "webhook",
       "httpMethod": "POST",
-      "authentication": "headerAuth",
       "limitWaitTime": true,
       "limitType": "afterTimeInterval",
       "resumeAmount": 3,
       "resumeUnit": "hours",
       "options": {}
-    },
-    "credentials": {
-      "httpHeaderAuth": {
-        "id": "dBAcX42kLwL5n3eW",
-        "name": "Auth - Fabrica Callback"
-      }
     },
     "position": [
       1440,
@@ -320,12 +307,6 @@ const s_thumb = node({
             "responseFormat": "text"
           }
         }
-      }
-    },
-    "credentials": {
-      "youTubeOAuth2Api": {
-        "id": "nnKxTYcW1aFdkd4a",
-        "name": "YouTube - Fabrica"
       }
     },
     "onError": "continueRegularOutput",
@@ -399,12 +380,6 @@ const s_shorts = node({
       "sendBody": true,
       "specifyBody": "json",
       "jsonBody": expr("{{ JSON.stringify($json.body) }}")
-    },
-    "credentials": {
-      "youTubeOAuth2Api": {
-        "id": "nnKxTYcW1aFdkd4a",
-        "name": "YouTube - Fabrica"
-      }
     },
     "retryOnFail": true,
     "maxTries": 3,
@@ -492,18 +467,11 @@ const w_rest = node({
     "parameters": {
       "resume": "webhook",
       "httpMethod": "POST",
-      "authentication": "headerAuth",
       "limitWaitTime": true,
       "limitType": "afterTimeInterval",
       "resumeAmount": 3,
       "resumeUnit": "hours",
       "options": {}
-    },
-    "credentials": {
-      "httpHeaderAuth": {
-        "id": "dBAcX42kLwL5n3eW",
-        "name": "Auth - Fabrica Callback"
-      }
     },
     "position": [
       3120,

@@ -382,8 +382,10 @@ def yt_session(url, content_type, body_expr=None):
     return p
 
 
-def build_publish() -> str:
-    wf = WF("factory-publish", "factory.publish")
+def build_publish(yt=None, name="factory.publish") -> str:
+    """Um factory.publish por canal do YouTube (cada canal tem a sua credencial OAuth)."""
+    yt = yt or yt
+    wf = WF("factory-publish", name)
     wf.node("t_sub", "n8n-nodes-base.executeWorkflowTrigger", 1.2, "Vídeo aprovado",
             {"inputSource": "workflowInputs", "workflowInputs": {"values": [{"name": "video_id", "type": "string"}]}},
             [0, 0], fn="trigger", output=[{"video_id": "uuid"}])
@@ -456,14 +458,14 @@ return [{ json: {
 """}, [720, 0], output=[{"video_id": "v", "title": "t", "publish_at": "2026-10-16T21:00:00Z", "publish_local": "16/10 18:00",
                          "final_url": "s3://x", "thumb_url": "s3://y", "long_body": {}, "shorts": [], "snippet_base": {}, "number": "55", "tz": "America/Sao_Paulo"}])
     wf.node("s_long", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessão do vídeo",
-            yt_session(YT_SESSION_URL, "video/mp4", "$json.long_body"), [960, 0], CRED["yt"],
+            yt_session(YT_SESSION_URL, "video/mp4", "$json.long_body"), [960, 0], yt,
             output=[{"headers": {"location": "https://upload"}, "statusCode": 200}], **RETRY)
     wf.node("up_long", "n8n-nodes-base.httpRequest", 4.2, "Worker: enviar vídeo", worker_job("youtube_upload",
         "{ video_id: $('Plano de publicação').first().json.video_id, idempotency_key: $('Plano de publicação').first().json.video_id + '-yt-long-' + $execution.id, "
         "callback_url: $execution.resumeUrl, input: { uploads: [ { ref: 'long', upload_url: $json.headers.location, "
         "media_url: $('Plano de publicação').first().json.final_url, content_type: 'video/mp4' } ] } }"),
         [1200, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
-    wf.node("w_long", "n8n-nodes-base.wait", 1.1, "Aguardar envio do vídeo", wait(3), [1440, 0], CRED["callback"],
+    wf.node("w_long", "n8n-nodes-base.wait", 1.1, "Aguardar envio do vídeo", {k: v for k, v in wait(3).items() if k != "authentication"}, [1440, 0],
             output=[{"body": {"status": "succeeded", "result": {"uploads": [{"ref": "long", "id": "abc"}]}}}])
     wf.node("c_long", "n8n-nodes-base.code", 2, "Checar envio do vídeo", {"jsCode": """const b = $input.first().json.body;
 if (!b) throw new Error('Envio do vídeo: tempo esgotado esperando o worker');
@@ -474,7 +476,7 @@ return [{ json: { youtube_id: up.id } }];
 """}, [1680, 0], output=[{"youtube_id": "abc"}])
     wf.node("s_thumb", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessão da thumbnail", yt_session(
         "=https://www.googleapis.com/upload/youtube/v3/thumbnails/set?uploadType=resumable&videoId={{ $json.youtube_id }}", "image/jpeg"),
-        [1920, 0], CRED["yt"], onError="continueRegularOutput", alwaysOutputData=True,
+        [1920, 0], yt, onError="continueRegularOutput", alwaysOutputData=True,
         output=[{"headers": {"location": "https://upload"}, "statusCode": 200}])
     wf.node("shorts", "n8n-nodes-base.code", 2, "Shorts a enviar", {"jsCode": r"""const p = $('Plano de publicação').first().json;
 const id = $('Checar envio do vídeo').first().json.youtube_id;
@@ -489,7 +491,7 @@ return p.shorts.map(s => ({ json: {
 } }));
 """}, [2160, 0], output=[{"n": 1, "url": "s3://x", "publish_at": "2026-10-17T15:00:00Z", "body": {}}])
     wf.node("s_shorts", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessões dos Shorts",
-            yt_session(YT_SESSION_URL, "video/mp4", "$json.body"), [2400, 0], CRED["yt"],
+            yt_session(YT_SESSION_URL, "video/mp4", "$json.body"), [2400, 0], yt,
             output=[{"headers": {"location": "https://upload"}, "statusCode": 200}], **RETRY)
     wf.node("uploads", "n8n-nodes-base.code", 2, "Montar envios", {"jsCode": r"""const p = $('Plano de publicação').first().json;
 const shorts = $('Shorts a enviar').all().map(i => i.json);
@@ -507,7 +509,7 @@ return [{ json: {
         "{ video_id: $('Plano de publicação').first().json.video_id, idempotency_key: $('Plano de publicação').first().json.video_id + '-yt-rest-' + $execution.id, "
         "callback_url: $execution.resumeUrl, input: { uploads: $json.uploads } }"),
         [2880, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
-    wf.node("w_rest", "n8n-nodes-base.wait", 1.1, "Aguardar envio dos Shorts", wait(3), [3120, 0], CRED["callback"],
+    wf.node("w_rest", "n8n-nodes-base.wait", 1.1, "Aguardar envio dos Shorts", {k: v for k, v in wait(3).items() if k != "authentication"}, [3120, 0],
             output=[{"body": {"status": "succeeded", "result": {"uploads": []}}}])
     wf.node("c_rest", "n8n-nodes-base.code", 2, "Checar envio dos Shorts", {"jsCode": r"""const b = $input.first().json.body;
 if (!b) throw new Error('Envio dos Shorts: tempo esgotado esperando o worker');
@@ -692,6 +694,9 @@ if __name__ == "__main__":
     (OUT / "factory.package.js").write_text(build_package(), "utf-8")
     (OUT / "factory.clips.js").write_text(build_clips(), "utf-8")
     (OUT / "factory.publish.js").write_text(build_publish(), "utf-8")
+    (OUT / "factory.publish.deu-tudo-errado.js").write_text(build_publish(
+        {"youTubeOAuth2Api": {"id": "pnIjvYU4Eixl66cj", "name": "YouTube - Deu Tudo Errado TV"}},
+        "factory.publish · Deu Tudo Errado"), "utf-8")
     (OUT / "factory.approval.js").write_text(build_approval(), "utf-8")
     (OUT / "factory.scheduler.js").write_text(build_scheduler(), "utf-8")
     print("ok", [p.name for p in OUT.iterdir()])

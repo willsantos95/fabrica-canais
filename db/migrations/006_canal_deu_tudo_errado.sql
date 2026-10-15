@@ -63,3 +63,8 @@ COMMIT;
 -- UPDATE channels SET active = true,
 --   config = jsonb_set(config, '{youtube,publish_workflow_id}', to_jsonb('ID_DA_COPIA_DO_PUBLISH'::text))
 -- WHERE slug = 'deu-tudo-errado';
+
+-- Aplicado em 15/10: publish próprio do canal (factory.publish · Deu Tudo Errado = lljV9Hcv2DjR57iT) e canal ativo.
+-- UPDATE channels SET active = true,
+--   config = jsonb_set(config, '{youtube,publish_workflow_id}', to_jsonb('lljV9Hcv2DjR57iT'::text))
+-- WHERE slug = 'deu-tudo-errado';
