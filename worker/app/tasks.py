@@ -136,7 +136,7 @@ def h_voice(job: dict, inp: dict, wd: Path) -> dict:
 
 
 def h_images(job: dict, inp: dict, wd: Path) -> dict:
-    """Gera a imagem de cada plano que ainda não tem uma (Gemini), em paralelo."""
+    """Gera a imagem de cada plano que ainda não tem uma (Cloudflare FLUX ou Gemini), em paralelo."""
     spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
     style = inp.get("style_block", "").strip()
     negative = inp.get("negative_prompt", "").strip()
