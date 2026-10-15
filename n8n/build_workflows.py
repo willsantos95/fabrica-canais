@@ -100,7 +100,7 @@ def http_json(url: str, body_expr: str, timeout_ms: int = 120000, headers: list 
 
 def wait_callback(hours: int) -> dict:
     return {"resume": "webhook", "httpMethod": "POST", "authentication": "headerAuth",
-            "limitWait": True, "limitType": "afterTimeInterval", "resumeAmount": hours,
+            "limitWaitTime": True, "limitType": "afterTimeInterval", "resumeAmount": hours,
             "resumeUnit": "hours", "options": {}}
 
 
@@ -532,7 +532,7 @@ return [{ json: { ...$input.first().json, resume_url: url } }];
     f.link("Mostrar URL de retomada", "Worker: job de teste")
     f.add("Aguardar worker", "n8n-nodes-base.wait", 1.1,
           {"resume": "webhook", "httpMethod": "POST", "authentication": "headerAuth",
-           "limitWait": True, "limitType": "afterTimeInterval", "resumeAmount": 10,
+           "limitWaitTime": True, "limitType": "afterTimeInterval", "resumeAmount": 10,
            "resumeUnit": "minutes", "options": {}},
           creds=CRED_CALLBACK, webhookId=_id())
     f.link("Worker: job de teste", "Aguardar worker")
