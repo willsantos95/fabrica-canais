@@ -48,10 +48,12 @@ services:
 
   render:
     build: ../worker
-    command: ["rq", "worker", "render", "--url", "redis://:${REDIS_PASSWORD}@redis:6379/0", "--with-scheduler"]
-    env_file: .env
+    # nome "srv-<container>" para distinguir dos workers do PC ("pc-<container>") nos logs e em /workers
+    command: ["sh", "-c", "exec rq worker render --url redis://:$$REDIS_PASSWORD@redis:6379/0 --with-scheduler --name srv-$$HOSTNAME"]
     environment:
       S3_ENDPOINT: http://minio:9000
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    env_file: .env
     volumes:
       - work:/data/work
       - models:/data/models
