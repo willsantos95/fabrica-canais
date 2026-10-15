@@ -136,12 +136,13 @@ def status_params(status: str, spec_expr: str) -> str:
 def build_produce() -> dict:
     f = Flow("factory.produce")
     f.add("Produzir agora", "n8n-nodes-base.manualTrigger", 1, {}, x=0, y=-100)
-    f.add("Agenda diária", "n8n-nodes-base.scheduleTrigger", 1.2,
-          {"rule": {"interval": [{"triggerAtHour": 2}]}}, x=0, y=100, disabled=True)
+    f.add("Chamado pelo agendador", "n8n-nodes-base.executeWorkflowTrigger", 1.2,
+          {"inputSource": "workflowInputs", "workflowInputs": {"values": [{"name": "channel_slug", "type": "string"}]}},
+          x=0, y=100)
 
     f.add("Config", "n8n-nodes-base.set", 3.4, {
         "assignments": {"assignments": [
-            {"id": _id(), "name": "channel_slug", "value": "career-levels", "type": "string"},
+            {"id": _id(), "name": "channel_slug", "value": "={{ $json.channel_slug || 'career-levels' }}", "type": "string"},
             {"id": _id(), "name": "worker_url", "value": "https://render.relampagodeofertas.shop", "type": "string"},
             {"id": _id(), "name": "openai_model", "value": "gpt-5.5", "type": "string"},
             {"id": _id(), "name": "reasoning_effort", "value": "medium", "type": "string"},
@@ -151,7 +152,7 @@ def build_produce() -> dict:
         "options": {},
     })
     f.link("Produzir agora", "Config")
-    f.link("Agenda diária", "Config")
+    f.link("Chamado pelo agendador", "Config")
 
     f.add("Pegar próximo tema", "n8n-nodes-base.postgres", 2.5, pg("""
 SELECT t.topic_id, t.video_id, t.title, c.config
@@ -161,25 +162,30 @@ JOIN channels c ON c.slug = $1::text;
     f.link("Config", "Pegar próximo tema")
 
     f.add("Pedido do roteiro", "n8n-nodes-base.code", 2, code(f"""
-const SYSTEM = {json.dumps(SCRIPT_PROMPT, ensure_ascii=False)};
+// Prompt do canal (config.prompts.script) ou o padrão do Career Levels.
+const DEFAULT_SYSTEM = {json.dumps(SCRIPT_PROMPT, ensure_ascii=False)};
+const DEFAULT_INPUT = "Topic: {{{{topic}}}}\\n\\nResearch it on the web and write the full video now.";
+const EXTRA = "\\n\\nIn the same JSON object also include: \\"subject\\" (the main subject in 1 to 4 words, in the narration language), \\"tags\\" (8 to 12 YouTube search tags in the narration language) and \\"hashtags\\" (3 hashtags without #, CamelCase, in the narration language).";
 const p = $('Config').first().json;
 const t = $input.first().json;
 const cfg = typeof t.config === 'string' ? JSON.parse(t.config) : t.config;
+const pr = cfg.prompts || {{}};
 const [mmin, mmax] = cfg.format.long_minutes;
 const wpm = cfg.format.words_per_minute;
+const [bmin, bmax] = cfg.format.blocks || [6, 12];
 const vars = {{
   'channel.name': cfg.name, 'channel.niche': cfg.niche, 'channel.language': cfg.language,
   'channel.tone': cfg.tone, 'channel.point_of_view': cfg.point_of_view || '',
   words_min: Math.round(mmin * wpm), words_max: Math.round(mmax * wpm), wpm,
-  blocks_min: 6, blocks_max: 12,
+  blocks_min: bmin, blocks_max: bmax, topic: t.title,
 }};
-const system = SYSTEM.replace(/{{{{\\s*([\\w.]+)\\s*}}}}/g, (_, k) => String(vars[k] ?? ''));
+const fill = x => String(x).replace(/{{{{\\s*([\\w.]+)\\s*}}}}/g, (_, k) => String(vars[k] ?? ''));
 const body = {{
-  model: p.openai_model,
-  instructions: system,
-  input: `Topic: ${{t.title}}\\n\\nResearch it on the web and write the full video now.`,
-  tools: [{{ type: 'web_search' }}],
-  reasoning: {{ effort: p.reasoning_effort || 'medium' }},
+  model: pr.model || p.openai_model,
+  instructions: fill(pr.script || DEFAULT_SYSTEM) + EXTRA,
+  input: fill(pr.script_input || DEFAULT_INPUT),
+  tools: pr.web_search === false ? [] : [{{ type: 'web_search' }}],
+  reasoning: {{ effort: pr.reasoning_effort || p.reasoning_effort || 'medium' }},
   max_output_tokens: 32000,
 }};
 return [{{ json: {{ video_id: t.video_id, topic_id: t.topic_id, title: t.title, config: cfg,
@@ -228,22 +234,27 @@ return [{ json: { ...ctx, body: undefined, script: {
   titles: titles.length ? titles : [ctx.title],
   chosen_title: clean(s.chosen_title) || titles[0] || ctx.title,
   hook_options: (s.hook_options || []).map(clean).filter(Boolean),
+  subject: clean(s.subject).slice(0, 60) || null,
+  tags: (s.tags || []).map(clean).filter(Boolean).slice(0, 15),
+  hashtags: (s.hashtags || []).map(x => clean(x).replace(/^#/, '')).filter(Boolean).slice(0, 5),
   sources, blocks }, checks, words } }];
 """), y=0)
     f.link("OpenAI: pesquisa e roteiro", "Validar roteiro")
 
     f.add("Pedido da shotlist", "n8n-nodes-base.code", 2, code(f"""
-const SYSTEM = {json.dumps(SHOTLIST_PROMPT, ensure_ascii=False)};
+const DEFAULT_SYSTEM = {json.dumps(SHOTLIST_PROMPT, ensure_ascii=False)};
 const p = $('Config').first().json;
 const c = $input.first().json;
+const pr = c.config.prompts || {{}};
+const SYSTEM = pr.shotlist || DEFAULT_SYSTEM;
 const vars = {{ 'channel.name': c.config.name, shots_total: c.config.format.shots_per_video }};
 const system = SYSTEM.replace(/{{{{\\s*([\\w.]+)\\s*}}}}/g, (_, k) => String(vars[k] ?? ''));
 const blocks = c.script.blocks.map(b => ({{ block_id: b.block_id, title: b.title, narration: b.narration }}));
 const body = {{
-  model: p.openai_model,
+  model: pr.shotlist_model || pr.model || p.openai_model,
   instructions: system,
   input: 'Narration blocks:\\n' + JSON.stringify({{ blocks }}, null, 1),
-  reasoning: {{ effort: p.reasoning_effort || 'medium' }},
+  reasoning: {{ effort: pr.reasoning_effort || p.reasoning_effort || 'medium' }},
   max_output_tokens: 32000,
 }};
 return [{{ json: {{ body }} }}];
@@ -309,6 +320,9 @@ const spec = {
   video_id: c.video_id,
   channel: c.config.slug,
   topic: c.title,
+  subject: c.script.subject || null,
+  tags: c.script.tags || [],
+  hashtags: c.script.hashtags || [],
   language: c.config.language,
   titles: c.script.titles,
   chosen_title: c.script.chosen_title,
