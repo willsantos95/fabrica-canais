@@ -87,6 +87,26 @@ def health() -> dict:
     return body
 
 
+@app.get("/workers", dependencies=[Depends(auth)])
+def list_workers() -> dict:
+    """Workers conectados à fila (servidor e PCs), com estado e job atual."""
+    from rq import Worker
+
+    out = []
+    for w in Worker.all(connection=_redis()):
+        job = w.get_current_job()
+        out.append({
+            "name": w.name,
+            "hostname": w.hostname,
+            "state": str(w.get_state()),
+            "current_job": job.id if job else None,
+            "last_heartbeat": w.last_heartbeat.isoformat() if w.last_heartbeat else None,
+            "jobs_ok": w.successful_job_count,
+            "jobs_failed": w.failed_job_count,
+        })
+    return {"count": len(out), "workers": sorted(out, key=lambda x: x["name"])}
+
+
 @app.post("/jobs/{job_type}", dependencies=[Depends(auth)], status_code=202)
 def create_job(job_type: JobType, body: JobIn) -> dict:
     q = _queue()
