@@ -446,7 +446,7 @@ def h_clips(job: dict, inp: dict, wd: Path) -> dict:
     spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
     cfg = inp.get("config") or {}
     final = storage.download(spec["outputs"]["final_url"], wd / "final.mp4")
-    end_card = inp.get("end_card") or ["Full video on YouTube", cfg.get("name", "")]
+    end_card = inp.get("end_card") or package.texts(cfg)["end_card"]
     fps = settings.fps
     shots = sorted((s for b in spec["blocks"] for s in b["shots"]), key=lambda s: s["order"])
     imgs: dict[str, Path] = {}

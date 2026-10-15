@@ -100,9 +100,55 @@ def _clean(text: str) -> str:
     return re.sub(r"[<>]", "", text or "").strip()
 
 
+DEFAULT_TEXTS = {
+    "en": {"chapters": "Chapters", "sources": "Sources", "disclaimer": "",
+           "full_video": "Full video", "full_video_on": "Full video on YouTube"},
+    "pt": {"chapters": "Capítulos", "sources": "Fontes", "disclaimer": "",
+           "full_video": "Vídeo completo", "full_video_on": "Vídeo completo no YouTube"},
+}
+
+
+def texts(cfg: dict) -> dict:
+    """Textos fixos do canal (descrição, Shorts, clipes): config.texts por cima do padrão do idioma."""
+    lang = (cfg.get("language") or "en").split("-")[0].lower()
+    out = dict(DEFAULT_TEXTS.get(lang, DEFAULT_TEXTS["en"]))
+    out.update({k: v for k, v in (cfg.get("texts") or {}).items() if v is not None})
+    out.setdefault("end_card", [out["full_video_on"], cfg.get("name", "")])
+    if "end_card" not in (cfg.get("texts") or {}):
+        out["end_card"] = [out["full_video_on"], cfg.get("name", "")]
+    return out
+
+
 def profession(spec: dict) -> str | None:
     m = re.search(r"level of an? (.+?)['’]s career", spec.get("topic") or "", re.I)
     return m.group(1).strip() if m else None
+
+
+def subject(spec: dict) -> str:
+    """Assunto curto do vídeo ("Software Engineer", "Japão", "Vila medieval"): vem do roteiro;
+    sem ele, tenta o padrão do Career Levels e por fim o próprio tema."""
+    return (spec.get("subject") or profession(spec) or spec.get("topic") or "").strip()
+
+
+def _hashtag(t: str) -> str:
+    words = re.findall(r"\w+", t or "")
+    return "#" + "".join(w[:1].upper() + w[1:] for w in words) if words else ""
+
+
+def hashtags(spec: dict, cfg: dict, extra: list[str] | None = None, n: int = 4) -> list[str]:
+    yt = cfg.get("youtube") or {}
+    base = list(spec.get("hashtags") or []) or [subject(spec)]
+    base += list(yt.get("hashtags") or yt.get("default_tags") or [])[:2] + list(extra or [])
+    out = []
+    for t in base:
+        h = t if str(t).startswith("#") else _hashtag(str(t))
+        if h and h.lower() not in [x.lower() for x in out]:
+            out.append(h)
+    return out[:n]
+
+
+def _strip_level(title: str) -> str:
+    return re.sub(r"^\s*(Level|Nível|Nivel|Parte|Part)\s*\d+\s*[-–:]\s*", "", title or "", flags=re.I).strip()
 
 
 def _first_sentences(text: str, n: int = 2) -> str:
@@ -114,6 +160,7 @@ def _first_sentences(text: str, n: int = 2) -> str:
 
 def build_metadata(spec: dict, cfg: dict) -> dict:
     yt = cfg.get("youtube") or {}
+    tx = texts(cfg)
     lang = (cfg.get("language") or "en").split("-")[0]
     title = _clean(spec.get("chosen_title") or spec.get("topic") or "")[:100]
 
@@ -125,28 +172,30 @@ def build_metadata(spec: dict, cfg: dict) -> dict:
         chapter_lines.append(f"{_ts(t)} {_clean(c['title'])}")
 
     sources = [f"- {_clean(s.get('title') or s['url'])}: {s['url']}" for s in spec.get("sources") or []]
+    subj = subject(spec)
     prof = profession(spec)
     tags = list(dict.fromkeys(
-        [t for t in yt.get("default_tags") or []] +
-        ([prof, f"{prof} career", f"{prof} salary", f"how to become a {prof}"] if prof else []) +
-        [cfg.get("name", "")]
+        list(yt.get("default_tags") or []) + list(spec.get("tags") or []) +
+        ([prof, f"{prof} career", f"{prof} salary", f"how to become a {prof}"] if prof and not spec.get("tags") else []) +
+        [subj, cfg.get("name", "")]
     ))
-    tags = [t for t in tags if t]
+    seen, uniq = set(), []
+    for t in (_clean(t) for t in tags if t and len(t) <= 100):
+        if t.lower() not in seen:
+            seen.add(t.lower())
+            uniq.append(t)
+    tags = uniq
     while sum(len(t) + 3 for t in tags) > 480:  # limite do YouTube: 500 caracteres somando as tags
         tags.pop()
-    hashtags = " ".join("#" + re.sub(r"[^a-zA-Z0-9]", "", t.title()) for t in ([prof] if prof else []) + ["Careers"])
 
     hook = _clean(_first_sentences(spec["blocks"][0]["narration"], 2))
-    description = "\n".join([
-        hook, "",
-        "Chapters", *chapter_lines, "",
-        "Sources", *sources, "",
-        "Numbers vary by country, company and year; check the sources above for the details.", "",
-        hashtags,
-    ])[:4900]
+    parts = [hook, "", tx["chapters"], *chapter_lines, "", tx["sources"], *sources, ""]
+    if tx.get("disclaimer"):
+        parts += [tx["disclaimer"], ""]
+    parts.append(" ".join(hashtags(spec, cfg)))
     return {
         "title": title,
-        "description": description,
+        "description": "\n".join(parts)[:4900],
         "tags": tags,
         "category_id": str(yt.get("category_id") or "27"),
         "language": lang,
@@ -156,12 +205,17 @@ def build_metadata(spec: dict, cfg: dict) -> dict:
 
 
 def short_metadata(short: dict, spec: dict, cfg: dict, idx: int) -> dict:
-    hook = _clean(re.sub(r"^Level \d+\s*[-–]\s*", "", short.get("hook") or ""))
-    prof = profession(spec)
-    base = f"{prof.title()}: {hook}" if prof and hook and prof.lower() not in hook.lower() else (hook or spec.get("chosen_title", ""))
+    tx = texts(cfg)
+    block = _clean(_strip_level(short.get("hook") or ""))
+    subj = subject(spec)
+    if subj and block and subj.lower() not in block.lower() and len(subj) <= 40:
+        base = f"{subj}: {block}"
+    else:
+        base = block or spec.get("chosen_title", "")
     title = _clean(f"{base} #Shorts")[:100]
     first = _clean(_first_sentences(short.get("text", ""), 1))
-    description = f"{first}\n\nFull video: {{{{LONG_URL}}}}\n\n#Shorts #Careers"
+    tags = " ".join(["#Shorts"] + hashtags(spec, cfg, n=3))
+    description = f"{first}\n\n{tx['full_video']}: {{{{LONG_URL}}}}\n\n{tags}"
     return {"title": title, "description": description[:4900]}
 
 
@@ -195,15 +249,16 @@ def select_clips(spec: dict, whole_max_s: float = 75.0, cut_max_s: float = 60.0)
 
 
 def clip_caption(clip: dict, spec: dict, cfg: dict) -> dict:
-    """Título fixo do clipe e a legenda para colar no TikTok."""
-    prof = profession(spec) or ""
-    m = re.match(r"^\s*(Level\s*\d+)\s*[-–:]\s*(.+)$", clip["title"], re.I)
-    level, role = (m.group(1), m.group(2)) if m else ("", clip["title"])
-    header = [f"{prof} · {level}".strip(" ·") if prof else level or clip["title"], role]
+    """Título fixo do clipe (2 linhas) e a legenda para colar no TikTok."""
+    tx = texts(cfg)
+    subj = subject(spec)
+    m = re.match(r"^\s*((?:Level|Nível|Nivel|Parte|Part)\s*\d+)\s*[-–:]\s*(.+)$", clip["title"], re.I)
+    level, rest = (m.group(1), m.group(2)) if m else ("", clip["title"])
+    line1 = " · ".join(x for x in [subj if len(subj) <= 40 else "", level] if x) or clip["title"]
+    header = [line1, rest] if rest and rest != line1 else [line1]
     hook = _clean(_first_sentences(clip.get("text", ""), 1))
-    tags = ["#" + re.sub(r"[^A-Za-z0-9]", "", prof.title())] if prof else []
-    tags += ["#careers", "#careertok", "#jobs"]
-    channel = cfg.get("name", "")
-    caption = (f"{level + ' of a ' + prof + chr(39) + 's career' if prof and level else clip['title']}: {hook}\n\n"
-               f"Full video on YouTube: {channel}\n{' '.join(tags)}").strip()
-    return {"header": [h for h in header if h], "caption": caption[:2100], "hook": hook}
+    tiktok = cfg.get("tiktok") or {}
+    tags = hashtags(spec, cfg, extra=list(tiktok.get("hashtags") or []), n=5)
+    prefix = f"{subj} · {clip['title']}" if subj and subj.lower() not in clip["title"].lower() else clip["title"]
+    caption = f"{prefix}: {hook}\n\n{tx['full_video_on']}: {cfg.get('name', '')}\n{' '.join(tags)}".strip()
+    return {"header": header, "caption": caption[:2100], "hook": hook}
