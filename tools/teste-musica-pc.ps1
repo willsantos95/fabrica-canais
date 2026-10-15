@@ -31,6 +31,13 @@ $Api = "http://127.0.0.1:8001"
 function Etapa($t) { Write-Host ""; Write-Host "== $t" -ForegroundColor Cyan }
 function Ok($t) { Write-Host "   $t" -ForegroundColor Green }
 function Aviso($t) { Write-Host "   $t" -ForegroundColor Yellow }
+# "uv run" abre um python filho; matar só o uv deixa a API viva segurando a porta. Mata a árvore toda.
+function Parar-Arvore($procId) { if ($procId) { & taskkill /PID $procId /T /F 2>$null | Out-Null } }
+function Liberar-Porta($porta) {
+  $donos = Get-NetTCPConnection -LocalPort $porta -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
+  foreach ($d in $donos) { Aviso "porta $porta ocupada pelo processo $d (API de um teste anterior), encerrando..."; Parar-Arvore $d }
+  if ($donos) { Start-Sleep -Seconds 3 }
+}
 
 New-Item -ItemType Directory -Force -Path $Pasta, $Saida | Out-Null
 
@@ -76,6 +83,7 @@ $cpu = (Get-CimInstance Win32_Processor | Select-Object -First 1).Name
 $ram = [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
 Ok "Processador: $cpu · RAM: $ram GB"
 
+Liberar-Porta 8001
 $server = Start-Process -FilePath "uv" -ArgumentList "run", "acestep-api" -WorkingDirectory $Repo `
   -RedirectStandardOutput $Log -RedirectStandardError "$Log.err" -PassThru -WindowStyle Hidden
 
@@ -95,7 +103,7 @@ Write-Host ""
 if (-not $pronto) {
   Aviso "A API não subiu. Últimas linhas do log:"
   if (Test-Path "$Log.err") { Get-Content "$Log.err" -Tail 30 }
-  if (-not $server.HasExited) { Stop-Process -Id $server.Id -Force }
+  if (-not $server.HasExited) { Parar-Arvore $server.Id }
   throw "API do ACE-Step não respondeu. Mande o arquivo $Log.err para análise."
 }
 Ok ("API pronta em {0:N0} s" -f ((Get-Date) - $inicio).TotalSeconds)
@@ -160,7 +168,8 @@ try {
   }
 } finally {
   # ---------------------------------------------------------------- 5. resumo
-  if (-not $server.HasExited) { Stop-Process -Id $server.Id -Force }
+  Parar-Arvore $server.Id
+  Liberar-Porta 8001
 }
 
 Etapa "5/5 Resultado"
