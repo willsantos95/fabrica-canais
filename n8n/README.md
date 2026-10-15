@@ -85,3 +85,11 @@ Nenhuma etapa da Fase 2 chama a OpenAI: título, descrição, capítulos e tags 
 ```sql
 UPDATE videos SET status = 'awaiting_approval' WHERE id = '<video_id>';
 ```
+
+## Clipes para TikTok/Reels (`factory.clips`)
+
+Disparado pelo `factory.approval` logo depois do `1` (ou manual: "Testar com o último vídeo"). Sem aprovação e sem custo de API.
+
+- Job `clips` no worker: um clipe por nível, em 9:16, remontado a partir das imagens do vídeo (cena num quadrado no meio, fundo desfocado), com o áudio já mixado do vídeo final, título fixo no topo, legenda palavra por palavra e cartão final "Full video on YouTube". Nível com até 75 s vai inteiro; mais longo é cortado no fim da última frase que cabe em 60 s.
+- No WhatsApp chegam, para cada clipe, duas mensagens: o link (válido por 7 dias) e a legenda pronta para colar. A publicação no TikTok é manual.
+- Os clipes ficam em `assets` com `kind = 'short'` e `meta.platform = 'tiktok'`.

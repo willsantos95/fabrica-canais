@@ -14,6 +14,7 @@ from pathlib import Path
 OUT = Path(__file__).parent / "sdk"
 WORKER_URL = "https://render.relampagodeofertas.shop"
 INSTANCE = "fabrica-videos"
+CLIPS_ID = "f98b6HG2uClowRB4"  # factory.clips no n8n
 YOUTUBE_SCOPE_NOTE = ""
 
 CRED = {
@@ -312,6 +313,14 @@ return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.a
                            "matchingColumns": [], "schema": [{"id": "video_id", "displayName": "video_id", "required": False,
                                                               "defaultMatch": False, "display": True, "canBeUsedToMatch": True, "type": "string"}]},
         "options": {"waitForSubWorkflow": False}}, [1680, -200], output=[{}])
+    wf.node("clips", "n8n-nodes-base.executeWorkflow", 1.3, "Clipes TikTok", {
+        "mode": "once", "source": "database",
+        "workflowId": {"__rl": True, "mode": "id", "value": CLIPS_ID},
+        "workflowInputs": {"mappingMode": "defineBelow",
+                           "value": {"video_id": "={{ $('Interpretar').first().json.video_id }}"},
+                           "matchingColumns": [], "schema": [{"id": "video_id", "displayName": "video_id", "required": False,
+                                                              "defaultMatch": False, "display": True, "canBeUsedToMatch": True, "type": "string"}]},
+        "options": {"waitForSubWorkflow": False}}, [1800, -200], output=[{}])
     wf.node("no", "n8n-nodes-base.postgres", 2.5, "Registrar rejeição", pg(
         "WITH a AS (\n  INSERT INTO approvals (video_id, decision, reason, decided_by) VALUES ($1::uuid, 'rejected', NULLIF($2, ''), $3)\n)\n"
         "UPDATE videos SET status = 'rejected', updated_at = now() WHERE id = $1::uuid;",
@@ -324,7 +333,7 @@ return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.a
         [1920, 0], CRED["evo"], **RETRY)
     return wf.render(
         "  .add(hook)\n  .to(config)\n  .to(read)\n  .to(find)\n  .to(decide)\n"
-        "  .to(route\n    .onCase(0, ok.to(pub.to(reply)))\n    .onCase(1, no.to(reply))\n    .onCase(2, edit.to(reply))\n    .onCase(3, reply))")
+        "  .to(route\n    .onCase(0, ok.to(pub.to(clips.to(reply))))\n    .onCase(1, no.to(reply))\n    .onCase(2, edit.to(reply))\n    .onCase(3, reply))")
 
 
 # ===========================================================================
@@ -521,10 +530,69 @@ return [{ json: { number: p.number, text: lines.join('\n') } }];
         "  .to(s_thumb)\n  .to(shorts)\n  .to(s_shorts)\n  .to(uploads)\n  .to(up_rest)\n  .to(w_rest)\n  .to(c_rest)\n  .to(save)\n  .to(msg)\n  .to(wa)")
 
 
+# ===========================================================================
+# factory.clips — clipes verticais para TikTok/Reels, enviados no WhatsApp (sem aprovação)
+# ===========================================================================
+def build_clips() -> str:
+    wf = WF("factory-clips", "factory.clips")
+    wf.node("t_sub", "n8n-nodes-base.executeWorkflowTrigger", 1.2, "Vídeo aprovado",
+            {"inputSource": "workflowInputs", "workflowInputs": {"values": [{"name": "video_id", "type": "string"}]}},
+            [0, -100], fn="trigger", output=[{"video_id": "uuid"}])
+    wf.node("t_manual", "n8n-nodes-base.manualTrigger", 1, "Testar com o último vídeo", {}, [0, 100], fn="trigger")
+    config_node(wf)
+    wf.node("load", "n8n-nodes-base.postgres", 2.5, "Carregar vídeo", pg(
+        "SELECT v.id AS video_id, c.config,\n"
+        "  (SELECT a.url FROM assets a WHERE a.video_id = v.id AND a.kind = 'spec' ORDER BY a.created_at DESC LIMIT 1) AS spec_url\n"
+        "FROM videos v JOIN channels c ON c.id = v.channel_id\n"
+        "WHERE v.id = COALESCE(NULLIF($1::text, '')::uuid,\n"
+        "  (SELECT id FROM videos WHERE status IN ('awaiting_approval', 'scheduled', 'published') ORDER BY created_at DESC LIMIT 1));",
+        "={{ [ $json.video_id || '' ] }}"), [480, 0], CRED["pg"], output=[{"video_id": "v", "config": {}, "spec_url": "s3://x"}], **RETRY)
+    wf.node("job", "n8n-nodes-base.httpRequest", 4.2, "Worker: clipes", worker_job("clips",
+        "{ video_id: $json.video_id, idempotency_key: $json.video_id + '-clips-' + $execution.id, "
+        "callback_url: $execution.resumeUrl, input: { spec_url: $json.spec_url, config: $json.config } }"),
+        [720, 0], CRED["worker"], output=[{"job_id": "j", "status": "queued"}], **RETRY)
+    wf.node("wait", "n8n-nodes-base.wait", 1.1, "Aguardar clipes", {
+        "resume": "webhook", "httpMethod": "POST", "limitWaitTime": True, "limitType": "afterTimeInterval",
+        "resumeAmount": 4, "resumeUnit": "hours", "options": {}}, [960, 0],
+        output=[{"body": {"status": "succeeded", "result": {"clips": []}}}])
+    wf.node("chk", "n8n-nodes-base.code", 2, "Checar clipes", check_code("Clipes"), [1200, 0],
+            output=[{"clips": [{"n": 1, "url": "s3://x", "caption": "c", "title": "t", "duration_s": 60}], "title": "t"}])
+    wf.node("links", "n8n-nodes-base.httpRequest", 4.2, "Links temporários", {
+        "method": "POST", "url": "={{ $('Config').first().json.worker_url }}/files/presign",
+        "authentication": "genericCredentialType", "genericAuthType": "httpHeaderAuth",
+        "sendBody": True, "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ urls: $json.clips.map(c => c.url), expires_s: 604800 }) }}",
+        "options": {"timeout": 120000}}, [1440, 0], CRED["worker"], output=[{"urls": []}], **RETRY)
+    wf.node("save", "n8n-nodes-base.postgres", 2.5, "Salvar clipes", pg(
+        "INSERT INTO assets (video_id, kind, url, meta)\n"
+        "SELECT $1::uuid, 'short', c->>'url', jsonb_build_object('platform', 'tiktok', 'n', c->'n', 'title', c->>'title', 'caption', c->>'caption')\n"
+        "FROM jsonb_array_elements($2::jsonb) c;",
+        "={{ [ $('Carregar vídeo').first().json.video_id, JSON.stringify($('Checar clipes').first().json.clips) ] }}"),
+        [1680, 0], CRED["pg"], output=[{"success": True}], **RETRY)
+    wf.node("msgs", "n8n-nodes-base.code", 2, "Mensagens", {"jsCode": r"""// Para cada clipe: uma mensagem com o link e outra só com a legenda (fácil de copiar no celular).
+const r = $('Checar clipes').first().json;
+const urls = $('Links temporários').first().json.urls;
+const number = $('Carregar vídeo').first().json.config.approval.to;
+const out = [{ json: { number, text: `🎵 *Clipes para TikTok/Reels* (${r.clips.length})\n*${r.title}*\n\nCada clipe vem em 2 mensagens: o link do vídeo e a legenda para colar. Links válidos por 7 dias.\nPostar 1 a 3 por dia; marque como conteúdo gerado por IA.` } }];
+r.clips.forEach((c, i) => {
+  out.push({ json: { number, text: `*${c.n}/${r.clips.length} · ${c.title}* (${Math.round(c.duration_s)}s)\n${urls[i]}` } });
+  out.push({ json: { number, text: c.caption } });
+});
+return out;
+"""}, [1920, 0], output=[{"number": "55", "text": "x"}])
+    wf.node("wa", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: enviar clipes",
+            {**send_text("={{ $json.number }}", "={{ $json.text }}"), "options_message": {"delay": 1500}},
+            [2160, 0], CRED["evo"], **RETRY)
+    return wf.render(
+        "  .add(t_sub)\n  .to(config)\n  .to(load)\n  .to(job)\n  .to(wait)\n  .to(chk)\n  .to(links)\n  .to(save)\n  .to(msgs)\n  .to(wa)\n"
+        "  .add(t_manual)\n  .to(config)")
+
+
 if __name__ == "__main__":
     import sys
     OUT.mkdir(exist_ok=True)
     (OUT / "factory.package.js").write_text(build_package(), "utf-8")
+    (OUT / "factory.clips.js").write_text(build_clips(), "utf-8")
     (OUT / "factory.publish.js").write_text(build_publish(), "utf-8")
     (OUT / "factory.approval.js").write_text(build_approval(sys.argv[1] if len(sys.argv) > 1 else "PUBLISH_ID"), "utf-8")
     print("ok", [p.name for p in OUT.iterdir()])

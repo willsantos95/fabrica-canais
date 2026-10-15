@@ -254,6 +254,51 @@ const pub = node({
   ]
 });
 
+const clips = node({
+  type: "n8n-nodes-base.executeWorkflow",
+  version: 1.3,
+  config: {
+    "name": "Clipes TikTok",
+    "parameters": {
+      "mode": "once",
+      "source": "database",
+      "workflowId": {
+        "__rl": true,
+        "mode": "id",
+        "value": "f98b6HG2uClowRB4"
+      },
+      "workflowInputs": {
+        "mappingMode": "defineBelow",
+        "value": {
+          "video_id": expr("{{ $('Interpretar').first().json.video_id }}")
+        },
+        "matchingColumns": [],
+        "schema": [
+          {
+            "id": "video_id",
+            "displayName": "video_id",
+            "required": false,
+            "defaultMatch": false,
+            "display": true,
+            "canBeUsedToMatch": true,
+            "type": "string"
+          }
+        ]
+      },
+      "options": {
+        "waitForSubWorkflow": false
+      }
+    },
+    "position": [
+      1800,
+      -200
+    ]
+  },
+  output: [
+    {}
+  ]
+});
+
 const no = node({
   type: "n8n-nodes-base.postgres",
   version: 2.5,
@@ -358,7 +403,7 @@ export default workflow("factory-approval", "factory.approval")
   .to(find)
   .to(decide)
   .to(route
-    .onCase(0, ok.to(pub.to(reply)))
+    .onCase(0, ok.to(pub.to(clips.to(reply))))
     .onCase(1, no.to(reply))
     .onCase(2, edit.to(reply))
     .onCase(3, reply));
