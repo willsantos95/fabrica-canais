@@ -13,6 +13,7 @@
 #
 # A primeira execução baixa as dependências e os modelos (vários GB): leva um tempo.
 # As faixas ficam em <Pasta>\saida. Nada é enviado para fora do PC.
+# Na geração: "." = ainda processando; "~" = a API demorou a responder (normal com CPU no limite).
 
 param(
   [string]$Pasta = "C:\fabrica-musica",
@@ -121,28 +122,39 @@ try {
       audio_format = "mp3"
     } | ConvertTo-Json
     $t0 = Get-Date
-    $sub = Invoke-RestMethod -Method Post -Uri "$Api/release_task" -ContentType "application/json" -Body $body
+    $sub = Invoke-RestMethod -Method Post -Uri "$Api/release_task" -ContentType "application/json" -Body $body -TimeoutSec 120 -DisableKeepAlive
     $taskId = $sub.data.task_id
     Write-Host ("   faixa {0}: tarefa {1}" -f ($i + 1), $taskId) -NoNewline
 
     $res = $null
     while (((Get-Date) - $t0).TotalMinutes -lt 60) {
-      Start-Sleep -Seconds 5
-      $q = Invoke-RestMethod -Method Post -Uri "$Api/query_result" -ContentType "application/json" `
-        -Body (@{ task_id_list = @($taskId) } | ConvertTo-Json)
+      Start-Sleep -Seconds 10
+      if ($server.HasExited) {
+        Aviso "a API do ACE-Step fechou no meio da geração. Últimas linhas do log:"
+        if (Test-Path "$Log.err") { Get-Content "$Log.err" -Tail 40 }
+        throw "API encerrada durante a faixa $($i + 1). Mande o arquivo $Log.err."
+      }
+      # durante o processamento pesado a API pode demorar ou derrubar a conexão: tenta de novo
+      try {
+        $q = Invoke-RestMethod -Method Post -Uri "$Api/query_result" -ContentType "application/json" `
+          -Body (@{ task_id_list = @($taskId) } | ConvertTo-Json) -TimeoutSec 120 -DisableKeepAlive
+      } catch {
+        Write-Host "~" -NoNewline
+        continue
+      }
       $item = $q.data | Select-Object -First 1
       if ($item.status -eq 1) { $res = $item; break }
       if ($item.status -eq 2) { throw "a geração falhou: $($item.result)" }
       Write-Host "." -NoNewline
     }
     Write-Host ""
-    if (-not $res) { throw "passou de 60 minutos sem terminar" }
+    if (-not $res) { throw "passou de 60 minutos sem terminar (veja $Log.err)" }
     $seg = ((Get-Date) - $t0).TotalSeconds
 
     $r = $res.result | ConvertFrom-Json
     if ($r -is [array]) { $r = $r[0] }
     $arquivo = Join-Path $Saida ("teste_{0:yyyyMMdd_HHmmss}_{1}.mp3" -f (Get-Date), ($i + 1))
-    Invoke-WebRequest -Uri ($Api + $r.file) -OutFile $arquivo
+    Invoke-WebRequest -Uri ($Api + $r.file) -OutFile $arquivo -TimeoutSec 300 -DisableKeepAlive -UseBasicParsing
     $resultados += [pscustomobject]@{ Faixa = $i + 1; Segundos_audio = $Segundos; Segundos_gerando = [math]::Round($seg); Arquivo = $arquivo }
     Ok ("pronta em {0:N0} s -> {1}" -f $seg, $arquivo)
   }
