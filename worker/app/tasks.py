@@ -32,10 +32,11 @@ def _workdir(job: dict) -> Path:
     return d
 
 
-def _callback(job: dict, body: dict) -> None:
+def _callback(job: dict, body: dict) -> bool:
+    """Avisa o n8n. Devolve True se o n8n aceitou."""
     url = job.get("callback_url")
     if not url:
-        return
+        return False
     headers = {"Authorization": f"Bearer {settings.callback_token}"} if settings.callback_token else {}
     host = url.split("/webhook")[0]
     for attempt in range(3):
@@ -43,7 +44,7 @@ def _callback(job: dict, body: dict) -> None:
             r = httpx.post(url, json=body, headers=headers, timeout=30)
             r.raise_for_status()
             log.info("callback ok: %s job=%s status=%s", host, job.get("type"), body.get("status"))
-            return
+            return True
         except httpx.HTTPStatusError as exc:
             hint = {401: "CALLBACK_TOKEN diferente da credencial do Wait", 403: "CALLBACK_TOKEN diferente da credencial do Wait",
                     404: "execução não está mais esperando (cancelada, expirada ou já retomada)"}.get(exc.response.status_code, "")
@@ -51,7 +52,8 @@ def _callback(job: dict, body: dict) -> None:
         except Exception as exc:
             log.error("callback falhou (tentativa %d): %s em %s", attempt + 1, exc, host)
         time.sleep(2 * (attempt + 1))
-    log.error("callback DESISTIU depois de 3 tentativas: %s", host)
+    log.error("callback DESISTIU depois de 3 tentativas: %s (corrija e use POST /jobs/<id>/resend-callback)", host)
+    return False
 
 
 def execute(job: dict) -> dict:

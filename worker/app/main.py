@@ -124,6 +124,28 @@ def create_job(job_type: JobType, body: JobIn) -> dict:
     return {"job_id": job.id, "status": "queued", "deduplicated": False}
 
 
+@app.post("/jobs/{job_id}/resend-callback", dependencies=[Depends(auth)])
+def resend_callback(job_id: str) -> dict:
+    """Reenvia ao n8n o resultado de um job já concluído (ex.: o callback falhou por
+    token errado e a execução continua no Wait). Não reprocessa nada."""
+    from . import tasks
+
+    try:
+        job = Job.fetch(job_id, connection=_redis())
+    except NoSuchJobError:
+        raise HTTPException(404, "job não encontrado")
+    if not job.is_finished:
+        raise HTTPException(409, f"job ainda não terminou (status: {job.get_status()})")
+    payload = job.args[0] if job.args else {}
+    body = job.return_value()
+    if not payload.get("callback_url") or not body:
+        raise HTTPException(409, "job sem callback_url ou sem resultado guardado")
+    ok = tasks._callback(payload, body)
+    if not ok:
+        raise HTTPException(502, "o n8n recusou de novo; veja o log do serviço api para o motivo")
+    return {"resent": True, "job_id": job_id}
+
+
 @app.get("/jobs/{job_id}", dependencies=[Depends(auth)])
 def get_job(job_id: str) -> dict:
     try:
