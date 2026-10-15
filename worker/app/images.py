@@ -14,7 +14,6 @@ from __future__ import annotations
 import base64
 import io
 import os
-import random
 import time
 from pathlib import Path
 
@@ -47,7 +46,8 @@ def _cloudflare(prompt: str, aspect: str) -> tuple[bytes, str]:
     model = os.environ.get("CF_IMAGE_MODEL", "@cf/black-forest-labs/flux-1-schnell")
     steps = int(os.environ.get("CF_STEPS", "4"))
     text = prompt if aspect == "1:1" else f"{prompt}\n{CF_FRAMING}"
-    body = {"prompt": text[:2048], "steps": max(1, min(steps, 8)), "seed": random.randint(1, 2**31 - 1)}
+    # o flux-1-schnell do Workers AI só aceita prompt e steps (seed dá HTTP 400)
+    body = {"prompt": text[:2048], "steps": max(1, min(steps, 8))}
     last = "sem resposta"
     for attempt in range(3):
         try:
