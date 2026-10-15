@@ -2,7 +2,7 @@
 
 | Arquivo | O que faz |
 | --- | --- |
-| `factory.produce.json` | Pega o próximo tema da fila, escreve roteiro e shotlist com o Claude, manda o worker narrar, gerar imagens e montar, e avisa no WhatsApp com os links |
+| `factory.produce.json` | Pega o próximo tema da fila, escreve roteiro e shotlist com a OpenAI (com busca na web), manda o worker narrar, gerar imagens e montar, e avisa no WhatsApp com os links |
 | `factory.error.json` | Quando o `factory.produce` falha: marca o vídeo como `failed`, devolve o tema ao fim da fila e manda alerta no WhatsApp |
 | `teste-worker.json` | Teste simples do worker (Fase 0) |
 
@@ -21,7 +21,7 @@ Os JSON são gerados por `build_workflows.py`, que embute os prompts de `prompts
 | `Fabrica DB` | Postgres | Host interno do Postgres (aba Credentials do EasyPanel), banco, usuário, senha, SSL desligado |
 | `Fabrica Worker` | Header Auth | Name `Authorization`, Value `Bearer <WORKER_API_TOKEN>` |
 | `Fabrica Callback` | Header Auth | Name `Authorization`, Value `Bearer <CALLBACK_TOKEN>` |
-| `Anthropic API` | Header Auth | Name `x-api-key`, Value `<sua chave da API da Anthropic>` |
+| `OpenAI API` | Header Auth | Name `Authorization`, Value `Bearer <sua chave da API da OpenAI>` |
 | `Evolution API` | Header Auth | Name `apikey`, Value `<chave da sua Evolution API>` |
 
 Ao importar, abra cada nó que mostrar alerta de credencial e selecione a credencial correspondente.
@@ -31,7 +31,8 @@ Ao importar, abra cada nó que mostrar alerta de credencial e selecione a creden
 **`factory.produce` → nó `Config`:**
 - `evolution_url`: endereço da sua Evolution API (sem barra no final)
 - `evolution_instance`: nome da instância do WhatsApp
-- `anthropic_model`: modelo do Claude para roteiro e shotlist (padrão `claude-sonnet-5-5`)
+- `openai_model`: modelo da OpenAI para roteiro e shotlist (padrão `gpt-5.5`)
+- `reasoning_effort`: `low`, `medium` (padrão) ou `high`. Mais alto = roteiro mais cuidadoso, mais lento e mais caro
 
 **`factory.error` → nó `Config`:** os mesmos dados da Evolution e `alert_number` (seu WhatsApp com DDI e DDD).
 

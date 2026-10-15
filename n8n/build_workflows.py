@@ -18,7 +18,7 @@ SHOTLIST_PROMPT = (ROOT / "prompts" / "shotlist.system.md").read_text("utf-8")
 CRED_DB = {"postgres": {"id": "", "name": "Fabrica DB"}}
 CRED_WORKER = {"httpHeaderAuth": {"id": "", "name": "Fabrica Worker"}}
 CRED_CALLBACK = {"httpHeaderAuth": {"id": "", "name": "Fabrica Callback"}}
-CRED_ANTHROPIC = {"httpHeaderAuth": {"id": "", "name": "Anthropic API"}}
+CRED_OPENAI = {"httpHeaderAuth": {"id": "", "name": "OpenAI API"}}
 CRED_EVOLUTION = {"httpHeaderAuth": {"id": "", "name": "Evolution API"}}
 
 RETRY = {"retryOnFail": True, "maxTries": 3, "waitBetweenTries": 5000}
@@ -143,7 +143,8 @@ def build_produce() -> dict:
         "assignments": {"assignments": [
             {"id": _id(), "name": "channel_slug", "value": "career-levels", "type": "string"},
             {"id": _id(), "name": "worker_url", "value": "https://render.relampagodeofertas.shop", "type": "string"},
-            {"id": _id(), "name": "anthropic_model", "value": "claude-sonnet-5-5", "type": "string"},
+            {"id": _id(), "name": "openai_model", "value": "gpt-5.5", "type": "string"},
+            {"id": _id(), "name": "reasoning_effort", "value": "medium", "type": "string"},
             {"id": _id(), "name": "evolution_url", "value": "https://SEU-EVOLUTION", "type": "string"},
             {"id": _id(), "name": "evolution_instance", "value": "SUA-INSTANCIA", "type": "string"},
         ]},
@@ -174,29 +175,31 @@ const vars = {{
 }};
 const system = SYSTEM.replace(/{{{{\\s*([\\w.]+)\\s*}}}}/g, (_, k) => String(vars[k] ?? ''));
 const body = {{
-  model: p.anthropic_model,
-  max_tokens: 16000,
-  system,
-  messages: [{{ role: 'user', content: `Topic: ${{t.title}}\\n\\nResearch it and write the full video now.` }}],
-  tools: [{{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }}],
+  model: p.openai_model,
+  instructions: system,
+  input: `Topic: ${{t.title}}\\n\\nResearch it on the web and write the full video now.`,
+  tools: [{{ type: 'web_search' }}],
+  reasoning: {{ effort: p.reasoning_effort || 'medium' }},
+  max_output_tokens: 32000,
 }};
 return [{{ json: {{ video_id: t.video_id, topic_id: t.topic_id, title: t.title, config: cfg,
   words_min: vars.words_min, words_max: vars.words_max, body }} }}];
 """), y=0)
     f.link("Pegar próximo tema", "Pedido do roteiro")
 
-    anthropic_headers = [{"name": "anthropic-version", "value": "2023-06-01"}]
-    f.add("Claude: pesquisa e roteiro", "n8n-nodes-base.httpRequest", 4.2,
-          http_json("https://api.anthropic.com/v1/messages", "={{ JSON.stringify($json.body) }}",
-                    600000, anthropic_headers), creds=CRED_ANTHROPIC, **RETRY)
-    f.link("Pedido do roteiro", "Claude: pesquisa e roteiro")
+    f.add("OpenAI: pesquisa e roteiro", "n8n-nodes-base.httpRequest", 4.2,
+          http_json("https://api.openai.com/v1/responses", "={{ JSON.stringify($json.body) }}",
+                    900000), creds=CRED_OPENAI, **RETRY)
+    f.link("Pedido do roteiro", "OpenAI: pesquisa e roteiro")
 
     f.add("Validar roteiro", "n8n-nodes-base.code", 2, code("""
 const resp = $input.first().json;
 const ctx = $('Pedido do roteiro').first().json;
-const text = (resp.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+if (resp.status === 'incomplete') throw new Error('Resposta da OpenAI incompleta: ' + JSON.stringify(resp.incomplete_details || {}));
+const text = resp.output_text || (resp.output || []).filter(o => o.type === 'message')
+  .flatMap(o => o.content || []).filter(c => c.type === 'output_text').map(c => c.text).join('');
 const m = text.match(/<json>([\\s\\S]*)<\\/json>/);
-if (!m) throw new Error(`Roteiro sem bloco <json> (stop_reason=${resp.stop_reason})`);
+if (!m) throw new Error(`Roteiro sem bloco <json> (status=${resp.status})`);
 let s;
 try { s = JSON.parse(m[1]); } catch (e) { throw new Error('JSON do roteiro inválido: ' + e.message); }
 if (!Array.isArray(s.blocks) || s.blocks.length < 3) throw new Error('Roteiro com menos de 3 blocos');
@@ -227,7 +230,7 @@ return [{ json: { ...ctx, body: undefined, script: {
   hook_options: (s.hook_options || []).map(clean).filter(Boolean),
   sources, blocks }, checks, words } }];
 """), y=0)
-    f.link("Claude: pesquisa e roteiro", "Validar roteiro")
+    f.link("OpenAI: pesquisa e roteiro", "Validar roteiro")
 
     f.add("Pedido da shotlist", "n8n-nodes-base.code", 2, code(f"""
 const SYSTEM = {json.dumps(SHOTLIST_PROMPT, ensure_ascii=False)};
@@ -237,26 +240,29 @@ const vars = {{ 'channel.name': c.config.name, shots_total: c.config.format.shot
 const system = SYSTEM.replace(/{{{{\\s*([\\w.]+)\\s*}}}}/g, (_, k) => String(vars[k] ?? ''));
 const blocks = c.script.blocks.map(b => ({{ block_id: b.block_id, title: b.title, narration: b.narration }}));
 const body = {{
-  model: p.anthropic_model,
-  max_tokens: 16000,
-  system,
-  messages: [{{ role: 'user', content: 'Narration blocks:\\n' + JSON.stringify({{ blocks }}, null, 1) }}],
+  model: p.openai_model,
+  instructions: system,
+  input: 'Narration blocks:\\n' + JSON.stringify({{ blocks }}, null, 1),
+  reasoning: {{ effort: p.reasoning_effort || 'medium' }},
+  max_output_tokens: 32000,
 }};
 return [{{ json: {{ body }} }}];
 """), y=0)
     f.link("Validar roteiro", "Pedido da shotlist")
 
-    f.add("Claude: shotlist", "n8n-nodes-base.httpRequest", 4.2,
-          http_json("https://api.anthropic.com/v1/messages", "={{ JSON.stringify($json.body) }}",
-                    600000, anthropic_headers), creds=CRED_ANTHROPIC, **RETRY)
-    f.link("Pedido da shotlist", "Claude: shotlist")
+    f.add("OpenAI: shotlist", "n8n-nodes-base.httpRequest", 4.2,
+          http_json("https://api.openai.com/v1/responses", "={{ JSON.stringify($json.body) }}",
+                    900000), creds=CRED_OPENAI, **RETRY)
+    f.link("Pedido da shotlist", "OpenAI: shotlist")
 
     f.add("Montar video_spec", "n8n-nodes-base.code", 2, code("""
 const resp = $input.first().json;
 const c = $('Validar roteiro').first().json;
-const text = (resp.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+if (resp.status === 'incomplete') throw new Error('Resposta da OpenAI incompleta: ' + JSON.stringify(resp.incomplete_details || {}));
+const text = resp.output_text || (resp.output || []).filter(o => o.type === 'message')
+  .flatMap(o => o.content || []).filter(c => c.type === 'output_text').map(c => c.text).join('');
 const m = text.match(/<json>([\\s\\S]*)<\\/json>/);
-if (!m) throw new Error(`Shotlist sem bloco <json> (stop_reason=${resp.stop_reason})`);
+if (!m) throw new Error(`Shotlist sem bloco <json> (status=${resp.status})`);
 const sl = JSON.parse(m[1]);
 const norm = t => String(t || '').toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, ' ').trim();
 const MOVES = ['push_in', 'pull_out', 'pan_left', 'pan_right', 'pan_up', 'pan_down'];
@@ -323,7 +329,7 @@ const spec = {
 };
 return [{ json: { video_id: c.video_id, spec, key: `videos/${c.video_id}/video_spec.json` } }];
 """), y=0)
-    f.link("Claude: shotlist", "Montar video_spec")
+    f.link("OpenAI: shotlist", "Montar video_spec")
 
     W = "={{ $('Config').first().json.worker_url }}"
     f.add("Salvar spec", "n8n-nodes-base.httpRequest", 4.2,

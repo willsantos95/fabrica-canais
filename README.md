@@ -114,4 +114,4 @@ STORAGE=local LOCAL_STORAGE_ROOT=/tmp/fab WORK_DIR=/tmp/fab-work \
 
 ## Próximo passo: Fase 1
 
-Workflows n8n `factory.orchestrator`, `factory.script` (Claude), `factory.voice`, `factory.visuals` (Nano Banana) e `factory.assemble`, produzindo o primeiro vídeo real do Career Levels com Ken Burns em todos os planos e upload pelo Studio.
+Workflows n8n `factory.orchestrator`, `factory.script` (OpenAI), `factory.voice`, `factory.visuals` (Nano Banana) e `factory.assemble`, produzindo o primeiro vídeo real do Career Levels com Ken Burns em todos os planos e upload pelo Studio.
