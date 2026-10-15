@@ -155,8 +155,8 @@ def build_produce() -> dict:
 
     f.add("Pegar próximo tema", "n8n-nodes-base.postgres", 2.5, pg("""
 SELECT t.topic_id, t.video_id, t.title, c.config
-FROM claim_next_topic($1, $2) t
-JOIN channels c ON c.slug = $1;
+FROM claim_next_topic($1::text, $2::text) t
+JOIN channels c ON c.slug = $1::text;
 """, "={{ [ $json.channel_slug, $execution.id ] }}"), creds=CRED_DB, **RETRY)
     f.link("Config", "Pegar próximo tema")
 
