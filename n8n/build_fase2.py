@@ -428,9 +428,9 @@ return [{ json: {
     wf.node("c_long", "n8n-nodes-base.code", 2, "Checar envio do vídeo", {"jsCode": """const b = $input.first().json.body;
 if (!b) throw new Error('Envio do vídeo: tempo esgotado esperando o worker');
 if (b.status !== 'succeeded') throw new Error('Envio do vídeo ao YouTube falhou: ' + (b.error || 'sem detalhe'));
-const id = b.result.uploads[0].id;
-if (!id) throw new Error('O YouTube não devolveu o id do vídeo');
-return [{ json: { youtube_id: id } }];
+const up = b.result.uploads[0] || {};
+if (!up.id) throw new Error('O YouTube não aceitou o vídeo: ' + (up.error || 'sem id na resposta'));
+return [{ json: { youtube_id: up.id } }];
 """}, [1680, 0], output=[{"youtube_id": "abc"}])
     wf.node("s_thumb", "n8n-nodes-base.httpRequest", 4.2, "YouTube: sessão da thumbnail", yt_session(
         "=https://www.googleapis.com/upload/youtube/v3/thumbnails/set?uploadType=resumable&videoId={{ $json.youtube_id }}", "image/jpeg"),
@@ -477,8 +477,11 @@ const longId = $('Checar envio do vídeo').first().json.youtube_id;
 const shorts = $('Shorts a enviar').all().map(i => i.json);
 const byRef = Object.fromEntries(b.result.uploads.map(u => [u.ref, u]));
 const pubs = [{ kind: 'long', id: longId, publish_at: p.publish_at }];
-for (const s of shorts) pubs.push({ kind: 'short', id: byRef[`short${s.n}`]?.id || null, publish_at: s.publish_at, n: s.n });
-return [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb } }];
+for (const s of shorts) {
+  const u = byRef[`short${s.n}`] || {};
+  pubs.push({ kind: 'short', id: u.ok ? u.id : null, publish_at: s.publish_at, n: s.n, error: u.ok ? null : (u.error || 'não enviado') });
+}
+return [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb?.ok, thumb_upload_error: byRef.thumb && !byRef.thumb.ok ? byRef.thumb.error : null } }];
 """}, [3360, 0], output=[{"long_id": "abc", "pubs": [], "thumb_ok": True}])
     wf.node("save", "n8n-nodes-base.postgres", 2.5, "Registrar publicação", pg(
         "WITH v AS (\n"
@@ -493,7 +496,7 @@ return [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb } }];
         [3600, 0], CRED["pg"], output=[{"success": True}], **RETRY)
     wf.node("msg", "n8n-nodes-base.code", 2, "Mensagem", {"jsCode": r"""const p = $('Plano de publicação').first().json;
 const r = $('Checar envio dos Shorts').first().json;
-const thumbErr = $('Montar envios').first().json.thumb_error;
+const thumbErr = r.thumb_upload_error || $('Montar envios').first().json.thumb_error;
 const local = iso => DateTime.fromISO(iso).setZone(p.tz).toFormat('dd/MM HH:mm');
 const lines = [
   '📅 *Agendado no YouTube*',
@@ -503,9 +506,9 @@ const lines = [
   '📱 Shorts:',
   ...r.pubs.filter(x => x.kind === 'short').map(x => x.id
     ? `${x.n}. ${local(x.publish_at)} — https://youtube.com/shorts/${x.id}`
-    : `${x.n}. ⚠️ não enviado`),
+    : `${x.n}. ⚠️ não enviado: ${String(x.error || '').slice(0, 200)}`),
   '',
-  r.thumb_ok ? '🖼️ Thumbnail aplicada.' : `⚠️ Thumbnail não aplicada${thumbErr ? `: ${thumbErr}` : ''}. Envie pelo YouTube Studio.`,
+  r.thumb_ok ? '🖼️ Thumbnail aplicada.' : `⚠️ Thumbnail não aplicada${thumbErr ? `: ${String(thumbErr).slice(0, 300)}` : ''}. Envie pelo YouTube Studio.`,
   '',
   'Tudo fica privado até o horário agendado. Confira no YouTube Studio > Conteúdo.',
 ];

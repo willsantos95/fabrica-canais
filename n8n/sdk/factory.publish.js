@@ -279,7 +279,7 @@ const c_long = node({
   config: {
     "name": "Checar envio do vídeo",
     "parameters": {
-      "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('Envio do vídeo: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Envio do vídeo ao YouTube falhou: ' + (b.error || 'sem detalhe'));\nconst id = b.result.uploads[0].id;\nif (!id) throw new Error('O YouTube não devolveu o id do vídeo');\nreturn [{ json: { youtube_id: id } }];\n"
+      "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('Envio do vídeo: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Envio do vídeo ao YouTube falhou: ' + (b.error || 'sem detalhe'));\nconst up = b.result.uploads[0] || {};\nif (!up.id) throw new Error('O YouTube não aceitou o vídeo: ' + (up.error || 'sem id na resposta'));\nreturn [{ json: { youtube_id: up.id } }];\n"
     },
     "position": [
       1680,
@@ -528,7 +528,7 @@ const c_rest = node({
   config: {
     "name": "Checar envio dos Shorts",
     "parameters": {
-      "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('Envio dos Shorts: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Envio dos Shorts ao YouTube falhou: ' + (b.error || 'sem detalhe'));\nconst p = $('Plano de publicação').first().json;\nconst longId = $('Checar envio do vídeo').first().json.youtube_id;\nconst shorts = $('Shorts a enviar').all().map(i => i.json);\nconst byRef = Object.fromEntries(b.result.uploads.map(u => [u.ref, u]));\nconst pubs = [{ kind: 'long', id: longId, publish_at: p.publish_at }];\nfor (const s of shorts) pubs.push({ kind: 'short', id: byRef[`short${s.n}`]?.id || null, publish_at: s.publish_at, n: s.n });\nreturn [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb } }];\n"
+      "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('Envio dos Shorts: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Envio dos Shorts ao YouTube falhou: ' + (b.error || 'sem detalhe'));\nconst p = $('Plano de publicação').first().json;\nconst longId = $('Checar envio do vídeo').first().json.youtube_id;\nconst shorts = $('Shorts a enviar').all().map(i => i.json);\nconst byRef = Object.fromEntries(b.result.uploads.map(u => [u.ref, u]));\nconst pubs = [{ kind: 'long', id: longId, publish_at: p.publish_at }];\nfor (const s of shorts) {\n  const u = byRef[`short${s.n}`] || {};\n  pubs.push({ kind: 'short', id: u.ok ? u.id : null, publish_at: s.publish_at, n: s.n, error: u.ok ? null : (u.error || 'não enviado') });\n}\nreturn [{ json: { long_id: longId, pubs, thumb_ok: !!byRef.thumb?.ok, thumb_upload_error: byRef.thumb && !byRef.thumb.ok ? byRef.thumb.error : null } }];\n"
     },
     "position": [
       3360,
@@ -583,7 +583,7 @@ const msg = node({
   config: {
     "name": "Mensagem",
     "parameters": {
-      "jsCode": "const p = $('Plano de publicação').first().json;\nconst r = $('Checar envio dos Shorts').first().json;\nconst thumbErr = $('Montar envios').first().json.thumb_error;\nconst local = iso => DateTime.fromISO(iso).setZone(p.tz).toFormat('dd/MM HH:mm');\nconst lines = [\n  '📅 *Agendado no YouTube*',\n  `*${p.title}*`,\n  `Vídeo: ${p.publish_local} — https://youtu.be/${r.long_id}`,\n  '',\n  '📱 Shorts:',\n  ...r.pubs.filter(x => x.kind === 'short').map(x => x.id\n    ? `${x.n}. ${local(x.publish_at)} — https://youtube.com/shorts/${x.id}`\n    : `${x.n}. ⚠️ não enviado`),\n  '',\n  r.thumb_ok ? '🖼️ Thumbnail aplicada.' : `⚠️ Thumbnail não aplicada${thumbErr ? `: ${thumbErr}` : ''}. Envie pelo YouTube Studio.`,\n  '',\n  'Tudo fica privado até o horário agendado. Confira no YouTube Studio > Conteúdo.',\n];\nreturn [{ json: { number: p.number, text: lines.join('\\n') } }];\n"
+      "jsCode": "const p = $('Plano de publicação').first().json;\nconst r = $('Checar envio dos Shorts').first().json;\nconst thumbErr = r.thumb_upload_error || $('Montar envios').first().json.thumb_error;\nconst local = iso => DateTime.fromISO(iso).setZone(p.tz).toFormat('dd/MM HH:mm');\nconst lines = [\n  '📅 *Agendado no YouTube*',\n  `*${p.title}*`,\n  `Vídeo: ${p.publish_local} — https://youtu.be/${r.long_id}`,\n  '',\n  '📱 Shorts:',\n  ...r.pubs.filter(x => x.kind === 'short').map(x => x.id\n    ? `${x.n}. ${local(x.publish_at)} — https://youtube.com/shorts/${x.id}`\n    : `${x.n}. ⚠️ não enviado: ${String(x.error || '').slice(0, 200)}`),\n  '',\n  r.thumb_ok ? '🖼️ Thumbnail aplicada.' : `⚠️ Thumbnail não aplicada${thumbErr ? `: ${String(thumbErr).slice(0, 300)}` : ''}. Envie pelo YouTube Studio.`,\n  '',\n  'Tudo fica privado até o horário agendado. Confira no YouTube Studio > Conteúdo.',\n];\nreturn [{ json: { number: p.number, text: lines.join('\\n') } }];\n"
     },
     "position": [
       3840,

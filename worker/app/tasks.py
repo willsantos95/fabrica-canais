@@ -443,13 +443,23 @@ def h_youtube_upload(job: dict, inp: dict, wd: Path) -> dict:
     uploads: [{upload_url, media_url, content_type?, ref?}]"""
     from . import youtube
 
+    # cada envio é independente: uma thumbnail recusada (canal sem verificação, por ex.)
+    # não pode impedir os Shorts de subirem
     results = []
     for i, u in enumerate(inp["uploads"], 1):
-        src = storage.download(u["media_url"], wd / f"up{i}{Path(u['media_url'].split('?')[0]).suffix}")
-        log.info("enviando ao YouTube: %s (%.1f MB)", u.get("ref") or src.name, src.stat().st_size / 1e6)
-        resp = youtube.upload(u["upload_url"], src, u.get("content_type") or youtube.guess_type(src.name))
-        results.append({"ref": u.get("ref"), "id": resp.get("id"), "response": resp})
-        src.unlink(missing_ok=True)
+        ref = u.get("ref") or f"upload{i}"
+        try:
+            src = storage.download(u["media_url"], wd / f"up{i}{Path(u['media_url'].split('?')[0]).suffix}")
+            log.info("enviando ao YouTube: %s (%.1f MB)", ref, src.stat().st_size / 1e6)
+            resp = youtube.upload(u["upload_url"], src, u.get("content_type") or youtube.guess_type(src.name))
+            src.unlink(missing_ok=True)
+            results.append({"ref": ref, "ok": True, "id": resp.get("id"), "response": resp})
+            log.info("YouTube: %s enviado (id=%s)", ref, resp.get("id"))
+        except Exception as exc:
+            log.error("YouTube: %s falhou: %s", ref, exc)
+            results.append({"ref": ref, "ok": False, "id": None, "error": str(exc)[:500]})
+    if results and not any(r["ok"] for r in results):
+        raise RuntimeError("nenhum envio ao YouTube deu certo: " + " | ".join(f"{r['ref']}: {r['error']}" for r in results))
     return {"uploads": results}
 
 
