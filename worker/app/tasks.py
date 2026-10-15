@@ -346,6 +346,113 @@ def h_thumbnail(job: dict, inp: dict, wd: Path) -> dict:
     return {"thumbnails": results}
 
 
+THUMB_VARIATIONS = [
+    "",
+    " Close-up of the main character's face with a strong, surprised expression.",
+    " Dramatic low-angle wide view, strong rim light, bold colors.",
+]
+
+
+def _thumb_backgrounds(spec: dict, style: str, wd: Path, n: int) -> list[tuple[Path, str]]:
+    """Fundos das thumbnails: gera pelo provedor de imagens; se falhar, usa os planos do gancho."""
+    prompt = (spec.get("thumbnail") or {}).get("image_prompt") or spec.get("topic") or ""
+    out: list[tuple[Path, str]] = []
+    for i in range(n):
+        path = wd / "thumb_bg" / f"bg{i + 1}.jpg"
+        try:
+            raw, used = images.generate(
+                f"{style}\n\nScene: {prompt}{THUMB_VARIATIONS[i % len(THUMB_VARIATIONS)]}\n"
+                "No text, letters or watermarks in the image.")
+            images.to_jpeg(raw, path)
+            out.append((path, used))
+        except Exception as exc:
+            log.warning("fundo da thumbnail %d não gerado (%s); usando um plano do vídeo", i + 1, exc)
+    if len(out) < n:
+        shots = sorted((s for b in spec["blocks"] for s in b["shots"] if (s.get("image") or {}).get("url")),
+                       key=lambda s: (not s.get("is_hook"), s["order"]))
+        for s in shots[: n - len(out)]:
+            out.append((storage.download(s["image"]["url"], wd / "thumb_bg" / f"{s['shot_id']}.jpg"), "shot"))
+    return out
+
+
+def h_package(job: dict, inp: dict, wd: Path) -> dict:
+    """Shorts, thumbnails e metadados do YouTube a partir do vídeo montado (sem IA de texto)."""
+    from . import package
+
+    spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
+    cfg = inp.get("config") or {}
+    n_shorts = int(inp.get("shorts", (cfg.get("format") or {}).get("shorts_per_video", 3)))
+    n_thumbs = int(inp.get("thumbnails", 3))
+    final = storage.download(spec["outputs"]["final_url"], wd / "final.mp4")
+
+    # 1) Shorts
+    words = []
+    for b in spec["blocks"]:
+        off = (b.get("audio") or {}).get("offset_s") or 0
+        words += [{"w": w["w"], "s": w["s"] + off, "e": w["e"] + off} for w in (b.get("audio") or {}).get("words") or []]
+    shorts = []
+    for i, c in enumerate(package.select_shorts(spec, n_shorts), 1):
+        out = media.vertical_short(final, c["start_s"], c["end_s"], words, wd / f"short{i}.mp4")
+        dur = media.duration(out)
+        meta = package.short_metadata(c, spec, cfg, i)
+        shorts.append({
+            "n": i, "url": storage.upload(out, _key(job, f"shorts/short{i}.mp4"), "video/mp4"),
+            "start_s": c["start_s"], "end_s": c["end_s"], "hook": c["hook"], "text": c["text"],
+            "duration_s": round(dur, 2), "passed": 15 <= dur <= 60, **meta,
+        })
+
+    # 2) Thumbnails
+    visual = cfg.get("visual") or {}
+    brand = visual.get("brand") or {}
+    lines = (spec.get("thumbnail") or {}).get("phrases") or []
+    if not lines:
+        prof = package.profession(spec)
+        lines = [prof.upper() if prof else spec.get("chosen_title", "")[:20], "EVERY LEVEL"]
+    thumbs = []
+    for i, (bg, used) in enumerate(_thumb_backgrounds(spec, visual.get("style_block", ""), wd, n_thumbs), 1):
+        out = wd / f"thumb{i}.jpg"
+        check = thumbnail.render(bg, lines, out, settings.font_path, accent=brand.get("secondary", "#F2B705"))
+        thumbs.append({"n": i, "url": storage.upload(out, _key(job, f"thumbs/thumb{i}.jpg"), "image/jpeg"),
+                       "lines": lines, "background": used, "check": check})
+
+    # 3) Metadados
+    meta = package.build_metadata(spec, cfg)
+    spec["shorts_candidates"] = shorts
+    spec.setdefault("thumbnail", {})
+    spec["thumbnail"]["options"] = thumbs
+    legible = [t["n"] for t in thumbs if t["check"]["passed"]]
+    spec["thumbnail"]["chosen"] = (legible or [1])[0] if thumbs else None
+    spec.setdefault("publishing", {}).update(meta)
+
+    checks = [
+        {"stage": "package", "name": "shorts_ready", "passed": len(shorts) == n_shorts and all(s["passed"] for s in shorts),
+         "detail": {"shorts": [{"n": s["n"], "duration_s": s["duration_s"]} for s in shorts], "wanted": n_shorts}},
+        {"stage": "package", "name": "thumbnail_legible", "passed": bool(legible), "detail": {"legible": legible}},
+        {"stage": "package", "name": "has_chapters", "passed": len(spec["blocks"]) >= 3, "detail": {"chapters": len(spec["blocks"])}},
+    ]
+    spec["checks"] = (spec.get("checks") or []) + checks
+    spec_path = wd / "spec.package.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), "utf-8")
+    spec_url = storage.upload(spec_path, _key(job, "video_spec.json"), "application/json")
+    return {"spec_url": spec_url, "spec": spec, "shorts": shorts, "thumbnails": thumbs,
+            "publishing": meta, "outputs": spec["outputs"], "checks": checks}
+
+
+def h_youtube_upload(job: dict, inp: dict, wd: Path) -> dict:
+    """Envia cada arquivo para a sessão resumable que o n8n abriu. Entrada:
+    uploads: [{upload_url, media_url, content_type?, ref?}]"""
+    from . import youtube
+
+    results = []
+    for i, u in enumerate(inp["uploads"], 1):
+        src = storage.download(u["media_url"], wd / f"up{i}{Path(u['media_url'].split('?')[0]).suffix}")
+        log.info("enviando ao YouTube: %s (%.1f MB)", u.get("ref") or src.name, src.stat().st_size / 1e6)
+        resp = youtube.upload(u["upload_url"], src, u.get("content_type") or youtube.guess_type(src.name))
+        results.append({"ref": u.get("ref"), "id": resp.get("id"), "response": resp})
+        src.unlink(missing_ok=True)
+    return {"uploads": results}
+
+
 def _media_checks(path: Path, stage: str, lufs_target: float | None, min_duration: float = 0) -> list[dict]:
     dur = media.duration(path)
     sil = media.silences(path)
@@ -379,4 +486,6 @@ HANDLERS = {
     "shorts": h_shorts,
     "thumbnail": h_thumbnail,
     "checks": h_checks,
+    "package": h_package,
+    "youtube_upload": h_youtube_upload,
 }

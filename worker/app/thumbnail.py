@@ -57,13 +57,27 @@ def render(background: Path, lines: list[str], out: Path, font_path: str,
 
     draw = ImageDraw.Draw(img)
     lines = [ln.upper() for ln in lines if ln.strip()][:2]
-    font = _fit_font(draw, lines, font_path, max_w=int(W * 0.52), max_h=int(H * 0.62))
+    # frase longa ("ENGINEER LEVELS") fica pequena numa linha só: testa quebrar por palavra
+    # e fica com o arranjo que permite a maior letra (no máximo 4 linhas)
+    layouts = [lines]
+    if lines and len(lines[0].split()) > 1:
+        layouts.append(lines[0].split() + lines[1:])
+    if len(lines) > 1 and len(lines[1].split()) > 1:
+        layouts.append(lines[:1] + lines[1].split())
+    best = None
+    for lay in layouts:
+        if len(lay) > 4:
+            continue
+        f = _fit_font(draw, lay, font_path, max_w=int(W * 0.54), max_h=int(H * 0.82))
+        if not best or f.size > best[1].size:
+            best = (lay, f)
+    lines, font = best
     stroke = max(4, font.size // 14)
     y = (H - sum(draw.textbbox((0, 0), ln, font=font, stroke_width=stroke)[3] for ln in lines)) // 2
     colors = [_hex(text_color), _hex(accent)]
     boxes = []
     for i, ln in enumerate(lines):
-        fill = colors[min(i, 1)] if len(lines) > 1 else colors[0]
+        fill = colors[1] if len(lines) > 1 and i == len(lines) - 1 else colors[0]  # última linha em destaque
         draw.text((56, y), ln, font=font, fill=fill, stroke_width=stroke, stroke_fill=(0, 0, 0))
         bbox = draw.textbbox((56, y), ln, font=font, stroke_width=stroke)
         boxes.append((bbox, fill))
