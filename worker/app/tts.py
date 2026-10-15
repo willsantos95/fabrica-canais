@@ -3,6 +3,7 @@ cada palavra. A ElevenLabs é chamada pelo n8n; aqui fica só o caminho grátis.
 from __future__ import annotations
 
 import asyncio
+import re
 from pathlib import Path
 
 
@@ -25,7 +26,30 @@ async def _synth(text: str, voice: str, rate: str, out: Path) -> list[dict]:
     return words
 
 
+def _norm(t: str) -> str:
+    return re.sub(r"[^\w]+", "", t.lower())
+
+
+def restore_punctuation(words: list[dict], text: str) -> list[dict]:
+    """O edge-tts devolve as palavras sem pontuação ("somewhere" em vez de
+    "somewhere."). Casa cada palavra com o token do texto original, em ordem,
+    para a legenda ter pontuação e quebrar linha no fim das frases."""
+    tokens = text.split()
+    out, ti = [], 0
+    for w in words:
+        target = _norm(w["w"])
+        j = ti
+        while j < len(tokens) and j < ti + 4 and _norm(tokens[j]) != target:
+            j += 1
+        if j < len(tokens) and _norm(tokens[j]) == target:
+            out.append({**w, "w": tokens[j]})
+            ti = j + 1
+        else:
+            out.append(w)
+    return out
+
+
 def synthesize(text: str, voice: str, out: Path, rate: str = "+0%") -> list[dict]:
-    """Gera o MP3 em `out` e devolve [{w, s, e}] em segundos."""
+    """Gera o MP3 em `out` e devolve [{w, s, e}] em segundos, com a pontuação do texto."""
     out.parent.mkdir(parents=True, exist_ok=True)
-    return asyncio.run(_synth(text, voice, rate, out))
+    return restore_punctuation(asyncio.run(_synth(text, voice, rate, out)), text)

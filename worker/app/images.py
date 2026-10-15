@@ -50,8 +50,12 @@ def generate(prompt: str, model: str | None = None, aspect: str = "16:9", attemp
         for attempt in range(attempts):
             try:
                 r = httpx.post(API.format(model=m), json=body, headers={"x-goog-api-key": key}, timeout=180)
+                if r.status_code == 429 and "limit: 0" in r.text:
+                    # cota zero = plano gratuito sem acesso a imagens; tentar de novo não resolve
+                    raise ImageError("Gemini sem cota para imagens (plano gratuito, limit: 0). "
+                                     "Ative o faturamento do projeto no Google AI Studio.")
                 if r.status_code == 429 or r.status_code >= 500:
-                    last = f"{m}: HTTP {r.status_code}"
+                    last = f"{m}: HTTP {r.status_code} {r.text[:200]}"
                     time.sleep(5 * (attempt + 1))
                     continue
                 if r.status_code >= 400:
