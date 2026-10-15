@@ -32,7 +32,7 @@ function Etapa($t) { Write-Host ""; Write-Host "== $t" -ForegroundColor Cyan }
 function Ok($t) { Write-Host "   $t" -ForegroundColor Green }
 function Aviso($t) { Write-Host "   $t" -ForegroundColor Yellow }
 # "uv run" abre um python filho; matar só o uv deixa a API viva segurando a porta. Mata a árvore toda.
-function Parar-Arvore($procId) { if ($procId) { & taskkill /PID $procId /T /F 2>$null | Out-Null } }
+function Parar-Arvore($procId) { if ($procId) { try { Start-Process taskkill -ArgumentList "/PID $procId /T /F" -NoNewWindow -Wait } catch { } } }
 function Liberar-Porta($porta) {
   $donos = Get-NetTCPConnection -LocalPort $porta -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique
   foreach ($d in $donos) { Aviso "porta $porta ocupada pelo processo $d (API de um teste anterior), encerrando..."; Parar-Arvore $d }
