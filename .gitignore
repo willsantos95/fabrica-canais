@@ -5,3 +5,6 @@ __pycache__/
 deploy/.env
 deploy/.env.local
 .venv/
+
+# dumps do Redis gerados em testes locais
+dump.rdb
