@@ -93,3 +93,24 @@ Disparado pelo `factory.approval` logo depois do `1` (ou manual: "Testar com o �
 - Job `clips` no worker: um clipe por nível, em 9:16, remontado a partir das imagens do vídeo (cena num quadrado no meio, fundo desfocado), com o áudio já mixado do vídeo final, título fixo no topo, legenda palavra por palavra e cartão final "Full video on YouTube". Nível com até 75 s vai inteiro; mais longo é cortado no fim da última frase que cabe em 60 s.
 - No WhatsApp chegam, para cada clipe, duas mensagens: o link (válido por 7 dias) e a legenda pronta para colar. A publicação no TikTok é manual.
 - Os clipes ficam em `assets` com `kind = 'short'` e `meta.platform = 'tiktok'`.
+
+## Multicanal (`factory.scheduler`)
+
+- **factory.scheduler** (`iazE4HxM3uwfnzDg`) roda a cada hora (minuto 5) e chama o `factory.produce` para cada canal
+  ativo cujo dia e hora batem com `config.schedule`:
+  ```json
+  "schedule": { "timezone": "America/Sao_Paulo", "production_days": ["mon","wed","fri","sun"],
+                "production_hour": 1, "min_queued_topics": 5, "publish_times": ["18:00"] }
+  ```
+  Não produz duas vezes em 12 h. Avisa no WhatsApp quando a fila de temas fica abaixo de `min_queued_topics` ou acaba.
+- **factory.produce** recebe `channel_slug` e usa os prompts do canal quando existirem:
+  `config.prompts.script`, `script_input`, `shotlist`, `model`, `shotlist_model`, `reasoning_effort`, `web_search`
+  (variáveis: `{{channel.name}}`, `{{channel.niche}}`, `{{channel.language}}`, `{{channel.tone}}`,
+  `{{channel.point_of_view}}`, `{{words_min}}`, `{{words_max}}`, `{{wpm}}`, `{{blocks_min}}`, `{{blocks_max}}`, `{{topic}}`).
+  Sem prompts no config, usa os do Career Levels. `config.format.blocks` = `[min, max]` de blocos.
+- **Aprovação com código:** a mensagem traz o canal e o código do vídeo (`#AB12`, 4 primeiros caracteres do id).
+  Com um vídeo pendente, basta `1`. Com vários, `1 #AB12`, `3 2 #AB12` etc.; sem código, o n8n responde com a lista.
+- **Publicação por canal:** cada canal do YouTube precisa de uma credencial própria, então cada canal tem a sua cópia
+  do `factory.publish` (duplique o workflow e troque a credencial nos 3 nós do YouTube). O id vai em
+  `config.youtube.publish_workflow_id` (padrão: `y3zthNcqybMcQEl0`, Career Levels).
+- Agenda de 10 vídeos/semana: `db/migrations/004_agenda_multicanal.sql`.

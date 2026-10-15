@@ -169,8 +169,8 @@ const s_long = node({
     },
     "credentials": {
       "youTubeOAuth2Api": {
-        "id": "sXpaiZq0Ag6vg3cy",
-        "name": "YouTube account"
+        "id": "nnKxTYcW1aFdkd4a",
+        "name": "YouTube - Fabrica"
       }
     },
     "retryOnFail": true,
@@ -324,8 +324,8 @@ const s_thumb = node({
     },
     "credentials": {
       "youTubeOAuth2Api": {
-        "id": "sXpaiZq0Ag6vg3cy",
-        "name": "YouTube account"
+        "id": "nnKxTYcW1aFdkd4a",
+        "name": "YouTube - Fabrica"
       }
     },
     "onError": "continueRegularOutput",
@@ -402,8 +402,8 @@ const s_shorts = node({
     },
     "credentials": {
       "youTubeOAuth2Api": {
-        "id": "sXpaiZq0Ag6vg3cy",
-        "name": "YouTube account"
+        "id": "nnKxTYcW1aFdkd4a",
+        "name": "YouTube - Fabrica"
       }
     },
     "retryOnFail": true,

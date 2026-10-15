@@ -15,6 +15,8 @@ OUT = Path(__file__).parent / "sdk"
 WORKER_URL = "https://render.relampagodeofertas.shop"
 INSTANCE = "fabrica-videos"
 CLIPS_ID = "f98b6HG2uClowRB4"  # factory.clips no n8n
+PRODUCE_ID = "6ZhBwxhg575IOsSC"  # factory.produce no n8n
+PUBLISH_DEFAULT = "y3zthNcqybMcQEl0"  # factory.publish do Career Levels
 YOUTUBE_SCOPE_NOTE = ""
 
 CRED = {
@@ -22,7 +24,7 @@ CRED = {
     "worker": {"httpHeaderAuth": {"id": "R96vQrkAjGn3GHEt", "name": "Auth - Fabrica Worker"}},
     "callback": {"httpHeaderAuth": {"id": "dBAcX42kLwL5n3eW", "name": "Auth - Fabrica Callback"}},
     "evo": {"evolutionApi": {"id": "570ZlMjp90Xd9ZZk", "name": "Evolution API"}},
-    "yt": {"youTubeOAuth2Api": {"id": "sXpaiZq0Ag6vg3cy", "name": "YouTube account"}},
+    "yt": {"youTubeOAuth2Api": {"id": "nnKxTYcW1aFdkd4a", "name": "YouTube - Fabrica"}},
 }
 RETRY = {"retryOnFail": True, "maxTries": 3, "waitBetweenTries": 5000}
 
@@ -67,6 +69,8 @@ class WF:
 
 
 def pg(query, replacement):
+    if replacement is None:
+        return {"operation": "executeQuery", "query": query, "options": {}}
     return {"operation": "executeQuery", "query": query, "options": {"queryReplacement": replacement}}
 
 
@@ -163,13 +167,14 @@ const thumbLinks = urls.slice(2, 2 + nT);
 const shortLinks = urls.slice(2 + nT);
 const spec = r.spec;
 const cfg = $('Carregar vídeo').first().json.config;
+const code = String($('Carregar vídeo').first().json.video_id).slice(0, 4).toUpperCase();
 const d = Math.round(r.outputs.duration_s || 0);
 const dur = `${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}`;
 const failed = (spec.checks || []).filter(c => !c.passed).map(c => `• ${c.stage}/${c.name}`);
 const titles = (spec.titles || []).slice(0, 5);
 const current = spec.publishing?.title || spec.chosen_title;
 const lines = [
-  '🎬 *Vídeo pronto para revisão*',
+  `🎬 *Vídeo pronto para revisão* · ${cfg.name} · código *#${code}*`,
   `*${current}*`,
   `Duração: ${dur} · ${spec.blocks.length} blocos · ${(spec.sources || []).length} fontes`,
   failed.length ? `⚠️ Checagens com alerta:\n${failed.join('\n')}` : '✅ Todas as checagens passaram',
@@ -190,6 +195,7 @@ const lines = [
   '2 motivo → rejeitar (ex.: 2 imagens fracas)',
   '3 N → usar a thumbnail N',
   '4 N → usar o título N',
+  `Com mais de um vídeo pendente, inclua o código: 1 #${code}`,
   '',
   'Links válidos por 48 h.',
 ];
@@ -198,6 +204,7 @@ return [{ json: {
   text: lines.join('\n'),
   thumbs: r.thumbnails.map((t, i) => ({ n: t.n, url: thumbLinks[i], legible: t.check?.passed })),
   chosen: spec.thumbnail?.chosen || 1,
+  code,
 } }];
 """}, [2160, 0], output=[{"number": "55", "text": "x", "thumbs": [], "chosen": 1}])
     wf.node("wa", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: pedir aprovação",
@@ -206,7 +213,7 @@ return [{ json: {
 return m.thumbs.map(t => ({ json: {
   number: m.number,
   media: t.url,
-  caption: `Thumbnail ${t.n}${t.n === m.chosen ? ' (sugerida)' : ''}${t.legible === false ? ' · ⚠️ texto pequeno' : ''}`,
+  caption: `#${m.code} · Thumbnail ${t.n}${t.n === m.chosen ? ' (sugerida)' : ''}${t.legible === false ? ' · ⚠️ texto pequeno' : ''}`,
 } }));
 """}, [2640, 0], output=[{"number": "55", "media": "https://x", "caption": "Thumbnail 1"}])
     wf.node("wa_img", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: thumbnails", {
@@ -222,7 +229,7 @@ return m.thumbs.map(t => ({ json: {
 # ===========================================================================
 # factory.approval
 # ===========================================================================
-def build_approval(publish_id: str) -> str:
+def build_approval(publish_id: str = PUBLISH_DEFAULT) -> str:
     wf = WF("factory-approval", "factory.approval")
     wf.node("hook", "n8n-nodes-base.webhook", 2.1, "Evolution: mensagem recebida", {
         "httpMethod": "POST", "path": "fabrica-aprovacao", "responseMode": "onReceived",
@@ -236,9 +243,13 @@ const b = $input.first().json.body || {};
 const ev = String(b.event || '').toLowerCase().replace(/_/g, '.');
 const d = Array.isArray(b.data) ? b.data[0] || {} : (b.data || {});
 const key = d.key || {};
-const text = String(d.message?.conversation || d.message?.extendedTextMessage?.text || '').trim();
+const raw = String(d.message?.conversation || d.message?.extendedTextMessage?.text || '').trim();
+// código do vídeo (#AB12) opcional, em qualquer posição: "1 #AB12", "#AB12 3 2"
+const codeM = raw.match(/#\s*([0-9a-fA-F]{4})\b/);
+const code = codeM ? codeM[1].toLowerCase() : '';
+const text = raw.replace(/#\s*[0-9a-fA-F]{4}\b/, ' ').replace(/\s+/g, ' ').trim();
 if (!ev.includes('messages.upsert') || !text) return [];
-const cmd = text.match(/^\s*([1-4])(?:[\s.,:-]+([\s\S]*))?$/);
+const cmd = text.match(/^([1-4])(?:[\s.,:-]+([\s\S]*))?$/);
 if (!cmd) return [];
 const num = j => String(j || '').split('@')[0].replace(/\D/g, '');
 const isPhone = j => j && /@s\.whatsapp\.net$/.test(String(j));
@@ -252,53 +263,72 @@ if (key.fromMe) {
 return [{ json: {
   cmd: Number(cmd[1]),
   arg: (cmd[2] || '').trim(),
+  code,
   sender: chat[0],
   last8: '{' + [...new Set(chat.map(x => x.slice(-8)))].join(',') + '}',
 } }];
-"""}, [480, 0], output=[{"cmd": 1, "arg": "", "sender": "5511999999999", "last8": "{99999999}"}])
+"""}, [480, 0], output=[{"cmd": 1, "arg": "", "code": "", "sender": "5511999999999", "last8": "{99999999}"}])
     wf.node("find", "n8n-nodes-base.postgres", 2.5, "Vídeo aguardando", pg(
-        "SELECT v.id AS video_id, v.spec, c.config\n"
+        "SELECT v.id AS video_id, upper(left(v.id::text, 4)) AS code, v.spec, c.config, c.name AS channel_name\n"
         "FROM videos v JOIN channels c ON c.id = v.channel_id\n"
         "WHERE v.status = 'awaiting_approval'\n"
         "  AND right(regexp_replace(c.config->'approval'->>'to', '\\D', '', 'g'), 8) = ANY($1::text[])\n"
-        "ORDER BY v.created_at DESC LIMIT 1;",
+        "ORDER BY v.created_at DESC LIMIT 20;",
         "={{ [ $json.last8 ] }}"), [720, 0], CRED["pg"], alwaysOutputData=True,
-        output=[{"video_id": "v", "spec": {}, "config": {}}], **RETRY)
+        output=[{"video_id": "v", "code": "ABCD", "spec": {}, "config": {}, "channel_name": "c"}], **RETRY)
     wf.node("decide", "n8n-nodes-base.code", 2, "Interpretar", {"jsCode": r"""const m = $('Ler resposta').first().json;
-const v = $input.first().json;
-// sem vídeo aguardando para esse número: não responde (evita responder "1" de qualquer contato)
-if (!v.video_id) return [];
-const spec = typeof v.spec === 'string' ? JSON.parse(v.spec) : v.spec;
-const cfg = typeof v.config === 'string' ? JSON.parse(v.config) : v.config;
+const parse = x => typeof x === 'string' ? JSON.parse(x) : x;
+const rows = $input.all().map(i => i.json).filter(r => r.video_id);
+// sem vídeo aguardando para esse número: não responde (evita responder "1" de qualquer conversa)
+if (!rows.length) return [];
+const titleOf = r => { const s = parse(r.spec); return s.publishing?.title || s.chosen_title; };
+const list = rows.map(r => `#${r.code} · ${r.channel_name} · ${titleOf(r)}`).join('\n');
+const number0 = parse(rows[0].config).approval?.to || m.sender;
+const help = reply => [{ json: { action: 'help', reply, number: number0 } }];
+let v;
+if (m.code) {
+  const hits = rows.filter(r => r.code.toLowerCase() === m.code);
+  if (!hits.length) return help(`Não achei vídeo aguardando aprovação com o código #${m.code.toUpperCase()}.\n\nPendentes:\n${list}`);
+  if (hits.length > 1) return help(`Mais de um vídeo com o código #${m.code.toUpperCase()}. Responda pelo YouTube Studio ou rejeite um deles.\n\n${list}`);
+  v = hits[0];
+} else if (rows.length > 1) {
+  return help(`Há ${rows.length} vídeos aguardando aprovação. Inclua o código na resposta, ex.: ${m.cmd}${m.arg ? ' ' + m.arg : ''} #${rows[0].code}\n\n${list}`);
+} else {
+  v = rows[0];
+}
+const spec = parse(v.spec);
+const cfg = parse(v.config);
 const number = cfg.approval?.to || m.sender;
 const title = spec.publishing?.title || spec.chosen_title;
+const tag = `[${v.channel_name} #${v.code}]`;
 let action = 'help';
 let reply = '';
 if (m.cmd === 1) {
   action = 'approve';
-  reply = `✅ Aprovado: *${title}*\nVou agendar no YouTube e te aviso com os links.`;
+  reply = `✅ Aprovado ${tag}: *${title}*\nVou agendar no YouTube e te aviso com os links.`;
 } else if (m.cmd === 2) {
   action = 'reject';
-  reply = `🗑️ Rejeitado: *${title}*${m.arg ? `\nMotivo: ${m.arg}` : ''}`;
+  reply = `🗑️ Rejeitado ${tag}: *${title}*${m.arg ? `\nMotivo: ${m.arg}` : ''}`;
 } else if (m.cmd === 3) {
   const n = parseInt(m.arg, 10);
   const opts = spec.thumbnail?.options || [];
-  if (!(n >= 1 && n <= opts.length)) reply = `Escolha uma thumbnail de 1 a ${opts.length}. Ex.: 3 2`;
-  else { spec.thumbnail.chosen = n; action = 'edit'; reply = `🖼️ Thumbnail ${n} escolhida.`; }
+  if (!(n >= 1 && n <= opts.length)) reply = `Escolha uma thumbnail de 1 a ${opts.length}. Ex.: 3 2 #${v.code}`;
+  else { spec.thumbnail.chosen = n; action = 'edit'; reply = `🖼️ ${tag} Thumbnail ${n} escolhida.`; }
 } else if (m.cmd === 4) {
   const n = parseInt(m.arg, 10);
   const titles = (spec.titles || []).slice(0, 5);
-  if (!(n >= 1 && n <= titles.length)) reply = `Escolha um título de 1 a ${titles.length}. Ex.: 4 3`;
+  if (!(n >= 1 && n <= titles.length)) reply = `Escolha um título de 1 a ${titles.length}. Ex.: 4 3 #${v.code}`;
   else {
     spec.chosen_title = titles[n - 1];
     spec.publishing = { ...(spec.publishing || {}), title: titles[n - 1].replace(/[<>]/g, '').slice(0, 100) };
     action = 'edit';
-    reply = `📝 Título ${n}: *${titles[n - 1]}*`;
+    reply = `📝 ${tag} Título ${n}: *${titles[n - 1]}*`;
   }
 }
-if (action === 'edit') reply += '\n\nResponda 1 para aprovar, 2 para rejeitar, 3 N (thumbnail) ou 4 N (título).';
-return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender } }];
-"""}, [960, 0], output=[{"action": "approve", "reply": "ok", "number": "55", "video_id": "v", "spec": {}, "reason": "", "sender": "55"}])
+if (action === 'edit') reply += `\n\nResponda 1 #${v.code} para aprovar, 2 #${v.code} para rejeitar, 3 N (thumbnail) ou 4 N (título).`;
+return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender,
+  publish_workflow_id: cfg.youtube?.publish_workflow_id || 'PUBLISH_DEFAULT_ID' } }];
+""".replace('PUBLISH_DEFAULT_ID', publish_id)}, [960, 0], output=[{"action": "approve", "reply": "ok", "number": "55", "video_id": "v", "spec": {}, "reason": "", "sender": "55", "publish_workflow_id": "x"}])
     wf.node("route", "n8n-nodes-base.switch", 3.4, "Ação", {
         "mode": "expression", "numberOutputs": 4,
         "output": "={{ ({ approve: 0, reject: 1, edit: 2 })[$json.action] ?? 3 }}"}, [1200, 0], fn="switchCase")
@@ -307,7 +337,8 @@ return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.a
         "={{ [ $json.video_id, $json.sender ] }}"), [1440, -200], CRED["pg"], output=[{"success": True}], **RETRY)
     wf.node("pub", "n8n-nodes-base.executeWorkflow", 1.3, "Publicar no YouTube", {
         "mode": "once", "source": "database",
-        "workflowId": {"__rl": True, "mode": "id", "value": publish_id},
+        # cada canal tem o seu factory.publish (credencial do YouTube própria): config.youtube.publish_workflow_id
+        "workflowId": {"__rl": True, "mode": "id", "value": "={{ $('Interpretar').first().json.publish_workflow_id }}"},
         "workflowInputs": {"mappingMode": "defineBelow",
                            "value": {"video_id": "={{ $('Interpretar').first().json.video_id }}"},
                            "matchingColumns": [], "schema": [{"id": "video_id", "displayName": "video_id", "required": False,
@@ -588,11 +619,79 @@ return out;
         "  .add(t_manual)\n  .to(config)")
 
 
+# ===========================================================================
+# factory.scheduler — a cada hora vê quais canais produzem agora e chama o factory.produce
+# ===========================================================================
+SCHEDULER_PLAN = r"""// Decide quais canais produzem nesta hora.
+// config.schedule: timezone, production_days (["mon","wed",...], vazio = todos os dias),
+// production_hour (0-23; se faltar, usa a hora do production_cron), min_queued_topics (alerta de fila baixa).
+const DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const out = [];
+for (const it of $input.all()) {
+  const r = it.json;
+  if (!r.slug) continue;
+  const cfg = typeof r.config === 'string' ? JSON.parse(r.config) : r.config;
+  const s = cfg.schedule || {};
+  const now = DateTime.now().setZone(s.timezone || 'America/Sao_Paulo');
+  let hour = s.production_hour;
+  if (hour == null && s.production_cron) hour = Number(String(s.production_cron).trim().split(/\s+/)[1]);
+  if (hour == null || Number.isNaN(Number(hour))) hour = 2;
+  const days = Array.isArray(s.production_days) && s.production_days.length
+    ? s.production_days.map(d => String(d).slice(0, 3).toLowerCase()) : DAYS;
+  if (now.hour !== Number(hour) || !days.includes(DAYS[now.weekday % 7])) continue;
+  if (Number(r.recent) > 0) continue; // já produziu nas últimas 12 h
+  const queued = Number(r.queued);
+  const number = cfg.approval?.to;
+  if (!queued) {
+    out.push({ json: { kind: 'alert', number, text: `⚠️ *${cfg.name}*: fila de temas vazia, a produção de hoje foi pulada. Adicione temas.` } });
+    continue;
+  }
+  out.push({ json: { kind: 'produce', channel_slug: r.slug, name: cfg.name } });
+  const min = Number(s.min_queued_topics ?? 5);
+  if (queued - 1 < min) {
+    out.push({ json: { kind: 'alert', number, text: `📋 *${cfg.name}*: restam ${queued - 1} temas na fila. Adicione mais para não parar.` } });
+  }
+}
+return out;
+"""
+
+
+def build_scheduler(produce_id: str = PRODUCE_ID) -> str:
+    wf = WF("factory-scheduler", "factory.scheduler")
+    wf.node("t_cron", "n8n-nodes-base.scheduleTrigger", 1.2, "A cada hora",
+            {"rule": {"interval": [{"field": "hours", "hoursInterval": 1, "triggerAtMinute": 5}]}},
+            [0, 0], fn="trigger")
+    config_node(wf)
+    wf.node("load", "n8n-nodes-base.postgres", 2.5, "Canais ativos", pg(
+        "SELECT c.slug, c.config,\n"
+        "  (SELECT count(*) FROM topics t WHERE t.channel_id = c.id AND t.status = 'queued') AS queued,\n"
+        "  (SELECT count(*) FROM videos v WHERE v.channel_id = c.id AND v.created_at > now() - interval '12 hours') AS recent\n"
+        "FROM channels c WHERE c.active ORDER BY c.slug;",
+        None), [480, 0], CRED["pg"], output=[{"slug": "career-levels", "config": {}, "queued": 10, "recent": 0}], **RETRY)
+    wf.node("plan", "n8n-nodes-base.code", 2, "Quem produz agora", {"jsCode": SCHEDULER_PLAN}, [720, 0],
+            output=[{"kind": "produce", "channel_slug": "career-levels", "name": "Career Levels"}])
+    wf.node("route", "n8n-nodes-base.switch", 3.4, "Tipo", {
+        "mode": "expression", "numberOutputs": 2,
+        "output": "={{ $json.kind === 'produce' ? 0 : 1 }}"}, [960, 0], fn="switchCase")
+    wf.node("run", "n8n-nodes-base.executeWorkflow", 1.3, "Produzir vídeo", {
+        "mode": "each", "source": "database",
+        "workflowId": {"__rl": True, "mode": "id", "value": produce_id},
+        "workflowInputs": {"mappingMode": "defineBelow",
+                           "value": {"channel_slug": "={{ $json.channel_slug }}"},
+                           "matchingColumns": [], "schema": [{"id": "channel_slug", "displayName": "channel_slug", "required": False,
+                                                              "defaultMatch": False, "display": True, "canBeUsedToMatch": True, "type": "string"}]},
+        "options": {"waitForSubWorkflow": False}}, [1200, -100], output=[{}])
+    wf.node("wa", "n8n-nodes-evolution-api.evolutionApi", 1, "WhatsApp: alerta",
+            send_text("={{ $json.number }}", "={{ $json.text }}"), [1200, 100], CRED["evo"], **RETRY)
+    return wf.render("  .add(t_cron)\n  .to(config)\n  .to(load)\n  .to(plan)\n  .to(route\n    .onCase(0, run)\n    .onCase(1, wa))")
+
+
 if __name__ == "__main__":
     import sys
     OUT.mkdir(exist_ok=True)
     (OUT / "factory.package.js").write_text(build_package(), "utf-8")
     (OUT / "factory.clips.js").write_text(build_clips(), "utf-8")
     (OUT / "factory.publish.js").write_text(build_publish(), "utf-8")
-    (OUT / "factory.approval.js").write_text(build_approval(sys.argv[1] if len(sys.argv) > 1 else "PUBLISH_ID"), "utf-8")
+    (OUT / "factory.approval.js").write_text(build_approval(), "utf-8")
+    (OUT / "factory.scheduler.js").write_text(build_scheduler(), "utf-8")
     print("ok", [p.name for p in OUT.iterdir()])
