@@ -114,3 +114,14 @@ Disparado pelo `factory.approval` logo depois do `1` (ou manual: "Testar com o �
   do `factory.publish` (duplique o workflow e troque a credencial nos 3 nós do YouTube). O id vai em
   `config.youtube.publish_workflow_id` (padrão: `y3zthNcqybMcQEl0`, Career Levels).
 - Agenda de 10 vídeos/semana: `db/migrations/004_agenda_multicanal.sql`.
+
+## Painel e métricas
+
+- **factory.painel** (`94t5hb2r6FgtFcJj`): `GET /webhook/fabrica-painel?k=CHAVE` devolve a página (esteira, aprovação com botões,
+  calendário de 14 dias, canais com fila e próxima produção, vídeos recentes com custo e erro, desempenho e custo por mês).
+  Ações via `POST /webhook/fabrica-painel-acao`: `approve`, `reject`, `requeue` (tema de volta à fila), `produce` (produzir agora).
+  A chave fica só no nó Config do n8n (gere com `PAINEL_KEY=... python3 build_painel.py`; o repositório tem um placeholder).
+  Sem chave certa, responde 404. Execuções com sucesso não são salvas.
+- **factory.metrics** (`PFgiGM26QKFIbWGa`): a cada 6 h lê `statistics` e `status` dos vídeos (YouTube Data API, 1 unidade
+  por lote de 50), grava em `metrics` (uma linha por dia) e marca publicações/vídeos como `published` quando ficam públicos.
+- Custo da OpenAI: `spec.usage.cost_usd`, estimado em `Montar video_spec` (preços em `config.prices` sobrescrevem os padrões).
