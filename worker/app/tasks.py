@@ -46,9 +46,13 @@ def _callback(job: dict, body: dict) -> bool:
             log.info("callback ok: %s job=%s status=%s", host, job.get("type"), body.get("status"))
             return True
         except httpx.HTTPStatusError as exc:
-            hint = {401: "CALLBACK_TOKEN diferente da credencial do Wait", 403: "CALLBACK_TOKEN diferente da credencial do Wait",
-                    404: "execução não está mais esperando (cancelada, expirada ou já retomada)"}.get(exc.response.status_code, "")
-            log.error("callback falhou (tentativa %d): HTTP %s em %s %s", attempt + 1, exc.response.status_code, host, hint)
+            code = exc.response.status_code
+            hint = {401: "falta o header de autenticação", 403: "CALLBACK_TOKEN diferente da credencial do Wait (ou assinatura da URL inválida)",
+                    404: "execução não está mais esperando", 409: "execução já terminou (cancelada, expirada ou com erro)"}.get(code, "")
+            log.error("callback falhou (tentativa %d): HTTP %s em %s — %s | resposta do n8n: %s",
+                      attempt + 1, code, host, hint, exc.response.text[:200].replace("\n", " "))
+            if code in (404, 409):
+                break  # não adianta tentar de novo
         except Exception as exc:
             log.error("callback falhou (tentativa %d): %s em %s", attempt + 1, exc, host)
         time.sleep(2 * (attempt + 1))

@@ -1,0 +1,187 @@
+{
+  "name": "factory.teste-callback",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "838a79e0-2a5f-4af0-9ecf-cf647ffa2436",
+      "name": "Testar callback",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfb75c91-6a51-46c1-8c58-668e11887568",
+              "name": "worker_url",
+              "value": "https://render.relampagodeofertas.shop",
+              "type": "string"
+            },
+            {
+              "id": "06e9a0ba-1045-4640-8da1-242eaaf232c6",
+              "name": "media_url",
+              "value": "s3://fabrica/testes/callback.wav",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ef484fec-8df2-4e93-8606-567a70bb0f88",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// A URL precisa começar com o domínio público do n8n (WEBHOOK_URL), nunca com localhost.\nconst url = $execution.resumeUrl;\nif (/localhost|127\\.0\\.0\\.1/.test(url)) throw new Error('WEBHOOK_URL do n8n não configurada: ' + url);\nreturn [{ json: { ...$input.first().json, resume_url: url } }];\n"
+      },
+      "id": "9ad2e012-9290-4fa1-b154-f6f5cb87bee7",
+      "name": "Mostrar URL de retomada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.worker_url }}/jobs/checks",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ video_id: 'teste-callback', idempotency_key: 'teste-callback-' + $execution.id, callback_url: $execution.resumeUrl, input: { media_url: $json.media_url, stage: 'teste' } }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "3622b995-b66d-41dc-8ce0-2c125d385170",
+      "name": "Worker: job de teste",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Fabrica Worker"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "authentication": "headerAuth",
+        "limitWait": true,
+        "limitType": "afterTimeInterval",
+        "resumeAmount": 10,
+        "resumeUnit": "minutes",
+        "options": {}
+      },
+      "id": "de13b975-80be-422e-b8ca-d8eade1817b1",
+      "name": "Aguardar worker",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "",
+          "name": "Fabrica Callback"
+        }
+      },
+      "webhookId": "f058a8b9-c21b-4dbb-9e8f-805c04f1dd2e"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body;\nif (!b) throw new Error('O worker não conseguiu avisar o n8n em 10 min. Veja a linha \"callback falhou\" no log do serviço api/render.');\nreturn [{ json: { callback: 'OK — o n8n recebeu o aviso do worker', status: b.status, worker_result: b.result, erro: b.error || null } }];\n"
+      },
+      "id": "40254c5b-b104-4cf0-be83-5d791c47a87e",
+      "name": "Resultado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Testar callback": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Mostrar URL de retomada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mostrar URL de retomada": {
+      "main": [
+        [
+          {
+            "node": "Worker: job de teste",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Worker: job de teste": {
+      "main": [
+        [
+          {
+            "node": "Aguardar worker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar worker": {
+      "main": [
+        [
+          {
+            "node": "Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

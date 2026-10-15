@@ -503,7 +503,50 @@ return [{ json: { number: e.alert_number, text } }];
     return f.dump()
 
 
+# ---------------------------------------------------------------------------
+# teste-callback — valida o caminho worker → n8n (Wait) em segundos, sem gastar IA
+# ---------------------------------------------------------------------------
+def build_test_callback() -> dict:
+    f = Flow("factory.teste-callback")
+    f.add("Testar callback", "n8n-nodes-base.manualTrigger", 1, {}, x=0)
+    f.add("Config", "n8n-nodes-base.set", 3.4, {
+        "assignments": {"assignments": [
+            {"id": _id(), "name": "worker_url", "value": "https://render.relampagodeofertas.shop", "type": "string"},
+            {"id": _id(), "name": "media_url", "value": "s3://fabrica/testes/callback.wav", "type": "string"},
+        ]},
+        "options": {},
+    })
+    f.link("Testar callback", "Config")
+    f.add("Mostrar URL de retomada", "n8n-nodes-base.code", 2, code("""
+// A URL precisa começar com o domínio público do n8n (WEBHOOK_URL), nunca com localhost.
+const url = $execution.resumeUrl;
+if (/localhost|127\\.0\\.0\\.1/.test(url)) throw new Error('WEBHOOK_URL do n8n não configurada: ' + url);
+return [{ json: { ...$input.first().json, resume_url: url } }];
+"""))
+    f.link("Config", "Mostrar URL de retomada")
+    f.add("Worker: job de teste", "n8n-nodes-base.httpRequest", 4.2,
+          http_json("={{ $json.worker_url }}/jobs/checks",
+                    "={{ JSON.stringify({ video_id: 'teste-callback', idempotency_key: 'teste-callback-' + $execution.id, "
+                    "callback_url: $execution.resumeUrl, input: { media_url: $json.media_url, stage: 'teste' } }) }}"),
+          creds=CRED_WORKER)
+    f.link("Mostrar URL de retomada", "Worker: job de teste")
+    f.add("Aguardar worker", "n8n-nodes-base.wait", 1.1,
+          {"resume": "webhook", "httpMethod": "POST", "authentication": "headerAuth",
+           "limitWait": True, "limitType": "afterTimeInterval", "resumeAmount": 10,
+           "resumeUnit": "minutes", "options": {}},
+          creds=CRED_CALLBACK, webhookId=_id())
+    f.link("Worker: job de teste", "Aguardar worker")
+    f.add("Resultado", "n8n-nodes-base.code", 2, code("""
+const b = $input.first().json.body;
+if (!b) throw new Error('O worker não conseguiu avisar o n8n em 10 min. Veja a linha "callback falhou" no log do serviço api/render.');
+return [{ json: { callback: 'OK — o n8n recebeu o aviso do worker', status: b.status, worker_result: b.result, erro: b.error || null } }];
+"""))
+    f.link("Aguardar worker", "Resultado")
+    return f.dump()
+
+
 if __name__ == "__main__":
-    for name, wf in [("factory.produce.json", build_produce()), ("factory.error.json", build_error())]:
+    for name, wf in [("factory.produce.json", build_produce()), ("factory.error.json", build_error()),
+                     ("teste-callback.json", build_test_callback())]:
         (OUT / name).write_text(json.dumps(wf, ensure_ascii=False, indent=2) + "\n", "utf-8")
         print("gerado", name, len(wf["nodes"]), "nós")

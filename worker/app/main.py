@@ -142,7 +142,8 @@ def resend_callback(job_id: str) -> dict:
         raise HTTPException(409, "job sem callback_url ou sem resultado guardado")
     ok = tasks._callback(payload, body)
     if not ok:
-        raise HTTPException(502, "o n8n recusou de novo; veja o log do serviço api para o motivo")
+        # 424 (e não 502): o proxy do EasyPanel troca respostas 502 pela página genérica dele
+        raise HTTPException(424, "o n8n recusou o aviso; o motivo está no log do serviço api (linha 'callback falhou')")
     return {"resent": True, "job_id": job_id}
 
 

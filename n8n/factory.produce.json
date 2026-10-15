@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "6e0083f0-1570-43a3-8034-7fe4d5e2cbd0",
+      "id": "379cabc5-bf6f-4f87-b718-93778701771e",
       "name": "Produzir agora",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
@@ -22,7 +22,7 @@
           ]
         }
       },
-      "id": "877e1137-65ad-4a72-a56d-15fe454ce8be",
+      "id": "4606647f-8cd2-4f8d-9aa2-018837c38927",
       "name": "Agenda diária",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
@@ -37,37 +37,37 @@
         "assignments": {
           "assignments": [
             {
-              "id": "0d9c2b63-c68d-4845-bc6e-cfe8d2132148",
+              "id": "a8a4f200-35eb-41fe-b3be-3de489c2a0a8",
               "name": "channel_slug",
               "value": "career-levels",
               "type": "string"
             },
             {
-              "id": "48f746df-50de-46d7-a067-87cedf4cb9cd",
+              "id": "e477bd7c-d4cb-4a32-9490-f45a63f5f8c9",
               "name": "worker_url",
               "value": "https://render.relampagodeofertas.shop",
               "type": "string"
             },
             {
-              "id": "2fdf19d7-093e-49e6-8fe2-b19c425e5771",
+              "id": "d8de4e31-4290-4915-95c6-097c890a21d2",
               "name": "openai_model",
               "value": "gpt-5.5",
               "type": "string"
             },
             {
-              "id": "3088a080-7d12-4a0d-a47e-663c8975e1a3",
+              "id": "7812e219-59dc-4a01-93ae-28abf6097d90",
               "name": "reasoning_effort",
               "value": "medium",
               "type": "string"
             },
             {
-              "id": "13cf712e-bd00-46ea-9c0b-3ed7d01af5b9",
+              "id": "bc77b137-272f-4449-ac5a-4bd76906465e",
               "name": "evolution_url",
               "value": "https://SEU-EVOLUTION",
               "type": "string"
             },
             {
-              "id": "df0600c0-3ad4-466a-9a4a-d206a5a5765c",
+              "id": "57bc1986-5b4e-4af8-a4a4-1141cf266428",
               "name": "evolution_instance",
               "value": "SUA-INSTANCIA",
               "type": "string"
@@ -76,7 +76,7 @@
         },
         "options": {}
       },
-      "id": "dd5c9e5d-6868-4405-b2ac-7846666a7369",
+      "id": "9aa717a7-0e20-4925-885c-6389aa52260f",
       "name": "Config",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
@@ -93,7 +93,7 @@
           "queryReplacement": "={{ [ $json.channel_slug, $execution.id ] }}"
         }
       },
-      "id": "ca1b7970-71f5-4ec1-984b-babda3712d4c",
+      "id": "f29fce46-152d-4b4d-abf3-d71a98d1704f",
       "name": "Pegar próximo tema",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
@@ -115,7 +115,7 @@
       "parameters": {
         "jsCode": "const SYSTEM = \"You are the head writer of the faceless YouTube channel \\\"{{channel.name}}\\\".\\n\\nChannel\\n- Niche: {{channel.niche}}\\n- Language of the narration: {{channel.language}}\\n- Tone: {{channel.tone}}\\n- Point of view (what makes this channel original): {{channel.point_of_view}}\\n\\nYour job: research the topic on the web, then write the full narration of ONE long video.\\n\\nResearch rules\\n- Use the web_search tool before writing. Prefer primary or reputable sources (government statistics, professional bodies, established publications).\\n- Every concrete fact (number, salary, percentage, date, ranking, named requirement) must come from a source you actually found. List each source once in \\\"sources\\\" with the exact claim it supports.\\n- Never invent numbers. If you cannot verify a figure, describe it qualitatively instead.\\n- Salaries and statistics change by country: say which country or region a number refers to.\\n\\nWriting rules\\n- Total narration: between {{words_min}} and {{words_max}} words. This is read aloud by a synthetic voice at about {{wpm}} words per minute.\\n- Split the narration into {{blocks_min}} to {{blocks_max}} blocks. Each block is one level or one clear section, 120 to 300 words.\\n- The first block opens with a hook in the first 10 seconds: a question that only the video answers. No clichés such as \\\"you won't believe\\\".\\n- Spoken style: short sentences, no lists, no headings inside the narration, no stage directions, no emojis, no URLs.\\n- Write numbers the way they should be spoken (e.g. \\\"around sixty thousand dollars a year\\\").\\n- Original point of view in every block: what really changes at this level, the trade-off, the skill that unlocks the next level.\\n- Avoid generic filler and template phrases. Each block must contain at least one specific, sourced detail.\\n- End with a short closing that invites a comment about the viewer's own level. No \\\"like and subscribe\\\" begging.\\n\\nOutput\\nReply with ONLY one JSON object wrapped in <json> and </json>, with this shape:\\n\\n<json>\\n{\\n  \\\"titles\\\": [\\\"10 YouTube titles, max 60 characters; half start with the search keyword, half curiosity-driven\\\"],\\n  \\\"chosen_title\\\": \\\"the title you recommend\\\",\\n  \\\"hook_options\\\": [\\\"5 alternative opening lines, max 30 words each\\\"],\\n  \\\"sources\\\": [{\\\"id\\\": \\\"src1\\\", \\\"title\\\": \\\"page title\\\", \\\"url\\\": \\\"https://...\\\", \\\"claim\\\": \\\"the exact fact used\\\"}],\\n  \\\"blocks\\\": [\\n    {\\\"block_id\\\": \\\"b01\\\", \\\"title\\\": \\\"Level 1 - ...\\\", \\\"narration\\\": \\\"spoken text\\\", \\\"source_ids\\\": [\\\"src1\\\"]}\\n  ]\\n}\\n</json>\\n\\nblock_id values are b01, b02, b03... in order. Use only source ids that exist in \\\"sources\\\".\\n\";\nconst p = $('Config').first().json;\nconst t = $input.first().json;\nconst cfg = typeof t.config === 'string' ? JSON.parse(t.config) : t.config;\nconst [mmin, mmax] = cfg.format.long_minutes;\nconst wpm = cfg.format.words_per_minute;\nconst vars = {\n  'channel.name': cfg.name, 'channel.niche': cfg.niche, 'channel.language': cfg.language,\n  'channel.tone': cfg.tone, 'channel.point_of_view': cfg.point_of_view || '',\n  words_min: Math.round(mmin * wpm), words_max: Math.round(mmax * wpm), wpm,\n  blocks_min: 6, blocks_max: 12,\n};\nconst system = SYSTEM.replace(/{{\\s*([\\w.]+)\\s*}}/g, (_, k) => String(vars[k] ?? ''));\nconst body = {\n  model: p.openai_model,\n  instructions: system,\n  input: `Topic: ${t.title}\\n\\nResearch it on the web and write the full video now.`,\n  tools: [{ type: 'web_search' }],\n  reasoning: { effort: p.reasoning_effort || 'medium' },\n  max_output_tokens: 32000,\n};\nreturn [{ json: { video_id: t.video_id, topic_id: t.topic_id, title: t.title, config: cfg,\n  words_min: vars.words_min, words_max: vars.words_max, body } }];\n"
       },
-      "id": "58054db9-eeb2-4bff-aa1a-b181fd700df4",
+      "id": "a8e86935-5456-4cb9-a91f-b99e35f79582",
       "name": "Pedido do roteiro",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -137,7 +137,7 @@
           "timeout": 900000
         }
       },
-      "id": "728f48ee-d99a-475f-83f4-9990b20833ee",
+      "id": "124127a7-7148-4757-b683-9c26ca76553a",
       "name": "OpenAI: pesquisa e roteiro",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -159,7 +159,7 @@
       "parameters": {
         "jsCode": "const resp = $input.first().json;\nconst ctx = $('Pedido do roteiro').first().json;\nif (resp.status === 'incomplete') throw new Error('Resposta da OpenAI incompleta: ' + JSON.stringify(resp.incomplete_details || {}));\nconst text = resp.output_text || (resp.output || []).filter(o => o.type === 'message')\n  .flatMap(o => o.content || []).filter(c => c.type === 'output_text').map(c => c.text).join('');\nconst m = text.match(/<json>([\\s\\S]*)<\\/json>/);\nif (!m) throw new Error(`Roteiro sem bloco <json> (status=${resp.status})`);\nlet s;\ntry { s = JSON.parse(m[1]); } catch (e) { throw new Error('JSON do roteiro inválido: ' + e.message); }\nif (!Array.isArray(s.blocks) || s.blocks.length < 3) throw new Error('Roteiro com menos de 3 blocos');\n\nconst sources = Array.isArray(s.sources) ? s.sources.filter(x => x && x.id && /^https?:\\/\\//.test(x.url || '')) : [];\nconst ids = new Set(sources.map(x => x.id));\nconst clean = t => String(t || '').replace(/\\s+/g, ' ').trim();\nconst blocks = s.blocks.map((b, i) => ({\n  block_id: 'b' + String(i + 1).padStart(2, '0'),\n  title: clean(b.title) || `Part ${i + 1}`,\n  narration: clean(b.narration),\n  source_ids: (b.source_ids || []).filter(id => ids.has(id)),\n}));\nconst words = blocks.reduce((n, b) => n + b.narration.split(' ').length, 0);\nif (words < ctx.words_min * 0.8) throw new Error(`Roteiro curto demais: ${words} palavras (mínimo ${ctx.words_min})`);\n\nconst checks = [\n  { stage: 'script', name: 'word_count', passed: words >= ctx.words_min && words <= ctx.words_max * 1.15,\n    detail: { words, min: ctx.words_min, max: ctx.words_max } },\n  { stage: 'script', name: 'has_sources', passed: sources.length >= 3, detail: { sources: sources.length } },\n  { stage: 'script', name: 'blocks_cited', passed: blocks.filter(b => b.source_ids.length).length >= Math.ceil(blocks.length / 2),\n    detail: { cited: blocks.filter(b => b.source_ids.length).length, blocks: blocks.length } },\n];\nconst titles = (s.titles || []).map(clean).filter(Boolean).slice(0, 10);\nreturn [{ json: { ...ctx, body: undefined, script: {\n  titles: titles.length ? titles : [ctx.title],\n  chosen_title: clean(s.chosen_title) || titles[0] || ctx.title,\n  hook_options: (s.hook_options || []).map(clean).filter(Boolean),\n  sources, blocks }, checks, words } }];\n"
       },
-      "id": "53109d8c-51a9-4e68-be49-e5332d2146b6",
+      "id": "54c546c4-3e5d-4f48-952e-7d04d98036af",
       "name": "Validar roteiro",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -172,7 +172,7 @@
       "parameters": {
         "jsCode": "const SYSTEM = \"You are the visual director of the faceless YouTube channel \\\"{{channel.name}}\\\".\\n\\nYou receive the finished narration of one video, split into blocks. Turn it into a shot list of about {{shots_total}} shots, in narration order, so that one illustrated image is shown on screen while each piece of narration is read.\\n\\nRules for each shot\\n- \\\"narration_span\\\": the exact words of the narration this shot covers, copied verbatim and contiguous from the block (same spelling and punctuation). Spans of one block, in order, must cover the whole block without gaps or overlaps. A good span is 1 or 2 sentences (about 8 to 14 seconds of speech).\\n- \\\"visual_prompt\\\": in English, describe subject, action, setting and framing (wide / medium / close-up). Concrete and visual. Do NOT include art style words; the channel style is added automatically.\\n- Keep characters consistent: refer to the main character the same way every time (e.g. \\\"the young chef, short dark hair, white jacket\\\").\\n- No real people, no celebrities, no brand logos, no readable text in the image unless it is a short label you also put in \\\"text_overlay\\\".\\n- \\\"text_overlay\\\": null, or a label of at most 4 words shown on screen (use it on the first shot of each level, e.g. \\\"LEVEL 3\\\", and for key numbers).\\n- \\\"kenburns\\\": camera movement for this still image, one of push_in, pull_out, pan_left, pan_right, pan_up, pan_down. Vary it; never the same movement more than twice in a row.\\n- \\\"is_hook\\\": true only for the shots of the first 10 seconds of the video.\\n- No two shots may have the same visual_prompt.\\n\\nDistribute shots proportionally to the length of each block.\\n\\nOutput\\nReply with ONLY one JSON object wrapped in <json> and </json>:\\n\\n<json>\\n{\\n  \\\"blocks\\\": [\\n    {\\\"block_id\\\": \\\"b01\\\", \\\"shots\\\": [\\n      {\\\"narration_span\\\": \\\"...\\\", \\\"visual_prompt\\\": \\\"...\\\", \\\"text_overlay\\\": \\\"LEVEL 1\\\", \\\"kenburns\\\": \\\"push_in\\\", \\\"is_hook\\\": true}\\n    ]}\\n  ],\\n  \\\"thumbnail\\\": {\\n    \\\"phrases\\\": [\\\"2 lines, max 4 words total, line 2 is the impact word\\\"],\\n    \\\"image_prompt\\\": \\\"main subject on the right third, left half dark and empty for text, high contrast\\\"\\n  }\\n}\\n</json>\\n\";\nconst p = $('Config').first().json;\nconst c = $input.first().json;\nconst vars = { 'channel.name': c.config.name, shots_total: c.config.format.shots_per_video };\nconst system = SYSTEM.replace(/{{\\s*([\\w.]+)\\s*}}/g, (_, k) => String(vars[k] ?? ''));\nconst blocks = c.script.blocks.map(b => ({ block_id: b.block_id, title: b.title, narration: b.narration }));\nconst body = {\n  model: p.openai_model,\n  instructions: system,\n  input: 'Narration blocks:\\n' + JSON.stringify({ blocks }, null, 1),\n  reasoning: { effort: p.reasoning_effort || 'medium' },\n  max_output_tokens: 32000,\n};\nreturn [{ json: { body } }];\n"
       },
-      "id": "6a541ce8-3124-45cf-ac95-b8fc8aaec0e0",
+      "id": "40c99d23-f3da-4bdb-a55a-af9127fcb2d2",
       "name": "Pedido da shotlist",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -194,7 +194,7 @@
           "timeout": 900000
         }
       },
-      "id": "722d5c5c-3f47-45fd-a1c2-9992d7cd6e9d",
+      "id": "9b9e1f50-2683-4da7-9c3c-6e3c0994421a",
       "name": "OpenAI: shotlist",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -216,7 +216,7 @@
       "parameters": {
         "jsCode": "const resp = $input.first().json;\nconst c = $('Validar roteiro').first().json;\nif (resp.status === 'incomplete') throw new Error('Resposta da OpenAI incompleta: ' + JSON.stringify(resp.incomplete_details || {}));\nconst text = resp.output_text || (resp.output || []).filter(o => o.type === 'message')\n  .flatMap(o => o.content || []).filter(c => c.type === 'output_text').map(c => c.text).join('');\nconst m = text.match(/<json>([\\s\\S]*)<\\/json>/);\nif (!m) throw new Error(`Shotlist sem bloco <json> (status=${resp.status})`);\nconst sl = JSON.parse(m[1]);\nconst norm = t => String(t || '').toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, ' ').trim();\nconst MOVES = ['push_in', 'pull_out', 'pan_left', 'pan_right', 'pan_up', 'pan_down'];\nconst byId = Object.fromEntries((sl.blocks || []).map(b => [b.block_id, b]));\n\nlet order = 0, found = 0, total = 0, fallbackBlocks = 0;\nconst blocks = c.script.blocks.map(b => {\n  let raw = (byId[b.block_id] || {}).shots || [];\n  if (!raw.length) {\n    // sem planos para o bloco: 1 plano a cada 2 frases, com o título como cena\n    fallbackBlocks++;\n    const sentences = b.narration.match(/[^.!?]+[.!?]+/g) || [b.narration];\n    raw = [];\n    for (let i = 0; i < sentences.length; i += 2) {\n      raw.push({ narration_span: sentences.slice(i, i + 2).join(' ').trim(),\n        visual_prompt: `${b.title}, illustrative scene, variation ${i / 2 + 1}`, text_overlay: i === 0 ? b.title.split(' - ')[0].slice(0, 30) : null });\n    }\n  }\n  const nb = norm(b.narration);\n  const shots = raw.map((s, i) => {\n    order++; total++;\n    const span = String(s.narration_span || '').trim();\n    if (span && nb.includes(norm(span))) found++;\n    const kb = MOVES.includes(s.kenburns) ? s.kenburns : MOVES[order % MOVES.length];\n    return {\n      shot_id: `${b.block_id}-s${String(i + 1).padStart(2, '0')}`,\n      order,\n      narration_span: span || b.narration.slice(0, 80),\n      visual_prompt: (() => { const v = String(s.visual_prompt || '').trim();\n        return v.length >= 10 ? v : `${b.title}: ${span || b.narration.slice(0, 120)}`; })(),\n      text_overlay: s.text_overlay ? String(s.text_overlay).slice(0, 40) : null,\n      // Fase 1: todos os planos com Ken Burns (custo zero). IA de vídeo entra na Fase 2.\n      motion: { mode: 'kenburns', kenburns: kb },\n      is_hook: Boolean(s.is_hook) && order <= 3,\n      image: { url: null, provider: null },\n      clip: { url: null, provider: null },\n      start_s: null, end_s: null,\n    };\n  });\n  return { ...b, audio: { url: null, duration_s: null, offset_s: null, words: [] }, shots };\n});\n\nconst spec = {\n  video_id: c.video_id,\n  channel: c.config.slug,\n  topic: c.title,\n  language: c.config.language,\n  titles: c.script.titles,\n  chosen_title: c.script.chosen_title,\n  hook_options: c.script.hook_options,\n  sources: c.script.sources,\n  blocks,\n  shorts_candidates: [],\n  thumbnail: { phrases: (sl.thumbnail && sl.thumbnail.phrases) || [], image_prompt: (sl.thumbnail && sl.thumbnail.image_prompt) || '', options: [], chosen: null },\n  publishing: { description: null, chapters: [], tags: [], pinned_comment: null },\n  outputs: { final_url: null, srt_url: null, preview_url: null, duration_s: null },\n  checks: [\n    ...c.checks,\n    { stage: 'shotlist', name: 'shot_count', passed: Math.abs(total - c.config.format.shots_per_video) <= c.config.format.shots_per_video * 0.3,\n      detail: { shots: total, target: c.config.format.shots_per_video } },\n    { stage: 'shotlist', name: 'spans_match_narration', passed: found >= total * 0.8,\n      detail: { found, total, fallback_blocks: fallbackBlocks } },\n  ],\n};\nreturn [{ json: { video_id: c.video_id, spec, key: `videos/${c.video_id}/video_spec.json` } }];\n"
       },
-      "id": "a1b78bf6-9484-4942-9fd9-be64c66e3f66",
+      "id": "c8174eb6-3084-4309-86a4-3c0c9c09ee35",
       "name": "Montar video_spec",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -238,7 +238,7 @@
           "timeout": 120000
         }
       },
-      "id": "49458be5-5792-4f2c-8dee-5e6231ef2474",
+      "id": "87bf312b-9a65-40de-b2da-5a6c83c7fa8c",
       "name": "Salvar spec",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -264,7 +264,7 @@
           "queryReplacement": "={{ [ $('Pegar próximo tema').first().json.video_id, 'voicing', JSON.stringify($('Montar video_spec').first().json.spec) ] }}"
         }
       },
-      "id": "dba8d10c-1ca5-42cd-b344-6a4105afc0e0",
+      "id": "91dfc52d-ac4c-4a81-bd18-9857b0bf2067",
       "name": "Status: narração",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
@@ -295,7 +295,7 @@
           "timeout": 120000
         }
       },
-      "id": "714ee935-6b5d-459e-bc2f-feb9ef6b40e9",
+      "id": "2d415e05-bfa4-4838-aef4-4a38b8340b39",
       "name": "Worker: narração",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -324,7 +324,7 @@
         "resumeUnit": "hours",
         "options": {}
       },
-      "id": "ac163e1d-37c7-4db3-863e-60a377a13066",
+      "id": "3e4b9005-806c-4544-a05a-dd9b3236103e",
       "name": "Aguardar narração",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -338,13 +338,13 @@
           "name": "Fabrica Callback"
         }
       },
-      "webhookId": "9eed335d-38d7-43b8-8cc1-551639ec2a52"
+      "webhookId": "7cf614b8-bf95-4df2-b137-21ad7e7fedd8"
     },
     {
       "parameters": {
         "jsCode": "// O worker chama a URL de retomada do Wait com o resultado do job.\nconst b = $input.first().json.body;\nif (!b) throw new Error('Narração: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Narração falhou no worker: ' + (b.error || 'sem detalhe'));\nreturn [{ json: b.result }];\n"
       },
-      "id": "3f8dff63-bb4d-440a-a32a-29d10d098725",
+      "id": "bbbd1b66-224a-4fb1-83e2-937fcc22b05a",
       "name": "Checar narração",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -361,7 +361,7 @@
           "queryReplacement": "={{ [ $('Pegar próximo tema').first().json.video_id, 'imaging', JSON.stringify($('Checar narração').first().json.spec) ] }}"
         }
       },
-      "id": "740503d4-96db-4508-97a1-06399ca7c46d",
+      "id": "522564ea-96ab-4cc5-ab24-a40b58068401",
       "name": "Status: imagens",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
@@ -392,7 +392,7 @@
           "timeout": 120000
         }
       },
-      "id": "6d7f2aef-753e-4e1b-bbd2-cfdfcdea70a0",
+      "id": "5264bbf8-bbdb-4d4f-b4d3-c0438c3be227",
       "name": "Worker: imagens",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -421,7 +421,7 @@
         "resumeUnit": "hours",
         "options": {}
       },
-      "id": "6e9f44a1-e318-42aa-a8dc-b6801118948a",
+      "id": "606c4e5e-635b-404b-93f8-9a4b0c150c04",
       "name": "Aguardar imagens",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -435,13 +435,13 @@
           "name": "Fabrica Callback"
         }
       },
-      "webhookId": "36f56794-acfa-49d4-b2a6-fa92eb66cd27"
+      "webhookId": "5f98e96a-c1ec-4dbd-9814-f7f2d5617b12"
     },
     {
       "parameters": {
         "jsCode": "// O worker chama a URL de retomada do Wait com o resultado do job.\nconst b = $input.first().json.body;\nif (!b) throw new Error('Imagens: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Imagens falhou no worker: ' + (b.error || 'sem detalhe'));\nreturn [{ json: b.result }];\n"
       },
-      "id": "c89c04ec-a895-4252-bee3-281ee5a715e2",
+      "id": "3faf23d0-c78d-4d7d-b1e9-761fa3b2e4b6",
       "name": "Checar imagens",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -458,7 +458,7 @@
           "queryReplacement": "={{ [ $('Pegar próximo tema').first().json.video_id, 'assembling', JSON.stringify($('Checar imagens').first().json.spec) ] }}"
         }
       },
-      "id": "48f54670-9709-4f5e-9470-c56dd1908033",
+      "id": "f87102a6-23d5-49e9-ab26-6a2106bf0465",
       "name": "Status: montagem",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
@@ -489,7 +489,7 @@
           "timeout": 120000
         }
       },
-      "id": "63c980f3-f747-48dd-9184-0ee634eeeced",
+      "id": "4588c1f9-c30f-4013-a5fe-2211b69618fb",
       "name": "Worker: montagem",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -518,7 +518,7 @@
         "resumeUnit": "hours",
         "options": {}
       },
-      "id": "98f26d4b-82bb-49cb-80ba-09ac2d9e4c54",
+      "id": "e0c67a67-4359-4f9c-9121-9e2e76850267",
       "name": "Aguardar montagem",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
@@ -532,13 +532,13 @@
           "name": "Fabrica Callback"
         }
       },
-      "webhookId": "ebc9f04a-cd21-43b5-aee4-abad2d350163"
+      "webhookId": "cd13253f-f26b-48c5-b2dc-58b66f1cab87"
     },
     {
       "parameters": {
         "jsCode": "// O worker chama a URL de retomada do Wait com o resultado do job.\nconst b = $input.first().json.body;\nif (!b) throw new Error('Montagem: tempo esgotado esperando o worker');\nif (b.status !== 'succeeded') throw new Error('Montagem falhou no worker: ' + (b.error || 'sem detalhe'));\nreturn [{ json: b.result }];\n"
       },
-      "id": "65c00069-0282-4fe0-8779-72b9123e06a4",
+      "id": "93d08078-09cb-46e3-9a84-38c43f3c87f6",
       "name": "Checar montagem",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -560,7 +560,7 @@
           "timeout": 120000
         }
       },
-      "id": "4eb0c2fe-a636-4a9c-8e78-e261ee7d60bb",
+      "id": "6814f83d-a494-4412-9150-bb1f77dee00f",
       "name": "Links temporários",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -586,7 +586,7 @@
           "queryReplacement": "={{ (() => { const r = $('Checar montagem').first().json; return [ $('Pegar próximo tema').first().json.video_id, JSON.stringify(r.spec), r.outputs.duration_s, r.outputs.final_url, r.outputs.srt_url, r.outputs.preview_url, r.spec_url ]; })() }}"
         }
       },
-      "id": "9b1a0fab-97ce-4658-a7de-ea4860a84afb",
+      "id": "fbca4746-550d-4504-a15a-5cce651b25ed",
       "name": "Salvar resultado",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
@@ -608,7 +608,7 @@
       "parameters": {
         "jsCode": "const r = $('Checar montagem').first().json;\nconst [preview, final, srt] = $('Links temporários').first().json.urls;\nconst spec = r.spec;\nconst d = Math.round(r.outputs.duration_s);\nconst dur = `${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}`;\nconst failed = (spec.checks || []).filter(c => !c.passed).map(c => `• ${c.stage}/${c.name}`);\nconst text = [\n  `🎬 *Vídeo pronto para revisão*`,\n  `*${spec.chosen_title}*`,\n  `Duração: ${dur} · ${spec.blocks.length} blocos · ${spec.sources.length} fontes`,\n  failed.length ? `⚠️ Checagens com alerta:\\n${failed.join('\\n')}` : '✅ Todas as checagens passaram',\n  '',\n  `▶️ Preview (480p): ${preview}`,\n  `⬇️ Vídeo final: ${final}`,\n  srt ? `📝 Legenda SRT: ${srt}` : '',\n  '',\n  'Links válidos por 48 h. Fase 1: publique pelo YouTube Studio.',\n].filter(x => x !== '').join('\\n');\nreturn [{ json: { number: $('Pegar próximo tema').first().json.config.approval.to, text } }];\n"
       },
-      "id": "4f0aca2e-7afb-4130-b488-029eba99b3ea",
+      "id": "6cf2d8de-b769-45cc-8276-8b2657032d36",
       "name": "Mensagem",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -630,7 +630,7 @@
           "timeout": 120000
         }
       },
-      "id": "a1a17d1a-b887-42ee-a9fa-cfb64c18970f",
+      "id": "212f95c3-9590-4b11-a0b6-44103514d867",
       "name": "WhatsApp: avisar",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
