@@ -275,3 +275,79 @@ def integrated_lufs(path: Path) -> float:
     err = run(["ffmpeg", "-v", "info", "-nostats", "-i", str(path), "-af", "ebur128", "-f", "null", "-"])
     found = re.findall(r"I:\s+(-?[\d.]+) LUFS", err)
     return float(found[-1]) if found else float("nan")
+
+
+# ---------------------------------------------------------------------------
+# Clipes verticais para TikTok / Reels (remontados a partir das imagens)
+# ---------------------------------------------------------------------------
+CLIP_W, CLIP_H, CLIP_FG = 1080, 1920, 1080  # quadro 9:16 com a cena num quadrado no meio
+CLIP_FG_Y = 380
+
+
+def vertical_kenburns(image: Path, out: Path, seconds: float, mode: str = "push_in") -> Path:
+    """Um plano em 9:16: fundo desfocado da própria imagem e a cena em movimento
+    num quadrado de 1080 px no meio (espaço livre em cima para o título e embaixo para a legenda)."""
+    fps = settings.fps
+    n = max(1, round(seconds * fps))
+    z_max = 1 + KB_ZOOM
+    cx, cy = "iw/2-(iw/zoom/2)", "ih/2-(ih/zoom/2)"
+    motions = {
+        "push_in": (f"1+{KB_ZOOM}*on/{n}", cx, cy),
+        "pull_out": (f"{z_max}-{KB_ZOOM}*on/{n}", cx, cy),
+        "pan_left": (f"{z_max}", f"(iw-iw/zoom)*(1-on/{n})", cy),
+        "pan_right": (f"{z_max}", f"(iw-iw/zoom)*on/{n}", cy),
+        "pan_up": (f"{z_max}", cx, f"(ih-ih/zoom)*(1-on/{n})"),
+        "pan_down": (f"{z_max}", cx, f"(ih-ih/zoom)*on/{n}"),
+    }
+    z, x, y = motions.get(mode, motions["push_in"])
+    up = float(os.environ.get("KB_UPSCALE", "2"))
+    s = int(CLIP_FG * up) // 2 * 2
+    fc = (
+        "[0:v]split=2[a][b];"
+        f"[a]scale={s}:{s}:force_original_aspect_ratio=increase,crop={s}:{s},"
+        f"zoompan=z='{z}':x='{x}':y='{y}':d={n}:s={CLIP_FG}x{CLIP_FG}:fps={fps}[fg];"
+        f"[b]scale={CLIP_W}:{CLIP_H}:force_original_aspect_ratio=increase,crop={CLIP_W}:{CLIP_H},"
+        f"boxblur=30:3,eq=brightness=-0.18,loop=loop={n}:size=1:start=0,fps={fps}[bg];"
+        f"[bg][fg]overlay=0:{CLIP_FG_Y}:shortest=1,trim=end_frame={n}[v]"
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    run(["ffmpeg", "-y", "-v", "error", "-i", str(image), "-filter_complex", fc, "-map", "[v]",
+         "-frames:v", str(n), *_x264(), "-an", str(out)])
+    return out
+
+
+def write_clip_ass(words: list[dict], header: list[str], total: float, end_card: list[str],
+                   out: Path, font: str = "DejaVu Sans", end_s: float = 2.5) -> Path:
+    """Legenda palavra por palavra abaixo da cena + título fixo em cima + cartão final."""
+    base = write_word_ass(words, out.with_suffix(".words.ass"), font=font).read_text("utf-8")
+    head, events = base.split("[Events]", 1)
+    # legenda logo abaixo do quadrado da cena (o estilo W fica na parte de baixo)
+    head = head.replace(",2,60,60,520,1", ",2,60,60,210,1")
+    head = head.rstrip("\n") + (
+        f"\nStyle: H,{font},66,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,6,2,8,60,60,110,1"
+        f"\nStyle: K,{font},54,&H0005B7F2,&H0005B7F2,&H00000000,&H96000000,-1,0,0,0,100,100,0,0,1,6,2,8,60,60,110,1"
+        f"\nStyle: E,{font},78,&H00FFFFFF,&H00FFFFFF,&H00000000,&HC8000000,-1,0,0,0,100,100,0,0,3,18,0,5,80,80,0,1\n\n"
+    )
+    t0, t_end = _ts(0, ".")[1:-1], _ts(total, ".")[1:-1]
+    extra = []
+    if header:
+        # 1ª linha (destaque amarelo) e 2ª linha (branca) no topo, o clipe todo
+        extra.append(f"Dialogue: 1,{t0},{t_end},K,,0,0,0,,{_ass_escape(header[0]).upper()}")
+        if len(header) > 1:
+            extra.append(f"Dialogue: 1,{t0},{t_end},H,,0,0,0,,\\N{_ass_escape(header[1]).upper()}")
+    if end_card:
+        s = _ts(max(0.0, total - end_s), ".")[1:-1]
+        extra.append(f"Dialogue: 2,{s},{t_end},E,,0,0,0,," + "\\N".join(_ass_escape(x) for x in end_card))
+    out.write_text(head + "[Events]" + events.rstrip("\n") + "\n" + "\n".join(extra) + "\n", encoding="utf-8")
+    return out
+
+
+def finish_clip(video: Path, audio_src: Path, start: float, dur: float, ass: Path, out: Path) -> Path:
+    """Junta o vídeo dos planos com o trecho do áudio final (narração + música já mixadas) e as legendas."""
+    ass_path = str(ass).replace(":", r"\:")
+    run(["ffmpeg", "-y", "-v", "error", "-i", str(video), "-ss", f"{start:.3f}", "-t", f"{dur:.3f}",
+         "-i", str(audio_src), "-filter_complex", f"[0:v]ass='{ass_path}'[v]",
+         "-map", "[v]", "-map", "1:a", *_x264(), "-c:a", "aac", "-b:a", "160k",
+         "-af", "afade=t=out:st=" + f"{max(0.0, dur - 0.6):.3f}" + ":d=0.6",
+         "-shortest", "-movflags", "+faststart", str(out)])
+    return out

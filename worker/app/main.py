@@ -22,7 +22,7 @@ from .settings import settings
 
 app = FastAPI(title="Fábrica de Canais · Worker de render", version="0.1.0")
 
-JobType = Literal["voice", "images", "tts", "align", "kenburns", "assemble", "shorts", "thumbnail", "checks", "package", "youtube_upload"]
+JobType = Literal["voice", "images", "tts", "align", "kenburns", "assemble", "shorts", "thumbnail", "checks", "package", "youtube_upload", "clips"]
 
 
 def _redis() -> Redis:

@@ -106,7 +106,9 @@ def profession(spec: dict) -> str | None:
 
 
 def _first_sentences(text: str, n: int = 2) -> str:
-    parts = re.findall(r"[^.!?]+[.!?]+", text or "")
+    # só termina a frase em . ! ? seguido de espaço e maiúscula (ou fim do texto):
+    # "Levels.fyi" e "U.S. median" não quebram a frase
+    parts = re.findall(r".+?[.!?](?=\s+[A-Z\"“']|\s*$)", (text or "").strip(), flags=re.S)
     return " ".join(p.strip() for p in parts[:n]) or (text or "")[:200]
 
 
@@ -161,3 +163,47 @@ def short_metadata(short: dict, spec: dict, cfg: dict, idx: int) -> dict:
     first = _clean(_first_sentences(short.get("text", ""), 1))
     description = f"{first}\n\nFull video: {{{{LONG_URL}}}}\n\n#Shorts #Careers"
     return {"title": title, "description": description[:4900]}
+
+
+# ---------------------------------------------------------------------------
+# Clipes para TikTok / Reels (um por nível)
+# ---------------------------------------------------------------------------
+def select_clips(spec: dict, whole_max_s: float = 75.0, cut_max_s: float = 60.0) -> list[dict]:
+    """Um clipe por bloco. Bloco curto vai inteiro; bloco longo é cortado no fim da
+    última frase que cabe em cut_max_s, sempre começando do início do bloco (onde
+    está a apresentação do nível)."""
+    sents = _sentences(spec)
+    clips = []
+    for bi, b in enumerate(spec["blocks"]):
+        audio = b.get("audio") or {}
+        off, dur = audio.get("offset_s"), audio.get("duration_s")
+        if off is None or not dur:
+            continue
+        mine = [s for s in sents if s["block"] == bi]
+        if dur <= whole_max_s or not mine:
+            end = off + dur
+        else:
+            end = mine[0]["e"]
+            for s in mine:
+                if s["e"] - off > cut_max_s:
+                    break
+                end = s["e"]
+        text = " ".join(s["text"] for s in mine if s["e"] <= end + 0.01)
+        clips.append({"n": len(clips) + 1, "block": bi, "title": b["title"],
+                      "start_s": round(max(0.0, off - 0.05), 3), "end_s": round(end + 0.4, 3), "text": text})
+    return clips
+
+
+def clip_caption(clip: dict, spec: dict, cfg: dict) -> dict:
+    """Título fixo do clipe e a legenda para colar no TikTok."""
+    prof = profession(spec) or ""
+    m = re.match(r"^\s*(Level\s*\d+)\s*[-–:]\s*(.+)$", clip["title"], re.I)
+    level, role = (m.group(1), m.group(2)) if m else ("", clip["title"])
+    header = [f"{prof} · {level}".strip(" ·") if prof else level or clip["title"], role]
+    hook = _clean(_first_sentences(clip.get("text", ""), 1))
+    tags = ["#" + re.sub(r"[^A-Za-z0-9]", "", prof.title())] if prof else []
+    tags += ["#careers", "#careertok", "#jobs"]
+    channel = cfg.get("name", "")
+    caption = (f"{level + ' of a ' + prof + chr(39) + 's career' if prof and level else clip['title']}: {hook}\n\n"
+               f"Full video on YouTube: {channel}\n{' '.join(tags)}").strip()
+    return {"header": [h for h in header if h], "caption": caption[:2100], "hook": hook}

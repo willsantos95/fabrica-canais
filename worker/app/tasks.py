@@ -438,6 +438,65 @@ def h_package(job: dict, inp: dict, wd: Path) -> dict:
             "publishing": meta, "outputs": spec["outputs"], "checks": checks}
 
 
+def h_clips(job: dict, inp: dict, wd: Path) -> dict:
+    """Clipes verticais (TikTok/Reels), um por nível, remontados a partir das imagens
+    com o áudio já mixado do vídeo final. Sem custo de API."""
+    from . import package
+
+    spec = json.loads(storage.download(inp["spec_url"], wd / "spec.json").read_text("utf-8"))
+    cfg = inp.get("config") or {}
+    final = storage.download(spec["outputs"]["final_url"], wd / "final.mp4")
+    end_card = inp.get("end_card") or ["Full video on YouTube", cfg.get("name", "")]
+    fps = settings.fps
+    shots = sorted((s for b in spec["blocks"] for s in b["shots"]), key=lambda s: s["order"])
+    imgs: dict[str, Path] = {}
+
+    def image_of(shot: dict) -> Path:
+        if shot["shot_id"] not in imgs:
+            imgs[shot["shot_id"]] = storage.download(shot["image"]["url"], wd / "img" / f"{shot['shot_id']}.img")
+        return imgs[shot["shot_id"]]
+
+    clips = []
+    for c in package.select_clips(spec, float(inp.get("whole_max_s", 75)), float(inp.get("cut_max_s", 60))):
+        S, E = c["start_s"], c["end_s"]
+        cd = wd / f"clip{c['n']:02d}"
+        # planos que aparecem dentro da janela, cortados nas bordas, em quadros inteiros
+        parts = []
+        for s in shots:
+            a, b = max(S, s.get("start_s") or 0), min(E, s.get("end_s") or 0)
+            frames = round(b * fps) - round(a * fps)
+            if frames <= 0 or not (s.get("image") or {}).get("url"):
+                continue
+            mode = (s.get("motion") or {}).get("kenburns") or "push_in"
+            parts.append(media.vertical_kenburns(image_of(s), cd / f"{s['order']:03d}.mp4", frames / fps, mode))
+        if not parts:
+            continue
+        video = media.concat_videos(parts, cd / "video.mp4")
+        dur = media.duration(video)
+        words = []
+        for b in spec["blocks"]:
+            off = (b.get("audio") or {}).get("offset_s") or 0
+            for w in (b.get("audio") or {}).get("words") or []:
+                ws, we = w["s"] + off, w["e"] + off
+                if ws >= S - 0.05 and we <= E + 0.05:
+                    words.append({"w": w["w"], "s": max(0.0, ws - S), "e": min(dur, we - S)})
+        meta = package.clip_caption(c, spec, cfg)
+        ass = media.write_clip_ass(words, meta["header"], dur, end_card, cd / "subs.ass")
+        out = media.finish_clip(video, final, S, dur, ass, wd / f"tiktok{c['n']:02d}.mp4")
+        clips.append({
+            "n": c["n"], "title": c["title"], "start_s": S, "end_s": E,
+            "duration_s": round(media.duration(out), 2),
+            "url": storage.upload(out, _key(job, f"tiktok/clip{c['n']:02d}.mp4"), "video/mp4"),
+            "caption": meta["caption"],
+        })
+        shutil.rmtree(cd, ignore_errors=True)
+        out.unlink(missing_ok=True)
+        log.info("clipe %d pronto (%.1fs): %s", c["n"], clips[-1]["duration_s"], c["title"])
+    if not clips:
+        raise RuntimeError("nenhum clipe gerado (o vídeo não tem tempos de áudio por bloco)")
+    return {"clips": clips, "title": spec.get("publishing", {}).get("title") or spec.get("chosen_title")}
+
+
 def h_youtube_upload(job: dict, inp: dict, wd: Path) -> dict:
     """Envia cada arquivo para a sessão resumable que o n8n abriu. Entrada:
     uploads: [{upload_url, media_url, content_type?, ref?}]"""
@@ -498,4 +557,5 @@ HANDLERS = {
     "checks": h_checks,
     "package": h_package,
     "youtube_upload": h_youtube_upload,
+    "clips": h_clips,
 }
