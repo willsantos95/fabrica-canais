@@ -14,7 +14,7 @@ Ponto de vista: ${cfg.point_of_view}
 
 Escreva o roteiro de UM Short de ${minS} a ${maxS} segundos (entre ${minW} e ${maxW} palavras de narração no total) sobre UMA notícia de ${SPORT}.
 Regras de conteúdo (obrigatórias):
-- Use SÓ os fatos das fontes recebidas. Nomes, números, placares, valores e datas só se estiverem nas fontes. Se uma fonte estiver em inglês, traduza.
+- Use SÓ os fatos das fontes recebidas. Nomes, números, placares, valores e datas só se estiverem nas fontes. Se uma fonte estiver em inglês, traduza tudo para o português, inclusive termos técnicos (ex.: "blood clot" = coágulo); nada de palavras em inglês entre aspas.
 - Nada de boato, opinião disfarçada de fato ou exagero. Se as fontes divergem, diga "segundo o <veículo>".
 - Fale só deste esporte e desta notícia; não misture outros esportes.
 - Primeira frase = gancho com o fato principal, até 14 palavras, sem "olá", sem "neste vídeo".
@@ -23,12 +23,12 @@ Regras de conteúdo (obrigatórias):
 - Não peça inscrição na narração (o cartão final já faz isso).
 
 Divida em 5 a 7 trechos ("beats"). Cada trecho tem a narração (1 a 3 frases) e 1 visual:
-- {"type":"card","card":{...}} cartão de dados desenhado pelo sistema, em português, com textos CURTOS tirados das fontes:
+- {"type":"card","card":{...}} cartão de dados desenhado pelo sistema, TODO em português (nada em inglês), com textos CURTOS tirados das fontes:
   * {"kind":"score","title":"Final","home":"Time A","away":"Time B","home_score":"112","away_score":"108","note":"..."}
   * {"kind":"stat","value":"42","label":"pontos de Fulano","note":"..."}
   * {"kind":"list","title":"...","items":["...","...","..."]} (2 a 4 itens de até 40 caracteres)
   * {"kind":"fact","title":"...","text":"frase de até 90 caracteres"}
-  * {"kind":"quote","text":"citação curta que está na fonte","source":"quem disse"}
+  * {"kind":"quote","text":"citação curta da fonte, TRADUZIDA para o português","source":"quem disse"}
 - {"type":"image","prompt":"..."} ilustração gerada por IA. Prompt em INGLÊS descrevendo a cena (ação do esporte, estádio, torcida, vestiário, prancheta, bola, troféu), composição quadrada. Proibido: rosto reconhecível, nome de atleta real, logos, escudos, números de camisa, texto na imagem.
 Use pelo menos 2 cartões e pelo menos 2 imagens. Placar ou número marcante → cartão.
 

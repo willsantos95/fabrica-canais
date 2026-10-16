@@ -64,7 +64,7 @@ const config = node({
           {
             "id": "c-force",
             "name": "force",
-            "value": expr("{{ !!$('Testar (ignora prévia)').isExecuted }}"),
+            "value": expr("{{ $execution.mode !== 'trigger' }}"),
             "type": "boolean"
           }
         ]

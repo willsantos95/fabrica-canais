@@ -59,9 +59,9 @@ WITH ch AS (
     AND ($1::boolean OR (c.active AND COALESCE((c.config->'news'->>'preview')::boolean, true) = false))
     AND ($1::boolean OR extract(hour FROM now() AT TIME ZONE '{TZ}')
          BETWEEN COALESCE((c.config->'news'->'active_hours'->>0)::int, 8) AND COALESCE((c.config->'news'->'active_hours'->>1)::int, 23))
-    -- um Short por vez por canal
-    AND NOT EXISTS (SELECT 1 FROM videos v WHERE v.channel_id = c.id AND v.status IN ({ACTIVE_STATUSES})
-                    AND v.updated_at > now() - interval '45 minutes')
+    -- um Short por vez por canal (o teste manual ignora)
+    AND ($1::boolean OR NOT EXISTS (SELECT 1 FROM videos v WHERE v.channel_id = c.id AND v.status IN ({ACTIVE_STATUSES})
+                    AND v.updated_at > now() - interval '45 minutes'))
     AND ($1::boolean OR (SELECT count(*) FROM videos v WHERE v.channel_id = c.id AND v.spec->>'type' = 'news_short'
          AND v.created_at >= date_trunc('day', now() AT TIME ZONE '{TZ}') AT TIME ZONE '{TZ}')
          < COALESCE((c.config->'news'->>'max_shorts_per_day')::int, 10))
@@ -86,7 +86,7 @@ def build_news_short() -> str:
     wf.node("t_cron", "n8n-nodes-base.scheduleTrigger", 1.2, "A cada 20 min (8h-23h)",
             {"rule": {"interval": [{"field": "cronExpression", "expression": "*/20 8-23 * * *"}]}}, [0, -100], fn="trigger")
     wf.node("t_manual", "n8n-nodes-base.manualTrigger", 1, "Testar (ignora prévia e horário)", {}, [0, 100], fn="trigger")
-    config_node(wf, extra=[{"id": "c-force", "name": "force", "value": "={{ !!$('Testar (ignora prévia e horário)').isExecuted }}", "type": "boolean"}])
+    config_node(wf, extra=[{"id": "c-force", "name": "force", "value": "={{ $execution.mode !== 'trigger' }}", "type": "boolean"}])
     wf.node("prox", "n8n-nodes-base.postgres", 2.5, "Próxima pauta", pg(PROXIMA_SQL, "={{ [ $json.force ] }}"),
             [480, 0], CRED["pg"], output=[{"video_id": "v", "topic_id": "t", "title": "x", "notes": "{}", "config": {}, "channel_id": "c"}], **RETRY)
     wf.node("ped", "n8n-nodes-base.code", 2, "Pedido do roteiro", {"jsCode": code("roteiro.js")}, [720, 0], output=[{"sport": "nba", "body": {}}])
@@ -162,7 +162,7 @@ def build_news_recap() -> str:
     wf.node("t_cron", "n8n-nodes-base.scheduleTrigger", 1.2, "Às 22h, 22h30, 23h e 23h30",
             {"rule": {"interval": [{"field": "cronExpression", "expression": "0,30 22-23 * * *"}]}}, [0, -100], fn="trigger")
     wf.node("t_manual", "n8n-nodes-base.manualTrigger", 1, "Testar (ignora prévia)", {}, [0, 100], fn="trigger")
-    config_node(wf, extra=[{"id": "c-force", "name": "force", "value": "={{ !!$('Testar (ignora prévia)').isExecuted }}", "type": "boolean"}])
+    config_node(wf, extra=[{"id": "c-force", "name": "force", "value": "={{ $execution.mode !== 'trigger' }}", "type": "boolean"}])
     wf.node("prox", "n8n-nodes-base.postgres", 2.5, "Próximo resumo", pg(RESUMO_SQL, "={{ [ $json.force ] }}"),
             [480, 0], CRED["pg"], output=[{"video_id": "v", "sport": "nba", "stories": [], "config": {}}], **RETRY)
     wf.node("ped", "n8n-nodes-base.code", 2, "Pedido do resumo", {"jsCode": code("resumo_pedido.js")}, [720, 0],

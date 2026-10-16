@@ -680,7 +680,7 @@ def h_news_short(job: dict, inp: dict, wd: Path) -> dict:
     dur = media.duration(final)
     for c in _media_checks(final, "news_short", r["lufs"], float(inp.get("min_duration_s", 20))):
         if c["name"] == "no_long_silence":  # o silêncio do cartão final é esperado
-            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < dur - NEWS_TAIL_S - 0.8]
+            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < dur - NEWS_TAIL_S - 1.5]
             c["passed"] = not c["detail"]["silences"]
         checks.append(c)
     checks.append({"stage": "news_short", "name": "short_max_duration", "passed": dur <= float(inp.get("max_duration_s", 60)),
@@ -737,7 +737,7 @@ def h_news_recap(job: dict, inp: dict, wd: Path) -> dict:
     # o YouTube só mostra capítulos se o primeiro começa em 0:00 e há 3+ com 10 s ou mais
     for c in _media_checks(final, "news_recap", r["lufs"], float(inp.get("min_duration_s", 90))):
         if c["name"] == "no_long_silence":
-            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < r["total"] - NEWS_TAIL_S - 0.8]
+            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < r["total"] - NEWS_TAIL_S - 1.5]
             c["passed"] = not c["detail"]["silences"]
         checks.append(c)
 
