@@ -21,10 +21,10 @@ CONFIG = {
     "niche": "Notícias rápidas e análise de futebol, NBA e NFL em português, em Shorts e compilados semanais",
     "tone": "narrador esportivo jovem e direto, energia alta sem gritar, frases curtas, análise em uma frase, nunca inventa fatos",
     "point_of_view": "Toda notícia vem com o porquê importa: o que muda na tabela, no elenco ou na temporada.",
-    "format": {"type": "news_short", "short_seconds": [40, 55], "words_per_minute": 175, "compilation": "weekly"},
+    "format": {"type": "news_short", "short_seconds": [40, 55], "words_per_minute": 175, "compilation": "daily_per_sport"},
     "voice": {"provider": "edge-tts", "fallback": "edge-tts", "voice_id": "", "edge_voice": "pt-BR-FranciscaNeural", "rate": "+10%"},
     "visual": {
-        "style_block": "[STYLE] bold modern sports broadcast illustration, dynamic diagonal composition, stadium lights, high contrast, saturated colors, generic players seen from behind or in silhouette, no faces, 9:16 vertical",
+        "style_block": "[STYLE] bold modern sports broadcast illustration, dynamic diagonal composition, stadium lights, high contrast, saturated colors, generic players seen from behind or in silhouette, no faces, square composition",
         "negative_prompt": "real athlete faces, recognizable people, team logos, league logos, jersey numbers of real players, sponsor logos, watermark, text, gore",
         "image_provider": "cloudflare", "image_fallback": "gemini",
         "sport_colors": {"futebol": "#1DB954", "nba": "#F58426", "nfl": "#1E4FD8"},

@@ -13,7 +13,7 @@ from pathlib import Path
 
 import httpx
 
-from . import align, images, media, storage, thumbnail, tts
+from . import align, images, media, newsvideo, storage, thumbnail, tts
 from .settings import settings
 
 log = logging.getLogger("fabrica.worker")
@@ -545,6 +545,222 @@ def h_checks(job: dict, inp: dict, wd: Path) -> dict:
                                     float(inp.get("min_duration_s", 0)))}
 
 
+# ---------------------------------------------------------------------------
+# Canal de notícias (Short vertical por notícia e resumo diário horizontal)
+# ---------------------------------------------------------------------------
+NEWS_GAP_S = 0.25   # respiro entre trechos de narração
+NEWS_TAIL_S = 2.3   # cartão final
+
+
+def _narrate(text: str, voice: str, rate: str, out: Path) -> tuple[Path, list[dict], float]:
+    words: list[dict] = []
+    for attempt in range(3):  # edge-tts às vezes devolve áudio vazio
+        words = tts.synthesize(newsvideo.clean_tts(text), voice, out, rate=rate)
+        if out.exists() and out.stat().st_size > 1000 and words:
+            break
+        time.sleep(2 * (attempt + 1))
+    else:
+        raise RuntimeError(f"edge-tts falhou: {text[:60]}")
+    return out, words, media.duration(out)
+
+
+def _news_scenes(visuals: list[dict], inp: dict, wd: Path, tag: str, checks: list[dict]) -> list[dict]:
+    """Imagens 1:1 (IA) e cartões de dados de um trecho. Imagem que falhar vira cartão com a manchete."""
+    sport = inp.get("sport") or "futebol"
+    color = inp.get("color") or newsvideo.SPORT_COLOR.get(sport, "#F2B705")
+    label = newsvideo.SPORT_LABEL.get(sport, sport.upper())
+    style = inp.get("image_style") or ""
+
+    def one(i_v: tuple[int, dict]) -> dict:
+        i, v = i_v
+        name = f"{tag}-{i}"
+        if v.get("url"):  # cena já pronta (resumo reaproveitando os Shorts)
+            src = storage.download(v["url"], wd / "src" / f"{name}{Path(v['url'].split('?')[0]).suffix or '.img'}")
+            return {"path": newsvideo.square(src, wd / "scenes" / f"{name}.jpg"), "kind": "reuse", "motion": v.get("motion")}
+        if v.get("type") == "card" or v.get("card"):
+            out = newsvideo.render_card(v.get("card") or v, color, wd / "scenes" / f"{name}.png")
+            return {"path": out, "kind": "card", "motion": v.get("motion") or "push_in", "card": v.get("card") or v}
+        prompt = f"{v.get('prompt', '')}. {style}".strip(". ")
+        try:
+            raw, provider = images.generate(prompt, inp.get("image_model"), "1:1")
+            out = images.to_jpeg(raw, wd / "scenes" / f"{name}.jpg", width=newsvideo.SQ, aspect=1.0)
+            return {"path": out, "kind": "image", "provider": provider, "prompt": prompt, "motion": v.get("motion")}
+        except Exception as exc:
+            log.warning("imagem %s falhou, usando cartão: %s", name, exc)
+            checks.append({"stage": "images", "name": f"image_fallback:{name}", "passed": False,
+                           "detail": {"error": str(exc)[:300]}})
+            out = newsvideo.title_card(inp.get("headline") or "", color, wd / "scenes" / f"{name}.png", label)
+            return {"path": out, "kind": "fallback", "motion": "push_in"}
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        return list(pool.map(one, enumerate(visuals)))
+
+
+def _news_render(job: dict, inp: dict, wd: Path, segments: list[dict], layout: str) -> dict:
+    """segments: [{narration, scenes: [{path, motion}], panel: Path}] → vídeo final com narração.
+    Cada trecho dura o tempo da sua narração; as cenas do trecho dividem esse tempo."""
+    voice, rate = inp["voice"], inp.get("rate", "+0%")
+    fps = settings.fps
+    audio_parts, words, timeline = [], [], []
+    t = 0.0
+    for i, seg in enumerate(segments):
+        mp3, w, dur = _narrate(seg["narration"], voice, rate, wd / "audio" / f"{i:02d}.mp3")
+        audio_parts.append(media.to_wav(mp3, wd / "audio" / f"{i:02d}.wav"))
+        last = i == len(segments) - 1
+        tail = NEWS_TAIL_S if (last and inp.get("end_card")) else 0.0
+        gap = NEWS_GAP_S if not last else 0.4
+        audio_parts.append(media.silence(wd / "audio" / f"{i:02d}-gap.wav", gap + tail))
+        words += [{"w": x["w"], "s": round(x["s"] + t, 3), "e": round(x["e"] + t, 3)} for x in w]
+        seg_len = dur + gap + tail
+        timeline.append({"start_s": round(t, 3), "end_s": round(t + seg_len, 3), "narration_s": round(dur, 3)})
+        t += seg_len
+    total = t
+    narration = media.concat_audio(audio_parts, wd / "narration.wav")
+
+    motions = ["push_in", "pan_right", "pull_out", "pan_left", "pan_up"]
+    clips, k = [], 0
+    for i, seg in enumerate(segments):
+        S, E = timeline[i]["start_s"], timeline[i]["end_s"]
+        scenes = seg["scenes"] or [{"path": seg["fallback"], "motion": "push_in"}]
+        # cenas longas demais cansam: repete as cenas do trecho com outro movimento
+        per_max = float(inp.get("max_scene_s", 7 if layout == "vertical" else 9))
+        n = max(len(scenes), int(-(-(E - S) // per_max)))
+        for j in range(n):
+            a, b = S + (E - S) * j / n, S + (E - S) * (j + 1) / n
+            frames = round(b * fps) - round(a * fps)
+            if frames <= 0:
+                continue
+            sc = scenes[j % len(scenes)]
+            mode = sc.get("motion") if j < len(scenes) and sc.get("motion") else motions[k % len(motions)]
+            clips.append(newsvideo.scene_clip(sc["path"], seg["panel"], wd / "clips" / f"{k:03d}.mp4",
+                                              frames / fps, layout, mode))
+            k += 1
+    video = media.concat_videos(clips, wd / "video.mp4")
+    if layout == "vertical":
+        ass = media.write_word_ass(words, wd / "subs.ass")
+        newsvideo.add_end_card(ass, total, inp.get("end_card") or [])
+        video = newsvideo.burn(video, ass, wd / "video.subs.mp4")
+    elif inp.get("end_card"):
+        ass = wd / "end.ass"
+        ass.write_text("[Script Info]\nScriptType: v4.00+\nPlayResX: 1920\nPlayResY: 1080\n\n[V4+ Styles]\n"
+                       "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
+                       "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
+                       "Alignment, MarginL, MarginR, MarginV, Encoding\n\n[Events]\n"
+                       "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n", "utf-8")
+        newsvideo.add_end_card(ass, total, inp["end_card"])
+        video = newsvideo.burn(video, ass, wd / "video.subs.mp4")
+    music = storage.download(inp["music_url"], wd / "music.mp3") if inp.get("music_url") else None
+    lufs = float(inp.get("lufs", -14))
+    final = media.master(video, narration, wd / "final.mp4", lufs=lufs, music=music,
+                         music_db=float(inp.get("music_db", -24)))
+    return {"final": final, "words": words, "timeline": timeline, "total": total, "lufs": lufs}
+
+
+def h_news_short(job: dict, inp: dict, wd: Path) -> dict:
+    """Short vertical (1080x1920) de uma notícia. Entrada:
+    sport, headline, sources_label, channel_name, voice, rate, image_style, end_card,
+    beats: [{narration, visuals: [{type: image, prompt} | {type: card, card: {...}}]}]"""
+    sport = inp.get("sport") or "futebol"
+    color = inp.get("color") or newsvideo.SPORT_COLOR.get(sport, "#F2B705")
+    panel = newsvideo.vertical_panel(inp.get("headline") or "", sport, color, inp.get("channel_name") or "",
+                                     inp.get("sources_label") or "", wd / "panel.png")
+    checks: list[dict] = []
+    beats = inp["beats"]
+    scenes = [_news_scenes(b.get("visuals") or ([b["visual"]] if b.get("visual") else []), inp, wd, f"b{i:02d}", checks)
+              for i, b in enumerate(beats)]
+    fallback = newsvideo.title_card(inp.get("headline") or "", color, wd / "scenes" / "title.png",
+                                    newsvideo.SPORT_LABEL.get(sport, sport.upper()))
+    segs = [{"narration": b["narration"], "scenes": scenes[i], "panel": panel, "fallback": fallback}
+            for i, b in enumerate(beats)]
+    r = _news_render(job, inp, wd, segs, "vertical")
+    final = r["final"]
+
+    first = next((s["path"] for ss in scenes for s in ss), fallback)
+    cov = newsvideo.cover(first, panel, wd / "cover.jpg", "vertical")
+    dur = media.duration(final)
+    for c in _media_checks(final, "news_short", r["lufs"], float(inp.get("min_duration_s", 20))):
+        if c["name"] == "no_long_silence":  # o silêncio do cartão final é esperado
+            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < dur - NEWS_TAIL_S - 0.8]
+            c["passed"] = not c["detail"]["silences"]
+        checks.append(c)
+    checks.append({"stage": "news_short", "name": "short_max_duration", "passed": dur <= float(inp.get("max_duration_s", 60)),
+                   "detail": {"duration_s": round(dur, 2)}})
+    # cenas sobem para o resumo diário reaproveitar sem gerar imagem de novo
+    out_beats = []
+    for i, b in enumerate(beats):
+        ups = []
+        for j, s in enumerate(scenes[i]):
+            ext = s["path"].suffix
+            ups.append({"kind": s["kind"], "card": s.get("card"), "prompt": s.get("prompt"),
+                        "url": storage.upload(s["path"], _key(job, f"scenes/b{i:02d}-{j}{ext}"),
+                                              "image/png" if ext == ".png" else "image/jpeg")})
+        out_beats.append({"narration": b["narration"], "scenes": ups, **r["timeline"][i]})
+    spec = {"type": "news_short", "sport": sport, "headline": inp.get("headline"), "beats": out_beats,
+            "words": r["words"], "duration_s": round(dur, 2), "checks": checks}
+    spec_path = wd / "news_spec.json"
+    spec_path.write_text(json.dumps(spec, ensure_ascii=False), "utf-8")
+    return {
+        "url": storage.upload(final, _key(job, "short.mp4"), "video/mp4"),
+        "cover_url": storage.upload(cov, _key(job, "cover.jpg"), "image/jpeg"),
+        "spec_url": storage.upload(spec_path, _key(job, "news_spec.json"), "application/json"),
+        "duration_s": round(dur, 2),
+        "beats": out_beats,
+        "checks": checks,
+        "fallback_images": sum(1 for ss in scenes for s in ss if s["kind"] == "fallback"),
+    }
+
+
+def h_news_recap(job: dict, inp: dict, wd: Path) -> dict:
+    """Resumo horizontal (1920x1080) de um esporte. Entrada:
+    sport, title, channel_name, voice, rate, end_card, thumbnail_lines,
+    segments: [{headline, kicker?, narration, visuals: [{url} | {type: card, card} | {type: image, prompt}]}]
+    (o primeiro costuma ser a abertura e o último o fechamento, com cartões)."""
+    sport = inp.get("sport") or "futebol"
+    color = inp.get("color") or newsvideo.SPORT_COLOR.get(sport, "#F2B705")
+    label = newsvideo.SPORT_LABEL.get(sport, sport.upper())
+    checks: list[dict] = []
+    stories = [s for s in inp["segments"] if s.get("story")]
+    segs, chapters = [], []
+    for i, s in enumerate(inp["segments"]):
+        n = stories.index(s) + 1 if s in stories else 0
+        counter = f"{n}/{len(stories)}" if n else (inp.get("title") or "")
+        panel = newsvideo.horizontal_panel(s.get("headline") or inp.get("title") or "", sport, color,
+                                           inp.get("channel_name") or "", counter, wd / "panels" / f"{i:02d}.png",
+                                           s.get("kicker") or "")
+        fb = newsvideo.title_card(s.get("headline") or "", color, wd / "scenes" / f"t{i:02d}.png", label)
+        segs.append({"narration": s["narration"], "panel": panel, "fallback": fb,
+                     "scenes": _news_scenes(s.get("visuals") or [], {**inp, "headline": s.get("headline")}, wd, f"s{i:02d}", checks)})
+    r = _news_render(job, inp, wd, segs, "horizontal")
+    final = r["final"]
+    for i, s in enumerate(inp["segments"]):
+        chapters.append({"t": round(r["timeline"][i]["start_s"]), "title": s.get("chapter") or s.get("headline") or ""})
+    # o YouTube só mostra capítulos se o primeiro começa em 0:00 e há 3+ com 10 s ou mais
+    for c in _media_checks(final, "news_recap", r["lufs"], float(inp.get("min_duration_s", 90))):
+        if c["name"] == "no_long_silence":
+            c["detail"]["silences"] = [x for x in c["detail"]["silences"] if x["start"] < r["total"] - NEWS_TAIL_S - 0.8]
+            c["passed"] = not c["detail"]["silences"]
+        checks.append(c)
+
+    thumbs = []
+    bg = next((x["path"] for sg in segs[1:] + segs[:1] for x in sg["scenes"] if x["kind"] in ("image", "reuse")), None)
+    if bg and inp.get("thumbnail_lines"):
+        out = wd / "thumb.jpg"
+        check = thumbnail.render(bg, inp["thumbnail_lines"], out, settings.font_path, accent=color)
+        thumbs.append({"url": storage.upload(out, _key(job, "thumbs/thumb1.jpg"), "image/jpeg"),
+                       "lines": inp["thumbnail_lines"], "check": check})
+    srt = media.write_srt(r["words"], wd / "recap.srt")
+    dur = media.duration(final)
+    return {
+        "url": storage.upload(final, _key(job, "recap.mp4"), "video/mp4"),
+        "srt_url": storage.upload(srt, _key(job, "recap.srt"), "application/x-subrip"),
+        "thumbnails": thumbs,
+        "chapters": chapters,
+        "duration_s": round(dur, 2),
+        "checks": checks,
+        "fallback_images": sum(1 for sg in segs for x in sg["scenes"] if x["kind"] == "fallback"),
+    }
+
+
 HANDLERS = {
     "voice": h_voice,
     "images": h_images,
@@ -558,4 +774,6 @@ HANDLERS = {
     "package": h_package,
     "youtube_upload": h_youtube_upload,
     "clips": h_clips,
+    "news_short": h_news_short,
+    "news_recap": h_news_recap,
 }

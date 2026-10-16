@@ -1,4 +1,4 @@
-import { workflow, node, trigger, switchCase, expr } from '@n8n/workflow-sdk';
+import { workflow, node, trigger, switchCase, ifElse, expr } from '@n8n/workflow-sdk';
 
 const hook = trigger({
   type: "n8n-nodes-base.webhook",
@@ -139,7 +139,7 @@ const decide = node({
   config: {
     "name": "Interpretar",
     "parameters": {
-      "jsCode": "const m = $('Ler resposta').first().json;\nconst parse = x => typeof x === 'string' ? JSON.parse(x) : x;\nconst rows = $input.all().map(i => i.json).filter(r => r.video_id);\n// sem vídeo aguardando para esse número: não responde (evita responder \"1\" de qualquer conversa)\nif (!rows.length) return [];\nconst titleOf = r => { const s = parse(r.spec); return s.publishing?.title || s.chosen_title; };\nconst list = rows.map(r => `#${r.code} · ${r.channel_name} · ${titleOf(r)}`).join('\\n');\nconst number0 = parse(rows[0].config).approval?.to || m.sender;\nconst help = reply => [{ json: { action: 'help', reply, number: number0 } }];\nlet v;\nif (m.code) {\n  const hits = rows.filter(r => r.code.toLowerCase() === m.code);\n  if (!hits.length) return help(`Não achei vídeo aguardando aprovação com o código #${m.code.toUpperCase()}.\\n\\nPendentes:\\n${list}`);\n  if (hits.length > 1) return help(`Mais de um vídeo com o código #${m.code.toUpperCase()}. Responda pelo YouTube Studio ou rejeite um deles.\\n\\n${list}`);\n  v = hits[0];\n} else if (rows.length > 1) {\n  return help(`Há ${rows.length} vídeos aguardando aprovação. Inclua o código na resposta, ex.: ${m.cmd}${m.arg ? ' ' + m.arg : ''} #${rows[0].code}\\n\\n${list}`);\n} else {\n  v = rows[0];\n}\nconst spec = parse(v.spec);\nconst cfg = parse(v.config);\nconst number = cfg.approval?.to || m.sender;\nconst title = spec.publishing?.title || spec.chosen_title;\nconst tag = `[${v.channel_name} #${v.code}]`;\nlet action = 'help';\nlet reply = '';\nif (m.cmd === 1) {\n  action = 'approve';\n  reply = `✅ Aprovado ${tag}: *${title}*\\nVou agendar no YouTube e te aviso com os links.`;\n} else if (m.cmd === 2) {\n  action = 'reject';\n  reply = `🗑️ Rejeitado ${tag}: *${title}*${m.arg ? `\\nMotivo: ${m.arg}` : ''}`;\n} else if (m.cmd === 3) {\n  const n = parseInt(m.arg, 10);\n  const opts = spec.thumbnail?.options || [];\n  if (!(n >= 1 && n <= opts.length)) reply = `Escolha uma thumbnail de 1 a ${opts.length}. Ex.: 3 2 #${v.code}`;\n  else { spec.thumbnail.chosen = n; action = 'edit'; reply = `🖼️ ${tag} Thumbnail ${n} escolhida.`; }\n} else if (m.cmd === 4) {\n  const n = parseInt(m.arg, 10);\n  const titles = (spec.titles || []).slice(0, 5);\n  if (!(n >= 1 && n <= titles.length)) reply = `Escolha um título de 1 a ${titles.length}. Ex.: 4 3 #${v.code}`;\n  else {\n    spec.chosen_title = titles[n - 1];\n    spec.publishing = { ...(spec.publishing || {}), title: titles[n - 1].replace(/[<>]/g, '').slice(0, 100) };\n    action = 'edit';\n    reply = `📝 ${tag} Título ${n}: *${titles[n - 1]}*`;\n  }\n}\nif (action === 'edit') reply += `\\n\\nResponda 1 #${v.code} para aprovar, 2 #${v.code} para rejeitar, 3 N (thumbnail) ou 4 N (título).`;\nreturn [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender,\n  publish_workflow_id: cfg.youtube?.publish_workflow_id || 'y3zthNcqybMcQEl0' } }];\n"
+      "jsCode": "const m = $('Ler resposta').first().json;\nconst parse = x => typeof x === 'string' ? JSON.parse(x) : x;\nconst rows = $input.all().map(i => i.json).filter(r => r.video_id);\n// sem vídeo aguardando para esse número: não responde (evita responder \"1\" de qualquer conversa)\nif (!rows.length) return [];\nconst titleOf = r => { const s = parse(r.spec); return s.publishing?.title || s.chosen_title; };\nconst list = rows.map(r => `#${r.code} · ${r.channel_name} · ${titleOf(r)}`).join('\\n');\nconst number0 = parse(rows[0].config).approval?.to || m.sender;\nconst help = reply => [{ json: { action: 'help', reply, number: number0 } }];\nlet v;\nif (m.code) {\n  const hits = rows.filter(r => r.code.toLowerCase() === m.code);\n  if (!hits.length) return help(`Não achei vídeo aguardando aprovação com o código #${m.code.toUpperCase()}.\\n\\nPendentes:\\n${list}`);\n  if (hits.length > 1) return help(`Mais de um vídeo com o código #${m.code.toUpperCase()}. Responda pelo YouTube Studio ou rejeite um deles.\\n\\n${list}`);\n  v = hits[0];\n} else if (rows.length > 1) {\n  return help(`Há ${rows.length} vídeos aguardando aprovação. Inclua o código na resposta, ex.: ${m.cmd}${m.arg ? ' ' + m.arg : ''} #${rows[0].code}\\n\\n${list}`);\n} else {\n  v = rows[0];\n}\nconst spec = parse(v.spec);\nconst cfg = parse(v.config);\nconst number = cfg.approval?.to || m.sender;\nconst title = spec.publishing?.title || spec.chosen_title;\nconst tag = `[${v.channel_name} #${v.code}]`;\n// canal de notícias: publica na hora e não gera clipes de TikTok\nconst news = cfg.format?.type === 'news_short';\nlet action = 'help';\nlet reply = '';\nif (m.cmd === 1) {\n  action = 'approve';\n  reply = news\n    ? `✅ Aprovado ${tag}: *${title}*\\nPublicando no YouTube agora; te aviso com o link.`\n    : `✅ Aprovado ${tag}: *${title}*\\nVou agendar no YouTube e te aviso com os links.`;\n} else if (m.cmd === 2) {\n  action = 'reject';\n  reply = `🗑️ Rejeitado ${tag}: *${title}*${m.arg ? `\\nMotivo: ${m.arg}` : ''}`;\n} else if (m.cmd === 3) {\n  const n = parseInt(m.arg, 10);\n  const opts = spec.thumbnail?.options || [];\n  if (!(n >= 1 && n <= opts.length)) reply = `Escolha uma thumbnail de 1 a ${opts.length}. Ex.: 3 2 #${v.code}`;\n  else { spec.thumbnail.chosen = n; action = 'edit'; reply = `🖼️ ${tag} Thumbnail ${n} escolhida.`; }\n} else if (m.cmd === 4) {\n  const n = parseInt(m.arg, 10);\n  const titles = (spec.titles || []).slice(0, 5);\n  if (!(n >= 1 && n <= titles.length)) reply = `Escolha um título de 1 a ${titles.length}. Ex.: 4 3 #${v.code}`;\n  else {\n    spec.chosen_title = titles[n - 1];\n    spec.publishing = { ...(spec.publishing || {}), title: titles[n - 1].replace(/[<>]/g, '').slice(0, 100) };\n    action = 'edit';\n    reply = `📝 ${tag} Título ${n}: *${titles[n - 1]}*`;\n  }\n}\nif (action === 'edit') reply += `\\n\\nResponda 1 #${v.code} para aprovar, 2 #${v.code} para rejeitar, 3 N (thumbnail) ou 4 N (título).`;\nreturn [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender, clips: !news,\n  publish_workflow_id: cfg.youtube?.publish_workflow_id || 'y3zthNcqybMcQEl0' } }];\n"
     },
     "position": [
       960,
@@ -303,6 +303,43 @@ const clips = node({
   ]
 });
 
+const gate = ifElse({
+  type: "n8n-nodes-base.if",
+  version: 2.2,
+  config: {
+    "name": "Gera clipes?",
+    "parameters": {
+      "conditions": {
+        "options": {
+          "caseSensitive": true,
+          "leftValue": "",
+          "typeValidation": "loose"
+        },
+        "conditions": [
+          {
+            "leftValue": expr("{{ $('Interpretar').first().json.clips }}"),
+            "rightValue": true,
+            "operator": {
+              "type": "boolean",
+              "operation": "true",
+              "singleValue": true
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "options": {}
+    },
+    "position": [
+      1740,
+      -200
+    ]
+  },
+  output: [
+    {}
+  ]
+});
+
 const no = node({
   type: "n8n-nodes-base.postgres",
   version: 2.5,
@@ -407,7 +444,7 @@ export default workflow("factory-approval", "factory.approval")
   .to(find)
   .to(decide)
   .to(route
-    .onCase(0, ok.to(pub.to(clips.to(reply))))
+    .onCase(0, ok.to(pub.to(gate.onTrue(clips.to(reply)).onFalse(reply))))
     .onCase(1, no.to(reply))
     .onCase(2, edit.to(reply))
     .onCase(3, reply));

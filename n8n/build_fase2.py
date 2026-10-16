@@ -64,7 +64,7 @@ class WF:
         return var
 
     def render(self, chain: str) -> str:
-        head = "import { workflow, node, trigger, switchCase, expr } from '@n8n/workflow-sdk';\n\n"
+        head = "import { workflow, node, trigger, switchCase, ifElse, expr } from '@n8n/workflow-sdk';\n\n"
         return head + "\n".join(self.decls) + f"\nexport default workflow({json.dumps(self.wid)}, {json.dumps(self.name)})\n{chain};\n"
 
 
@@ -301,11 +301,15 @@ const cfg = parse(v.config);
 const number = cfg.approval?.to || m.sender;
 const title = spec.publishing?.title || spec.chosen_title;
 const tag = `[${v.channel_name} #${v.code}]`;
+// canal de notícias: publica na hora e não gera clipes de TikTok
+const news = cfg.format?.type === 'news_short';
 let action = 'help';
 let reply = '';
 if (m.cmd === 1) {
   action = 'approve';
-  reply = `✅ Aprovado ${tag}: *${title}*\nVou agendar no YouTube e te aviso com os links.`;
+  reply = news
+    ? `✅ Aprovado ${tag}: *${title}*\nPublicando no YouTube agora; te aviso com o link.`
+    : `✅ Aprovado ${tag}: *${title}*\nVou agendar no YouTube e te aviso com os links.`;
 } else if (m.cmd === 2) {
   action = 'reject';
   reply = `🗑️ Rejeitado ${tag}: *${title}*${m.arg ? `\nMotivo: ${m.arg}` : ''}`;
@@ -326,7 +330,7 @@ if (m.cmd === 1) {
   }
 }
 if (action === 'edit') reply += `\n\nResponda 1 #${v.code} para aprovar, 2 #${v.code} para rejeitar, 3 N (thumbnail) ou 4 N (título).`;
-return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender,
+return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.arg, sender: m.sender, clips: !news,
   publish_workflow_id: cfg.youtube?.publish_workflow_id || 'PUBLISH_DEFAULT_ID' } }];
 """.replace('PUBLISH_DEFAULT_ID', publish_id)}, [960, 0], output=[{"action": "approve", "reply": "ok", "number": "55", "video_id": "v", "spec": {}, "reason": "", "sender": "55", "publish_workflow_id": "x"}])
     wf.node("route", "n8n-nodes-base.switch", 3.4, "Ação", {
@@ -352,6 +356,11 @@ return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.a
                            "matchingColumns": [], "schema": [{"id": "video_id", "displayName": "video_id", "required": False,
                                                               "defaultMatch": False, "display": True, "canBeUsedToMatch": True, "type": "string"}]},
         "options": {"waitForSubWorkflow": False}}, [1800, -200], output=[{}])
+    wf.node("gate", "n8n-nodes-base.if", 2.2, "Gera clipes?", {"conditions": {
+        "options": {"caseSensitive": True, "leftValue": "", "typeValidation": "loose"},
+        "conditions": [{"leftValue": "={{ $('Interpretar').first().json.clips }}", "rightValue": True,
+                        "operator": {"type": "boolean", "operation": "true", "singleValue": True}}],
+        "combinator": "and"}, "options": {}}, [1740, -200], fn="ifElse")
     wf.node("no", "n8n-nodes-base.postgres", 2.5, "Registrar rejeição", pg(
         "WITH a AS (\n  INSERT INTO approvals (video_id, decision, reason, decided_by) VALUES ($1::uuid, 'rejected', NULLIF($2, ''), $3)\n)\n"
         "UPDATE videos SET status = 'rejected', updated_at = now() WHERE id = $1::uuid;",
@@ -364,7 +373,7 @@ return [{ json: { action, reply, number, video_id: v.video_id, spec, reason: m.a
         [1920, 0], CRED["evo"], **RETRY)
     return wf.render(
         "  .add(hook)\n  .to(config)\n  .to(read)\n  .to(find)\n  .to(decide)\n"
-        "  .to(route\n    .onCase(0, ok.to(pub.to(clips.to(reply))))\n    .onCase(1, no.to(reply))\n    .onCase(2, edit.to(reply))\n    .onCase(3, reply))")
+        "  .to(route\n    .onCase(0, ok.to(pub.to(gate.onTrue(clips.to(reply)).onFalse(reply))))\n    .onCase(1, no.to(reply))\n    .onCase(2, edit.to(reply))\n    .onCase(3, reply))")
 
 
 # ===========================================================================

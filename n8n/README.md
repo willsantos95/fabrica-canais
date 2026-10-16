@@ -135,3 +135,16 @@ Disparado pelo `factory.approval` logo depois do `1` (ou manual: "Testar com o �
 - Com `news.preview = true` (padrão) só manda a prévia no WhatsApp: nada é produzido.
 - O `factory.scheduler` ignora canais com `format.type = 'news_short'`.
 - Config e fila: `db/migrations/007_canal_lance_rapido.sql` (gerado por `channels/lance-rapido.py`).
+
+### Lance Rápido: produção (Shorts por notícia + resumo diário por esporte)
+
+Cada vídeo é de UM esporte só (futebol, NBA ou NFL), com selo e cor do esporte e playlist própria.
+
+| Workflow | O que faz |
+|---|---|
+| `factory.news-short` (RFokDXRAtVowKXWc) | a cada 20 min (8h–23h) pega a pauta com maior nota, escreve o roteiro com `gpt-5.4-mini` **só com as fontes**, renderiza o Short vertical no worker (`news_short`: imagens 1:1 + cartões de placar/número/lista, legenda palavra por palavra, cartão final) e manda no WhatsApp com o código `#ABCD` |
+| `factory.news-recap` (dHwLYtTitAcFtlsX) | 22h, 22h30, 23h e 23h30: um esporte por vez, se tiver 3+ Shorts aprovados no dia, monta o resumo horizontal de 3–6 min (`news_recap`) reaproveitando as cenas dos Shorts, com capítulos e thumbnail |
+| `factory.publish · Lance Rápido` (0886FbEVwRzq2z4h) | depois do "1 #CÓDIGO": publica público na hora, põe na playlist do esporte e aplica a thumbnail do resumo. Gatilho manual **Criar playlists** cria as 3 playlists e grava os ids na config |
+
+Para ligar: criar o canal @LanceRapido, a credencial OAuth "YouTube - Lance Rápido", selecionar essa credencial nos 4 nós do YouTube do `factory.publish · Lance Rápido`, rodar "Criar playlists", depois `news.preview = false` e `active = true` no canal e publicar os workflows.
+Custo por Short: roteiro ~US$ 0,005 (gpt-5.4-mini) + 2–3 imagens no Cloudflare (dentro da cota grátis). O resumo reaproveita as imagens.
