@@ -125,3 +125,13 @@ Disparado pelo `factory.approval` logo depois do `1` (ou manual: "Testar com o �
 - **factory.metrics** (`PFgiGM26QKFIbWGa`): a cada 6 h lê `statistics` e `status` dos vídeos (YouTube Data API, 1 unidade
   por lote de 50), grava em `metrics` (uma linha por dia) e marca publicações/vídeos como `published` quando ficam públicos.
 - Custo da OpenAI: `spec.usage.cost_usd`, estimado em `Montar video_spec` (preços em `config.prices` sobrescrevem os padrões).
+
+## Canal de notícias: Lance Rápido (`factory.news`)
+
+- **factory.news** (`CrCh9EZvu71VKstl`): das 8h às 23h, no minuto 15, lê os RSS de `config.news.feeds` (ge, BBC Sport,
+  CBS Sports, ProFootballTalk), grava as notícias novas em `news_items`, avalia com `gpt-5.4-nano` (nota 0-10, story_key,
+  manchete em PT), junta notícias do mesmo fato, equilibra futebol/NBA/NFL e coloca até 3 pautas por rodada em `topics`
+  (`source = 'news'`, fontes em `notes`). Pautas paradas há mais de `topic_ttl_hours` (12 h) são descartadas.
+- Com `news.preview = true` (padrão) só manda a prévia no WhatsApp: nada é produzido.
+- O `factory.scheduler` ignora canais com `format.type = 'news_short'`.
+- Config e fila: `db/migrations/007_canal_lance_rapido.sql` (gerado por `channels/lance-rapido.py`).

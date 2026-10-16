@@ -633,6 +633,7 @@ for (const it of $input.all()) {
   const r = it.json;
   if (!r.slug) continue;
   const cfg = typeof r.config === 'string' ? JSON.parse(r.config) : r.config;
+  if (cfg.format?.type === 'news_short') continue; // canais de notícia são movidos pelo factory.news
   const s = cfg.schedule || {};
   const now = DateTime.now().setZone(s.timezone || 'America/Sao_Paulo');
   let hour = s.production_hour;
