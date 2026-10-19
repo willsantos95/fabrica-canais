@@ -13,7 +13,7 @@ from pathlib import Path
 
 import httpx
 
-from . import align, images, media, newsvideo, storage, thumbnail, tts
+from . import align, commons, images, media, newsvideo, storage, thumbnail, tts
 from .settings import settings
 
 log = logging.getLogger("fabrica.worker")
@@ -576,7 +576,19 @@ def _news_scenes(visuals: list[dict], inp: dict, wd: Path, tag: str, checks: lis
         name = f"{tag}-{i}"
         if v.get("url"):  # cena já pronta (resumo reaproveitando os Shorts)
             src = storage.download(v["url"], wd / "src" / f"{name}{Path(v['url'].split('?')[0]).suffix or '.img'}")
-            return {"path": newsvideo.square(src, wd / "scenes" / f"{name}.jpg"), "kind": "reuse", "motion": v.get("motion")}
+            return {"path": newsvideo.square(src, wd / "scenes" / f"{name}.jpg"), "kind": "reuse", "motion": v.get("motion"),
+                    "credit": v.get("credit")}
+        if v.get("type") == "photo" and v.get("subject"):
+            # foto livre do Wikimedia Commons; sem foto livre, cai na ilustração de IA (fallback_prompt)
+            try:
+                meta = commons.fetch(v["subject"], wd / "scenes" / f"{name}.jpg")
+                return {"path": wd / "scenes" / f"{name}.jpg", "kind": "photo", "motion": v.get("motion") or "pull_out",
+                        "credit": {k: meta.get(k) for k in ("subject", "author", "license", "page", "file", "credit")}}
+            except Exception as exc:
+                log.info("sem foto livre de %s: %s", v["subject"], str(exc)[:200])
+                checks.append({"stage": "images", "name": f"photo_fallback:{name}", "passed": True,
+                               "detail": {"subject": v["subject"], "reason": str(exc)[:300]}})
+                v = {"type": "image", "prompt": v.get("fallback_prompt") or v.get("prompt") or f"{v['subject']} sports scene"}
         if v.get("type") == "card" or v.get("card"):
             out = newsvideo.render_card(v.get("card") or v, color, wd / "scenes" / f"{name}.png")
             return {"path": out, "kind": "card", "motion": v.get("motion") or "push_in", "card": v.get("card") or v}
@@ -662,12 +674,15 @@ def h_news_short(job: dict, inp: dict, wd: Path) -> dict:
     beats: [{narration, visuals: [{type: image, prompt} | {type: card, card: {...}}]}]"""
     sport = inp.get("sport") or "futebol"
     color = inp.get("color") or newsvideo.SPORT_COLOR.get(sport, "#F2B705")
-    panel = newsvideo.vertical_panel(inp.get("headline") or "", sport, color, inp.get("channel_name") or "",
-                                     inp.get("sources_label") or "", wd / "panel.png")
     checks: list[dict] = []
     beats = inp["beats"]
     scenes = [_news_scenes(b.get("visuals") or ([b["visual"]] if b.get("visual") else []), inp, wd, f"b{i:02d}", checks)
               for i, b in enumerate(beats)]
+    # crédito das fotos livres no rodapé, junto das fontes (licença CC BY pede atribuição)
+    credits = list(dict.fromkeys(s["credit"]["credit"] for ss in scenes for s in ss if (s.get("credit") or {}).get("credit")))
+    footer = " · ".join(x for x in [inp.get("sources_label") or ""] + credits if x)
+    panel = newsvideo.vertical_panel(inp.get("headline") or "", sport, color, inp.get("channel_name") or "",
+                                     footer, wd / "panel.png")
     fallback = newsvideo.title_card(inp.get("headline") or "", color, wd / "scenes" / "title.png",
                                     newsvideo.SPORT_LABEL.get(sport, sport.upper()))
     segs = [{"narration": b["narration"], "scenes": scenes[i], "panel": panel, "fallback": fallback}
@@ -691,7 +706,7 @@ def h_news_short(job: dict, inp: dict, wd: Path) -> dict:
         ups = []
         for j, s in enumerate(scenes[i]):
             ext = s["path"].suffix
-            ups.append({"kind": s["kind"], "card": s.get("card"), "prompt": s.get("prompt"),
+            ups.append({"kind": s["kind"], "card": s.get("card"), "prompt": s.get("prompt"), "credit": s.get("credit"),
                         "url": storage.upload(s["path"], _key(job, f"scenes/b{i:02d}-{j}{ext}"),
                                               "image/png" if ext == ".png" else "image/jpeg")})
         out_beats.append({"narration": b["narration"], "scenes": ups, **r["timeline"][i]})
@@ -707,6 +722,8 @@ def h_news_short(job: dict, inp: dict, wd: Path) -> dict:
         "beats": out_beats,
         "checks": checks,
         "fallback_images": sum(1 for ss in scenes for s in ss if s["kind"] == "fallback"),
+        "photos": sum(1 for ss in scenes for s in ss if s["kind"] == "photo"),
+        "credits": [s["credit"] for ss in scenes for s in ss if s.get("credit")],
     }
 
 
@@ -724,12 +741,13 @@ def h_news_recap(job: dict, inp: dict, wd: Path) -> dict:
     for i, s in enumerate(inp["segments"]):
         n = stories.index(s) + 1 if s in stories else 0
         counter = f"{n}/{len(stories)}" if n else (inp.get("title") or "")
+        sc = _news_scenes(s.get("visuals") or [], {**inp, "headline": s.get("headline")}, wd, f"s{i:02d}", checks)
+        credit = " · ".join(dict.fromkeys(x["credit"]["credit"] for x in sc if (x.get("credit") or {}).get("credit")))
         panel = newsvideo.horizontal_panel(s.get("headline") or inp.get("title") or "", sport, color,
                                            inp.get("channel_name") or "", counter, wd / "panels" / f"{i:02d}.png",
-                                           s.get("kicker") or "")
+                                           s.get("kicker") or "", credit)
         fb = newsvideo.title_card(s.get("headline") or "", color, wd / "scenes" / f"t{i:02d}.png", label)
-        segs.append({"narration": s["narration"], "panel": panel, "fallback": fb,
-                     "scenes": _news_scenes(s.get("visuals") or [], {**inp, "headline": s.get("headline")}, wd, f"s{i:02d}", checks)})
+        segs.append({"narration": s["narration"], "panel": panel, "fallback": fb, "scenes": sc})
     r = _news_render(job, inp, wd, segs, "horizontal")
     final = r["final"]
     for i, s in enumerate(inp["segments"]):
@@ -758,6 +776,7 @@ def h_news_recap(job: dict, inp: dict, wd: Path) -> dict:
         "duration_s": round(dur, 2),
         "checks": checks,
         "fallback_images": sum(1 for sg in segs for x in sg["scenes"] if x["kind"] == "fallback"),
+        "credits": [x["credit"] for sg in segs for x in sg["scenes"] if x.get("credit")],
     }
 
 

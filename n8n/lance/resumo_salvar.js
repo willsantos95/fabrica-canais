@@ -8,7 +8,10 @@ const chapters = (r.chapters || []).map((c, i) => `${mmss(i === 0 ? 0 : c.t)} ${
 const seen = new Set();
 const sources = v.spec.sources.filter(x => x.url && !seen.has(x.url) && seen.add(x.url)).slice(0, 10).map(x => `• ${x.source}: ${x.url}`);
 const hashtags = [LABEL, ...(cfg.youtube?.hashtags || [])].map(h => '#' + String(h).replace(/\s+/g, ''));
+const credits = (r.credits || []).filter((c, i, a) => c && a.findIndex(x => x.file === c.file) === i)
+  .map(c => `• ${c.subject}: ${c.author} (${c.license}) ${c.page || ''}`.trim());
 const description = [v.spec.publishing.description_base, '', 'Capítulos:', ...chapters, '', 'Fontes:', ...sources, '',
+  ...(credits.length ? ['Fotos:', ...credits, ''] : []),
   cfg.texts?.disclaimer || '', '', hashtags.join(' ')].join('\n').slice(0, 4900);
 const spec = { ...v.spec,
   publishing: { ...v.spec.publishing, description },

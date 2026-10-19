@@ -13,7 +13,7 @@ const stories = (s.stories || []).filter(x => byId[x.video_id] && clean(x.narrat
 if (stories.length < 2) throw new Error('Resumo com poucas notícias válidas: ' + stories.length);
 
 const LABEL = { futebol: 'Futebol', nba: 'NBA', nfl: 'NFL' }[p.sport] || p.sport;
-const scenesOf = st => (st.beats || []).flatMap(b => (b.scenes || []).map(x => ({ url: x.url }))).filter(x => x.url);
+const scenesOf = st => (st.beats || []).flatMap(b => (b.scenes || []).map(x => ({ url: x.url, credit: x.credit || null }))).filter(x => x.url);
 const segments = [
   { headline: `Resumo ${LABEL} · ${ped.today}`, chapter: 'Abertura', narration: clean(s.intro?.narration),
     visuals: [{ type: 'card', card: { kind: 'list', title: `${LABEL} hoje`, items: stories.slice(0, 4).map(x => clean(x.chapter).slice(0, 40)) } }] },

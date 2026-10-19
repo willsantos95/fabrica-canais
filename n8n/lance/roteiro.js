@@ -29,8 +29,9 @@ Divida em 5 a 7 trechos ("beats"). Cada trecho tem a narração (1 a 3 frases) e
   * {"kind":"list","title":"...","items":["...","...","..."]} (2 a 4 itens de até 40 caracteres)
   * {"kind":"fact","title":"...","text":"frase de até 90 caracteres"}
   * {"kind":"quote","text":"citação curta da fonte, TRADUZIDA para o português","source":"quem disse"}
-- {"type":"image","prompt":"..."} ilustração gerada por IA. Prompt em INGLÊS descrevendo a cena (ação do esporte, estádio, torcida, vestiário, prancheta, bola, troféu), composição quadrada. Proibido: rosto reconhecível, nome de atleta real, logos, escudos, números de camisa, texto na imagem.
-Use pelo menos 2 cartões e pelo menos 2 imagens. Placar ou número marcante → cartão.
+- {"type":"photo","subject":"Nome Exato","fallback_prompt":"..."} FOTO REAL de licença livre (Wikimedia Commons) da PESSOA principal da notícia (jogador, técnico, dirigente) ou do ESTÁDIO citado. subject = nome como aparece no título do artigo da Wikipédia (ex.: "Jalen Hurts", "Neymar", "Estádio do Maracanã"). Nunca use time/clube como subject (a foto de clube costuma ser escudo). fallback_prompt = ilustração em INGLÊS para o caso de não existir foto livre.
+- {"type":"image","prompt":"..."} ilustração gerada por IA. Prompt em INGLÊS descrevendo a cena (ação do esporte, estádio, torcida, vestiário, prancheta, bola, troféu), composição quadrada. Quando a cena for de um time, descreva os uniformes nas CORES REAIS do time (ex.: "players in midnight green and white uniforms") sem escudo, logo, nome ou número. Proibido: rosto reconhecível, nome de atleta real no prompt, logos, escudos, números de camisa, texto na imagem.
+Use 1 ou 2 fotos (no primeiro ou segundo trecho, quando a notícia tiver uma pessoa ou estádio principal), pelo menos 2 cartões e o resto ilustrações. Placar ou número marcante → cartão.
 
 Responda só com JSON:
 {"headline":"manchete para a tela, até 70 caracteres","title":"título do YouTube até 90 caracteres, fiel ao fato, sem hashtags","description":"2 ou 3 frases resumindo o fato","tags":["até 8 tags"],"beats":[{"narration":"...","visual":{...}}]}`;

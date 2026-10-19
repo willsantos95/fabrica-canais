@@ -11,7 +11,7 @@ const src = (spec.sources || []).slice(0, 3).map(s => `${s.source}: ${s.url}`);
 const lines = [
   `📱 *Short pronto* · ${cfg.name} · código *#${code}*`,
   `${TAG[spec.sport] || spec.sport} · *${spec.publishing.title}*`,
-  `Duração: ${Math.round(r.duration_s)}s${r.fallback_images ? ` · ⚠️ ${r.fallback_images} imagem(ns) trocada(s) por cartão` : ''}`,
+  `Duração: ${Math.round(r.duration_s)}s${r.photos ? ` · 📷 ${r.photos} foto(s) real(is)` : ''}${r.fallback_images ? ` · ⚠️ ${r.fallback_images} imagem(ns) trocada(s) por cartão` : ''}`,
   failed.length ? `⚠️ Checagens com alerta:\n${failed.join('\n')}` : '✅ Checagens ok',
   '',
   `▶️ Vídeo: ${videoLink}`,

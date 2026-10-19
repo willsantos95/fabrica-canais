@@ -236,7 +236,7 @@ def vertical_panel(headline: str, sport: str, color: str, channel: str, sources:
 
 
 def horizontal_panel(headline: str, sport: str, color: str, channel: str, counter: str, out: Path,
-                     kicker: str = "") -> Path:
+                     kicker: str = "", credit: str = "") -> Path:
     L = LAYOUTS["horizontal"]
     img = Image.new("RGBA", (L["w"], L["h"]), (0, 0, 0, 0))
     _gradient(img, 0, L["x"] + 160, 230, 0, axis="x")
@@ -253,6 +253,9 @@ def horizontal_panel(headline: str, sport: str, color: str, channel: str, counte
     _lines(d, (70, y), ls, f, (255, 255, 255), spacing=1.1, stroke=2)
     if channel:
         d.text((70, L["h"] - 80), channel.upper(), font=font("Black", 36), fill=(225, 228, 235), anchor="ls")
+    if credit:
+        fc, ls = fit(d, credit, "Medium", L["x"] - 140, 2, 22, 16)
+        _lines(d, (70, L["h"] - 60), ls, fc, (180, 186, 196))
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out, "PNG")
     return out

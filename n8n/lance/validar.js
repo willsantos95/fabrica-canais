@@ -15,6 +15,8 @@ const beats = (s.beats || []).map(b => {
   const v = b.visual || (b.visuals || [])[0] || {};
   let visual;
   if (v.type === 'card' && v.card && KINDS.includes(v.card.kind)) visual = { type: 'card', card: v.card };
+  else if (v.type === 'photo' && clean(v.subject)) visual = { type: 'photo', subject: clean(v.subject).slice(0, 80),
+    fallback_prompt: clean(v.fallback_prompt || v.prompt || 'dramatic stadium under lights, crowd, sports atmosphere') };
   else visual = { type: 'image', prompt: clean(v.prompt || 'dramatic stadium under lights, crowd, sports atmosphere') };
   return { narration: clean(b.narration), visuals: [visual] };
 }).filter(b => b.narration);
