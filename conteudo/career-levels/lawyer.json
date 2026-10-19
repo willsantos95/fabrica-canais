@@ -1,0 +1,420 @@
+{
+ "channel_slug": "career-levels",
+ "title": "Every Level of a Lawyer's Career",
+ "priority": 50,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "Every Level of a Lawyer's Career",
+    "From Law Student to Judge: Every Level Explained",
+    "How Much Lawyers Really Make at Every Level",
+    "The 7 Levels of a Legal Career",
+    "Every Level of Becoming a Partner (or a Judge)"
+   ],
+   "chosen_title": "Every Level of a Lawyer's Career",
+   "hook_options": [
+    "What does it take to go from a practice test to the judge's bench?",
+    "Some lawyers start at $215,000. Others start under $79,000. Here is the whole ladder.",
+    "There are 750,000 lawyers in the US, and the gap between them is enormous."
+   ],
+   "subject": "lawyer career levels",
+   "tags": [
+    "lawyer career",
+    "lawyer salary",
+    "big law",
+    "law school",
+    "bar exam",
+    "law firm partner",
+    "associate salary",
+    "how to become a judge",
+    "career levels",
+    "lawyer salary 2025"
+   ],
+   "hashtags": [
+    "Lawyer",
+    "CareerLevels",
+    "LawSchool"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "LEVEL 1 → 7",
+     "LAWYER"
+    ],
+    "image_prompt": "a confident lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, on the right third, courthouse columns behind her, left half clean dark background for text, high contrast, illustrated"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Lawyers (SOC 23-1011) — BLS OEWS May 2025, via WageDex",
+    "url": "https://wagedex.com/jobs/lawyers",
+    "claim": "United States, May 2025: median $159,670, mean $185,840, 10th percentile $78,360, 90th percentile $351,600, 754,500 jobs; typical entry education doctoral or professional degree."
+   },
+   {
+    "id": "src2",
+    "title": "Think new BigLaw associates are all making $225K? Think again, new NALP report says — ABA Journal",
+    "url": "https://www.abajournal.com/news/article/think-new-biglaw-associates-are-all-making-225k-think-again-report-says",
+    "claim": "NALP 2025 survey (as of Jan. 1, 2025): median first-year base salary $215,000 at firms with 700+ lawyers and $200,000 across 437 responding firms; 45% of the largest firms and 32% of all firms paid $225,000."
+   },
+   {
+    "id": "src3",
+    "title": "First-time bar passage rate increased — ABA News (March 2025)",
+    "url": "https://www.americanbar.org/news/abanews/aba-news-archives/2025/03/first-time-bar-passage-rate-increased/",
+    "claim": "2024 first-time bar passage for ABA-approved law school graduates 82.79%; ultimate passage within two years for the class of 2022 90.41%."
+   },
+   {
+    "id": "src4",
+    "title": "Judges, Magistrate Judges, and Magistrates (SOC 23-1023) — BLS OEWS May 2025, via WageDex",
+    "url": "https://wagedex.com/jobs/judges-magistrate-judges-and-magistrates",
+    "claim": "United States, May 2025: median $153,990, 10th percentile $46,950, 90th percentile $221,710, 24,030 jobs; typically 5+ years of related experience."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b00",
+    "title": "The question",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "What does it take to go from a college student staring at a practice test to the person in the black robe deciding who wins the case?",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, in her early twenties, sitting alone in a college library with a thick practice test book, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "There are about three quarters of a million lawyers working in the United States. And the gap between the lowest and highest paid among them is enormous.",
+      "a grand courthouse with tall columns at dusk, people in suits climbing the stairs, illustrated",
+      "754,500 LAWYERS (US)"
+     ],
+     [
+      "Behind that gap there is a ladder. Exams, debt, brutal hours, and a few big decisions that send lawyers down very different paths.",
+      "a tall ladder made of law books rising toward a judge's bench, symbolic illustration",
+      null
+     ],
+     [
+      "Let's climb it one level at a time. And at the end, I want you to tell me which level you are on right now.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses closing her laptop and looking up with determination, cinematic illustrated style, warm office lighting",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b01",
+    "title": "Level 1 - The Pre-Law Student",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Level one is the pre-law student. In the United States, law is not an undergraduate major you can go straight into. First you need a bachelor's degree in anything: history, economics, philosophy, even engineering.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as an undergraduate in a lecture hall with a political science slide on the screen, cinematic illustrated style, warm office lighting",
+      "LEVEL 1"
+     ],
+     [
+      "Then comes the admission test. Most law schools look closely at a standardized exam full of logic games, reading and arguments, where every point can change which schools say yes.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses timing herself with a stopwatch over a practice exam, eraser shavings everywhere, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Grades matter too. Students build applications with internships, debate teams, volunteer work in legal clinics and letters from professors.",
+      "a stack of application folders, recommendation letters and a college transcript on a dorm desk, illustrated",
+      null
+     ],
+     [
+      "This is also when many people quietly change their minds. A summer inside a real law office shows that the job is less about dramatic speeches in court and much more about reading, writing and deadlines.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses reading a long contract under a desk lamp, a coffee cup going cold beside her, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Pay at this level? Nothing. Many pre-law students work part time as paralegals or office assistants at law firms, just to see what the job really looks like from the inside.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as a young assistant carrying boxes of files through a busy law office, cinematic illustrated style, warm office lighting",
+      "PAY: $0"
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "Level 2 - The Law Student",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Level two is law school. A full time Juris Doctor program takes three years, and the first one is famous for being one of the hardest years of any education. Contracts, torts, property, criminal law, constitutional law and civil procedure, all at once.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses entering a gothic law school building with a heavy backpack, cinematic illustrated style, warm office lighting",
+      "LEVEL 2"
+     ],
+     [
+      "Professors use the Socratic method. They can call on any student at any moment and question them about a case in front of a hundred classmates. There is nowhere to hide, so students read hundreds of pages every single week.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses standing up in a crowded tiered classroom answering a professor's question, everyone watching, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "In many classes, the whole grade comes down to one final exam. And grades are curved, so you are not just competing with the material. You are competing with the person sitting next to you.",
+      "a bell curve drawn on a chalkboard with tiny student figures crowded along it, illustrated",
+      null
+     ],
+     [
+      "Outside class, students write legal briefs, argue fake cases in moot court competitions and work in legal clinics, where they help real clients with real problems under a professor's supervision.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses arguing in front of a panel of three student judges in a moot court room, cinematic illustrated style, warm office lighting",
+      "MOOT COURT"
+     ],
+     [
+      "The best students compete for spots on the law review and for summer jobs at big firms. Those summer jobs often turn into job offers worth more than two hundred thousand dollars a year.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses in a borrowed suit shaking hands with recruiters at a law firm reception event, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "The summer between the second and third year is the most important. At big firms, summer associates are wined, dined and tested, and most hope to leave with a permanent offer in hand.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses at a rooftop summer associate event with a city skyline behind her, holding a glass of water, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "And then there is the cost. Tuition, books and three years without a full salary leave many graduates with student debt that can follow them for a decade or more.",
+      "a mountain of envelopes marked student loan towering over a small figure with a diploma, illustrated",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "Level 3 - The New Lawyer",
+    "source_ids": [
+     "src3",
+     "src2"
+    ],
+    "shots": [
+     [
+      "Level three starts with the most feared test of the profession: the bar exam. Without passing it in a state, you cannot practice law there.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses in a huge exam hall filled with rows of desks and nervous graduates, cinematic illustrated style, warm office lighting",
+      "LEVEL 3"
+     ],
+     [
+      "Graduates spend around two months studying full time, often ten hours a day, for a test that usually lasts two days.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses surrounded by sticky notes and outlines on every wall of a small apartment, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "The good news: in 2024, about eighty three percent of graduates from accredited law schools passed on the first try. And within two years, more than ninety percent eventually pass.",
+      "an illustrated results screen with a large green PASS stamp and confetti",
+      "83% FIRST TRY (2024)"
+     ],
+     [
+      "Beyond the exam, every state also checks your character and fitness. Unpaid debts, past problems with the law or lying on an application can delay or even block your license.",
+      "a background check form with a magnifying glass over it on an official desk, illustrated",
+      null
+     ],
+     [
+      "And then the day finally comes. New lawyers raise their right hand in a courtroom, take an oath, and are officially admitted to practice.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses raising her right hand with a group of new lawyers in a courtroom swearing-in ceremony, families watching, cinematic illustrated style, warm office lighting",
+      "SWORN IN"
+     ],
+     [
+      "Now you are an associate, the entry level lawyer at a firm. And this is where the paths split dramatically.",
+      "a fork in a road, one path leading to glass skyscrapers, the other to a small town law office and a public defender building, illustrated",
+      null
+     ],
+     [
+      "At the largest firms, the median starting salary was two hundred fifteen thousand dollars in early 2025, and nearly half of those big firms paid two hundred twenty five thousand.",
+      "a sleek skyscraper lobby with a big law firm logo shape, number 215,000 floating, infographic illustration",
+      "$215,000 BIG LAW START"
+     ],
+     [
+      "But that is the top of the market. Public defenders, prosecutors and lawyers at small firms often start far lower. In May 2025, the lowest paid ten percent of all lawyers earned under seventy nine thousand dollars a year.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses in a modest government office with stacks of case files on every surface, cinematic illustrated style, warm office lighting",
+      "$78,360 BOTTOM 10% (US)"
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "Level 4 - The Associate Grind",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "Level four is the associate grind. At big firms, junior lawyers are measured by the billable hour, and the yearly targets often run around two thousand hours billed to clients.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses at her desk at midnight in a glass office tower, city lights outside, takeout box beside her laptop, cinematic illustrated style, warm office lighting",
+      "LEVEL 4"
+     ],
+     [
+      "Billing two thousand hours means working many more, because not every minute in the office can be charged to a client. Weekends, holidays and canceled vacations become part of the deal.",
+      "an hourglass with a law firm skyline inside, sand running fast, symbolic illustration",
+      "~2,000 BILLABLE HOURS"
+     ],
+     [
+      "Time is usually tracked in tenths of an hour, so every six minutes counts. Phone calls, emails, research, even a quick question from a partner in the hallway, all of it goes on the timesheet.",
+      "a computer screen showing a timesheet with tiny time entries like 0.1 and 0.3 hours, illustrated close-up",
+      "0.1 HOUR"
+     ],
+     [
+      "Junior associates do the heavy lifting. Reviewing thousands of documents, drafting contracts, researching case law and writing memos that a partner might read for five minutes.",
+      "piles of documents on a conference table with sticky tabs in every color, a tired associate highlighting text, illustrated",
+      null
+     ],
+     [
+      "Outside big law, the grind looks different but it is just as real. A young prosecutor or public defender may juggle a hundred cases at once, with hearings almost every day.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses running between courtrooms with a cart of case files, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Many leave after a few years. Some move to smaller firms for a better life, some go to work inside companies, and some join the government. It is one of the biggest turning points in a legal career.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses looking out the window of her office at sunrise, resignation letter half written on the screen, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Those who stay climb a salary ladder that rises every year, and the middle of the whole profession, counting every kind of lawyer in the United States, earned about one hundred sixty thousand dollars in May 2025.",
+      "an illustrated staircase of increasing paychecks with the label 159,670 highlighted in the middle",
+      "$159,670 MEDIAN (US)"
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "Level 5 - The Senior Associate",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Level five is the senior associate. After five or six years, you are no longer the one doing the first draft. You are the one running the case day to day.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, now in her early thirties, leading a meeting with junior associates around a conference table, cinematic illustrated style, warm office lighting",
+      "LEVEL 5"
+     ],
+     [
+      "Senior associates manage junior lawyers, talk directly with clients, and in litigation they may take depositions or argue motions in court. In deals, they negotiate contract terms line by line with the lawyers on the other side.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses questioning a witness in a deposition room while a court reporter types, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "The work gets more strategic. Instead of asking what the law says, you start asking what the client actually needs, and how to win without spending years and millions in court.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses on a video call with a client, drawing a strategy diagram on a whiteboard behind her, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "This is also the tryout. Partners are watching to see who can bring in clients, who can lead, and who can be trusted with the firm's reputation.",
+      "two older partners watching through a glass wall as a younger lawyer presents to clients, illustrated",
+      null
+     ],
+     [
+      "At some firms there is a middle step called counsel. It is a senior role for experienced lawyers who are highly valued, but who are not, or not yet, partners.",
+      "a door with a brass nameplate being changed from Associate to Counsel, illustrated",
+      "COUNSEL"
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "Level 6 - The Partner",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Level six is the goal many big firm associates chase for a decade: partner. The vote usually happens after eight to ten years, and only a fraction of each starting class makes it.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, in her late thirties, receiving a phone call in her office and covering her mouth in surprise, cinematic illustrated style, warm office lighting",
+      "LEVEL 6"
+     ],
+     [
+      "Partners are owners of the firm. Instead of just a salary, many share in the firm's profits. And in a great year, those profits can be enormous.",
+      "an elegant corner office with a view over a city, a partner's name on the glass door, illustrated",
+      null
+     ],
+     [
+      "The top ten percent of all lawyers in the United States earned more than three hundred fifty one thousand dollars in May 2025, and partners at the most profitable firms can earn several times that.",
+      "infographic illustration of a peak on a chart labeled 351,600 with an arrow continuing upward into the clouds",
+      "$351,600+ TOP 10% (US)"
+     ],
+     [
+      "Partners also carry the risk. If the firm has a bad year, their pay falls. If a big client leaves, it is their job to replace it.",
+      "an illustrated chart with a profit line dipping, a worried partner looking at it",
+      null
+     ],
+     [
+      "But being a partner is not just being a great lawyer. It is being a business. Partners are expected to bring in clients, keep them happy and keep the whole team busy.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as a partner at a business dinner with clients, laughing and closing a deal, cinematic illustrated style, warm office lighting",
+      "RAINMAKER"
+     ],
+     [
+      "Other lawyers reach the top in a different way: as general counsel, the chief lawyer inside a company, who answers directly to the chief executive and the board.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses in a corporate boardroom advising executives, documents spread across the table, cinematic illustrated style, warm office lighting",
+      "GENERAL COUNSEL"
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "Level 7 - The Judge",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "And level seven, for some, is the bench. Becoming a judge is not a promotion inside a firm. Depending on the court, judges are appointed or elected, and they usually have many years of legal experience.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, now in her fifties with silver streaks in her hair, putting on a black judicial robe in chambers, cinematic illustrated style, warm office lighting",
+      "LEVEL 7"
+     ],
+     [
+      "A judge's job is not to win. It is to be fair. To rule on evidence, guide juries, decide sentences and write decisions that other courts may follow for years.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as a judge on the bench in a wood paneled courtroom, gavel in front of her, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Surprisingly, many judges earn less than top lawyers. The median pay for judges and magistrates in the United States was about one hundred fifty four thousand dollars in May 2025.",
+      "infographic illustration comparing a gavel labeled 153,990 with a skyscraper labeled partner, illustrated",
+      "$153,990 MEDIAN (US)"
+     ],
+     [
+      "Federal judges are nominated by the president and confirmed by the Senate, and they serve for life. Many state judges, on the other hand, have to run in elections, just like politicians.",
+      "split illustration: the Capitol dome on one side, a state election campaign sign on the other",
+      null
+     ],
+     [
+      "So why take the job? Prestige, stability, public service, and a chance to shape the law itself instead of just arguing about it. For many lawyers who spent decades fighting for one side, finally being the neutral voice in the room is the real reward.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as a judge signing a written opinion in quiet chambers, law books behind her, cinematic illustrated style, warm office lighting",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "Your level",
+    "source_ids": [
+     "src1",
+     "src3"
+    ],
+    "shots": [
+     [
+      "So that is the ladder. Pre-law student, law student, new lawyer, associate, senior associate, partner or general counsel, and finally, for some, the judge's bench.",
+      "the ladder of law books again, now complete, with a small figure at each rung from student to judge, symbolic illustration",
+      null
+     ],
+     [
+      "It is a career with one of the widest pay ranges of any profession, and one where a few decisions early on can change where you end up decades later.",
+      "a split road map showing many different legal career paths branching from one law school building, illustrated",
+      null
+     ],
+     [
+      "Some lawyers chase the corner office. Others spend their whole lives defending people who cannot pay. Both started with the same exam, the same casebooks and the same sleepless nights.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses as a public defender standing beside a client in court, determined face, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Whichever path they choose, the best lawyers share the same habits: they read everything, they never stop learning, and they remember that behind every case there is a real person waiting for an answer.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses reading a thick file late at night with a photo of a client family pinned to her board, cinematic illustrated style, warm office lighting",
+      null
+     ],
+     [
+      "Now it is your turn. Are you a lawyer, a law student, or just someone who loves courtroom dramas? Tell me in the comments which level you are on right now, and which one you are aiming for.",
+      "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses in a sharp suit on the courthouse steps, looking at the viewer with a confident smile, cinematic illustrated style, warm office lighting",
+      "WHAT LEVEL ARE YOU?"
+     ]
+    ]
+   }
+  ]
+ }
+}

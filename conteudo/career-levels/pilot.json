@@ -1,0 +1,448 @@
+{
+ "channel_slug": "career-levels",
+ "title": "Every Level of a Pilot's Career",
+ "priority": 40,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "Every Level of a Pilot's Career",
+    "From Student Pilot to Airline Captain: Every Level Explained",
+    "How Much Pilots Really Make at Every Level",
+    "The 1,500 Hour Journey to the Cockpit",
+    "Every Level of Becoming an Airline Captain"
+   ],
+   "chosen_title": "Every Level of a Pilot's Career",
+   "hook_options": [
+    "How many hours does it take to go from zero to captain of a jet with 300 people behind you?",
+    "Nobody starts in the left seat of a big jet. Here is every level in between.",
+    "Pilots pay to fly before they get paid to fly. Here is how the ladder works."
+   ],
+   "subject": "pilot career levels",
+   "tags": [
+    "pilot career",
+    "airline pilot salary",
+    "how to become a pilot",
+    "1500 hour rule",
+    "ATP certificate",
+    "regional airline pilot",
+    "airline captain",
+    "flight instructor",
+    "career levels",
+    "pilot salary 2025"
+   ],
+   "hashtags": [
+    "Pilot",
+    "CareerLevels",
+    "Aviation"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "LEVEL 1 → 7",
+     "PILOT"
+    ],
+    "image_prompt": "a confident airline captain with short brown hair and a trimmed beard on the right third, four stripes on his uniform, widebody jet behind him at sunset, left half clean dark sky for text, high contrast, illustrated"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "14 CFR 61.159 — Aeronautical experience for the airline transport pilot certificate (Cornell LII)",
+    "url": "https://www.law.cornell.edu/cfr/text/14/61.159",
+    "claim": "ATP (airplane) requires at least 1,500 hours total time, including 500 cross-country, 100 night, 75 instrument and 250 as pilot in command."
+   },
+   {
+    "id": "src2",
+    "title": "How Long Does It Take to Become an Airline Pilot? — AeroCorner",
+    "url": "https://aerocorner.com/blog/how-long-to-become-an-airline-pilot/",
+    "claim": "Private pilot minimum 40 hours (~3 months full time); commercial 250 hours; restricted ATP at 750 (military), 1,000 (aviation bachelor's) or 1,250 (associate) hours; reaching 1,500 hours usually takes 12-24 months, often as a flight instructor; 2-3 years from first lesson to airline eligibility."
+   },
+   {
+    "id": "src3",
+    "title": "What Is an ATP Certificate in Aviation — AeroCorner",
+    "url": "https://aerocorner.com/blog/atp-in-aviation/",
+    "claim": "ATP is the highest level of pilot certification; minimum age 23 for the checkride; required to fly for a scheduled airline."
+   },
+   {
+    "id": "src4",
+    "title": "Airline Pilots, Copilots, and Flight Engineers (SOC 53-2011) — BLS OEWS May 2025, via WageDex",
+    "url": "https://wagedex.com/jobs/airline-pilots-copilots-and-flight-engineers",
+    "claim": "United States, May 2025: median $232,140, mean $288,650, 10th percentile $106,710, 90th percentile $463,830, 103,560 jobs."
+   },
+   {
+    "id": "src5",
+    "title": "Commercial Pilots (SOC 53-2012) — BLS OEWS May 2025, via WageDex",
+    "url": "https://wagedex.com/jobs/commercial-pilots",
+    "claim": "United States, May 2025: median $123,220, 10th percentile $58,850, 90th percentile $266,620, 47,630 jobs."
+   },
+   {
+    "id": "src6",
+    "title": "FAA Age Limits: Why Pilots Retire at 65 — Migflug",
+    "url": "https://migflug.com/afterburner/faa-age-limits-pilot-retirement-65-controller-hiring-31/",
+    "claim": "14 CFR 121.383(d): US airlines cannot use pilots in Part 121 operations after their 65th birthday; limit was 60 from 1959 until the Fair Treatment for Experienced Pilots Act (December 2007)."
+   },
+   {
+    "id": "src7",
+    "title": "FAA proposes 1,500 flight hr. requirement for pilots — Aviation Week (2012)",
+    "url": "https://aviationweek.com/air-transport/safety-ops-regulation/faa-proposes-1500-flight-hr-requirement-pilots",
+    "claim": "Before the rule, airline first officers needed only a commercial certificate and instrument rating, about 250 hours; FAA proposed requiring an ATP with 1,500 hours."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b00",
+    "title": "The question",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "How many hours does it take to go from someone who has never touched an airplane to the captain of a jet with three hundred people sitting behind the cockpit door?",
+      "a pilot, a man with short brown hair and a trimmed beard, in his twenties, looking through an airport window at a huge widebody jet at sunset, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "In the United States there are about one hundred thousand airline pilots, and the typical one earns more than most people would ever guess.",
+      "a busy airport apron at dusk with rows of airliners at the gates, illustrated",
+      "~103,000 AIRLINE PILOTS (US)"
+     ],
+     [
+      "But nobody starts in the left seat of a big jet. The path is a ladder of licenses, logbooks and thousands of hours, and every rung changes what you fly and what you earn.",
+      "a pilot logbook opening and turning into a staircase of small to large aircraft, symbolic illustration",
+      null
+     ],
+     [
+      "Let's climb it, level by level. And at the end, tell me where you are on this ladder right now.",
+      "a pilot, a man with short brown hair and a trimmed beard buckling his seat belt in a small training plane, smiling nervously, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b01",
+    "title": "Level 1 - The Student Pilot",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Level one is the student pilot. Your first lesson is usually in a small two seat training airplane, with an instructor beside you and your hands shaking on the controls.",
+      "a pilot, a man with short brown hair and a trimmed beard in a polo shirt at the controls of a small single engine trainer, instructor beside him, cinematic illustrated style, golden hour light",
+      "LEVEL 1"
+     ],
+     [
+      "The first goal is the private pilot certificate. The federal minimum is forty hours of flight time, and for a full time student that can take around three months.",
+      "a small white training airplane taking off from a quiet rural airfield, illustrated",
+      "40 HOURS MINIMUM"
+     ],
+     [
+      "You learn takeoffs, landings, stalls, navigation, radio calls and what to do when the engine goes quiet. And then comes the day every pilot remembers: the first solo, when the instructor steps out and you take off alone.",
+      "a pilot, a man with short brown hair and a trimmed beard alone in the cockpit of the trainer climbing away from the runway, instructor waving on the ground, cinematic illustrated style, golden hour light",
+      "FIRST SOLO"
+     ],
+     [
+      "Nothing about it is cheap or quick. Bad weather cancels lessons, airplanes go into maintenance, and many students take far more than the minimum forty hours before the examiner finally signs them off.",
+      "a small trainer parked on a rainy ramp with a cancelled sign on the flight school door, illustrated",
+      null
+     ],
+     [
+      "A private certificate lets you fly friends and family, but it does not let you get paid. At this level, flying costs you money. Every hour of rented airplane and instructor time comes out of your own pocket.",
+      "a pilot, a man with short brown hair and a trimmed beard paying at a flight school counter, a long receipt printing out, cinematic illustrated style, golden hour light",
+      "PAY: $0"
+     ],
+     [
+      "Ground school runs in parallel. Weather, aerodynamics, aviation law, how to read charts that look like a foreign language. Then a written exam, an oral exam and a checkride with an examiner watching every move.",
+      "a pilot, a man with short brown hair and a trimmed beard studying aviation charts and a weather map at a kitchen table late at night, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Many students also need to pass a medical exam before they can fly solo. A problem with your eyes, your heart or certain medications can end the dream right there.",
+      "a pilot, a man with short brown hair and a trimmed beard reading an eye chart in an aviation doctor's office, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "Level 2 - The Commercial Pilot and Flight Instructor",
+    "source_ids": [
+     "src2",
+     "src3",
+     "src5"
+    ],
+    "shots": [
+     [
+      "Level two is the commercial pilot. After adding an instrument rating to fly in clouds, a pilot needs at least two hundred fifty hours to earn a commercial certificate.",
+      "a pilot, a man with short brown hair and a trimmed beard flying a small plane through clouds, eyes on the instruments, cinematic illustrated style, golden hour light",
+      "LEVEL 2"
+     ],
+     [
+      "Now you can be paid to fly. But there is a catch: the airlines will not hire you yet. So how do you build the hours you need?",
+      "a gap between a small plane and a giant airliner, a bridge made of question marks, symbolic illustration",
+      null
+     ],
+     [
+      "Most new commercial pilots become flight instructors. They teach the next group of students, logging every hour they spend in the right seat.",
+      "a pilot, a man with short brown hair and a trimmed beard now as an instructor in the right seat, pointing at a gauge while a nervous student flies, cinematic illustrated style, golden hour light",
+      "FLIGHT INSTRUCTOR"
+     ],
+     [
+      "Teaching is also the best way to really learn. When a student freezes on final approach, you have to stay calm, take the controls and turn a scary moment into a lesson.",
+      "a pilot, a man with short brown hair and a trimmed beard as an instructor calmly taking the controls during a bumpy approach while the student grips the seat, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Others tow banners over beaches, fly skydivers, take tourists on sightseeing tours or carry cargo at night in small twin engine planes.",
+      "a small plane towing an advertising banner over a crowded beach, illustrated",
+      null
+     ],
+     [
+      "Pay here is modest. Government data groups many of these jobs as commercial pilots, and in May 2025 the lowest paid ten percent of them earned under fifty nine thousand dollars a year.",
+      "a modest apartment with an airplane poster on the wall and a stack of bills on the table, illustrated",
+      "$58,850 BOTTOM 10% (US)"
+     ],
+     [
+      "Building time this way usually takes one to two years. From the very first lesson to being eligible for an airline, the whole journey is often two to three years.",
+      "a calendar flipping quickly with flight logbook pages flying out of it, illustrated",
+      "2–3 YEARS"
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "Level 3 - The Regional First Officer",
+    "source_ids": [
+     "src1",
+     "src3",
+     "src7"
+    ],
+    "shots": [
+     [
+      "Level three is the big break: first officer at a regional airline. But to sit in that seat, you need the highest license in aviation, the airline transport pilot certificate.",
+      "a pilot, a man with short brown hair and a trimmed beard in a white shirt with three stripes on his shoulders, sitting in the right seat of a regional jet, cinematic illustrated style, golden hour light",
+      "LEVEL 3"
+     ],
+     [
+      "The standard rule is one thousand five hundred hours of total flight time, including five hundred hours cross country, one hundred hours at night and seventy five hours in instrument conditions.",
+      "infographic illustration of a giant hourglass filled with tiny airplanes, numbers 1,500, 500, 100 and 75 around it",
+      "1,500 HOURS"
+     ],
+     [
+      "It was not always like this. Before the rule changed in the 2010s, a first officer could be hired with roughly two hundred fifty hours. Today there are only a few shortcuts, like reduced minimums for military pilots and graduates of certain aviation degree programs.",
+      "split illustration: an old newspaper headline about pilot hours and a modern pilot training classroom",
+      null
+     ],
+     [
+      "The certificate itself requires passing written and practical exams, and you normally must be at least twenty three years old to get the full version. It is often called the doctorate of aviation.",
+      "a pilot, a man with short brown hair and a trimmed beard receiving his airline transport pilot certificate from an examiner in a small office, cinematic illustrated style, golden hour light",
+      "ATP CERTIFICATE"
+     ],
+     [
+      "Before flying the line, new hires spend weeks learning one specific jet. They get a type rating for that model, and then fly their first real trips with a training captain sitting right beside them.",
+      "a pilot, a man with short brown hair and a trimmed beard in a classroom with a cockpit poster of a regional jet, taking notes alongside other new hires, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Regional airlines fly the smaller jets that connect cities to the big hubs. Short flights, many landings a day, early mornings and nights in airport hotels.",
+      "a regional jet landing on a wet runway in the early morning, hub airport in the background, illustrated",
+      null
+     ],
+     [
+      "A typical month can mean fifteen or more days away from home. You might wake up at four in the morning in one city, fly four short legs and end the day in a hotel near another airport.",
+      "a pilot, a man with short brown hair and a trimmed beard pulling a rolling suitcase through an empty airport hotel lobby at 4 a.m., tired but smiling, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "For the first time, you are part of a crew, flying passengers on a real schedule. And you have to learn the airline's procedures, the aircraft systems and how to work hand in hand with the captain.",
+      "a pilot, a man with short brown hair and a trimmed beard and an older captain going through a checklist together in a jet cockpit, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "Level 4 - The Regional Captain",
+    "source_ids": [
+     "src3",
+     "src4"
+    ],
+    "shots": [
+     [
+      "Level four is the upgrade to captain. You move from the right seat to the left, and a fourth stripe goes on your shoulders.",
+      "a pilot, a man with short brown hair and a trimmed beard sewing or pinning a fourth stripe onto his uniform epaulettes, proud look, cinematic illustrated style, golden hour light",
+      "LEVEL 4"
+     ],
+     [
+      "At most airlines this comes down to seniority. Your position on the airline's list decides when you can upgrade, which routes you fly and even which days you get off.",
+      "a long illustrated list of pilot names on a wall with one name highlighted moving up",
+      "SENIORITY"
+     ],
+     [
+      "The captain has final authority over the aircraft. If there is a medical emergency, a technical failure or a storm on the route, the last word is yours.",
+      "a pilot, a man with short brown hair and a trimmed beard in the left seat making a calm announcement while lightning flashes outside the cockpit window, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "The upgrade also comes with more training and a new checkride, this time from the left seat. The airline needs to be sure you can handle the worst day, not just the normal one.",
+      "a pilot, a man with short brown hair and a trimmed beard in a simulator left seat handling an engine fire warning, red lights glowing, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Pay jumps with the fourth stripe. In May 2025, the lowest paid ten percent of airline pilots in the United States earned under one hundred seven thousand dollars a year, and regional captains usually sit well above that floor.",
+      "infographic illustration of a pay ladder with the number 106,710 at the first rung and higher rungs fading upward",
+      "$106,710 BOTTOM 10% (US)"
+     ],
+     [
+      "The captain also signs for the airplane before every flight, reviews the fuel, the weather and the maintenance logs, and decides if it is safe to go. Saying no to a flight is part of the job.",
+      "a pilot, a man with short brown hair and a trimmed beard reviewing a weather radar printout and fuel numbers with a dispatcher at the gate, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Many pilots use this phase to build what the big airlines really want: hours as pilot in command of a jet.",
+      "a logbook page filling with entries labeled PIC, with a jet silhouette in the background, illustrated",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "Level 5 - The Major Airline First Officer",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "Level five is the jump to a major airline. Then, surprise: you go back to the right seat. At a new airline, everyone starts at the bottom of the seniority list.",
+      "a pilot, a man with short brown hair and a trimmed beard in a new major airline uniform walking through a large terminal with a rolling flight bag, cinematic illustrated style, golden hour light",
+      "LEVEL 5"
+     ],
+     [
+      "Now the airplanes are bigger and the trips are longer. Coast to coast flights, international routes, nights in cities across the world.",
+      "a large twin aisle jet cruising above the clouds at sunset, illustrated",
+      null
+     ],
+     [
+      "There is a lot of training before the first flight with passengers: weeks of ground school, then full motion simulators where instructors throw every failure imaginable at you.",
+      "a pilot, a man with short brown hair and a trimmed beard sweating inside a full flight simulator while warning lights flash, instructor behind him, cinematic illustrated style, golden hour light",
+      "SIMULATOR"
+     ],
+     [
+      "Major airlines also bring a different lifestyle. Bigger bases, better schedules over time, travel benefits for the family, and a retirement plan that keeps growing with every year of seniority.",
+      "a pilot's family at an airport gate with suitcases, kids looking at a big airliner through the window, illustrated",
+      null
+     ],
+     [
+      "And the money changes too. The median airline pilot in the United States earned two hundred thirty two thousand dollars in May 2025. That puts the middle of this profession among the best paid jobs in the country.",
+      "a clean infographic with the number 232,140 and an airplane icon, illustrated",
+      "$232,140 MEDIAN (US)"
+     ],
+     [
+      "On long flights, a first officer might even command the aircraft for hours as part of a relief crew while the captain rests in the crew bunk.",
+      "a pilot, a man with short brown hair and a trimmed beard at the controls of a widebody jet at night over the ocean, stars outside, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "Level 6 - The Major Airline Captain",
+    "source_ids": [
+     "src4",
+     "src6"
+    ],
+    "shots": [
+     [
+      "Level six is the top of the line: captain at a major airline. Some fly narrow body jets on busy domestic routes. The most senior choose widebody jets on routes like New York to Tokyo.",
+      "a pilot, a man with short brown hair and a trimmed beard, now in his fifties with gray at the temples, in the left seat of a widebody jet, four stripes, cinematic illustrated style, golden hour light",
+      "LEVEL 6"
+     ],
+     [
+      "This is where the biggest numbers live. The top ten percent of airline pilots in the United States earned more than four hundred sixty three thousand dollars in May 2025.",
+      "an illustrated chart where a line rises to a peak labeled 463,830 over a skyline of airports",
+      "$463,830 TOP 10% (US)"
+     ],
+     [
+      "Senior captains also have the most control over their lives. With high seniority, they can choose the best routes, the best schedules and the most days off.",
+      "a pilot, a man with short brown hair and a trimmed beard looking at a monthly schedule on a tablet with many days off highlighted, smiling, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "Of course, with that pay comes enormous responsibility. Hundreds of passengers, a crew of a dozen or more and an aircraft worth well over a hundred million dollars, all under one person's command.",
+      "wide shot inside a widebody cabin full of passengers, with the cockpit door at the end of the aisle, illustrated",
+      null
+     ],
+     [
+      "But even at the top there is a clock running. In the United States, airlines cannot use pilots in scheduled airline flying after their sixty fifth birthday. That limit was sixty until 2007.",
+      "a cockpit clock morphing into the number 65, symbolic illustration",
+      "MANDATORY: AGE 65"
+     ],
+     [
+      "Every six months to a year, captains go back to the simulator for checkrides. A bad day there can cost even the most experienced pilot his seat.",
+      "a pilot, a man with short brown hair and a trimmed beard as a senior captain shaking hands with an examiner after a simulator checkride, relieved, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "Level 7 - Beyond the Cockpit",
+    "source_ids": [
+     "src3"
+    ],
+    "shots": [
+     [
+      "And some pilots climb one more level, into leadership. Check airmen train and test other pilots. Chief pilots manage hundreds of crew members at a base.",
+      "a pilot, a man with short brown hair and a trimmed beard as a chief pilot in a uniform jacket at an office overlooking the runway, cinematic illustrated style, golden hour light",
+      "LEVEL 7"
+     ],
+     [
+      "At the very top, directors of flight operations decide how the whole airline flies: procedures, training programs and safety standards that every pilot must follow.",
+      "an operations control center with big screens showing hundreds of flights over a world map, illustrated",
+      null
+     ],
+     [
+      "Many of these leaders still fly a few trips every month. Staying current keeps them close to the reality of the line pilots they manage, and keeps their own skills sharp.",
+      "a pilot, a man with short brown hair and a trimmed beard as a chief pilot walking out to a jet on the ramp with his flight bag, other pilots greeting him, cinematic illustrated style, golden hour light",
+      null
+     ],
+     [
+      "It is less flying and more responsibility. A decision made in an office here can change how thousands of pilots handle the next emergency.",
+      "a pilot, a man with short brown hair and a trimmed beard standing in front of the operations screens with his arms crossed, serious face, cinematic illustrated style, golden hour light",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "Your level",
+    "source_ids": [
+     "src2",
+     "src4"
+    ],
+    "shots": [
+     [
+      "So that is the ladder. Student pilot, commercial pilot and instructor, regional first officer, regional captain, major airline first officer, major airline captain and finally leadership.",
+      "the logbook staircase again, now complete, with a different aircraft on each step from a small trainer to a widebody jet, symbolic illustration",
+      null
+     ],
+     [
+      "It takes years of training, a lot of money at the start and a career shaped by seniority. But for many pilots, the view from the cockpit is worth every single hour.",
+      "view from a cockpit over a sea of clouds at sunrise, illustrated",
+      null
+     ],
+     [
+      "And every one of those captains, chief pilots and directors started in the same place: a tiny airplane, a nervous first lesson and a logbook with a single line written in it.",
+      "close-up of an old logbook with the first entry handwritten, a small training plane in the background, illustrated",
+      null
+     ],
+     [
+      "Now it is your turn. Are you a pilot, a student, or just someone who looks up every time a plane flies over? Tell me in the comments which level you are on right now, and which one you are aiming for.",
+      "a pilot, a man with short brown hair and a trimmed beard in full captain uniform looking at the viewer with a confident smile, airplane behind him, cinematic illustrated style, golden hour light",
+      "WHAT LEVEL ARE YOU?"
+     ]
+    ]
+   }
+  ]
+ }
+}

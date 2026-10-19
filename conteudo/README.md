@@ -22,3 +22,13 @@ Temas com conteúdo pronto saem primeiro da fila (`claim_next_topic`).
 Formato de `prepared`: `script` = mesmo JSON que a IA devolveria (titles, chosen_title, hook_options, sources,
 blocks, subject, tags, hashtags); `shotlist` = {blocks: [{block_id, shots: [{narration_span, visual_prompt,
 text_overlay, kenburns, is_hook}]}], thumbnail}. Cada `narration_span` é um trecho literal da narração do bloco.
+
+## Formato compacto (`_compact.py`)
+
+Os roteiros novos usam `from _compact import save`: cada bloco é `(id, título, [fontes], [(narração, prompt, texto_na_tela), ...])`.
+`python3 conteudo/<canal>/<tema>.py` confere o tamanho e grava `<tema>.json` com `{channel_slug, title, priority, author, compact}`,
+que é o corpo aceito pelo `factory.preparar` (POST `/webhook/fabrica-preparar?k=CHAVE_DO_PAINEL`). O webhook monta a narração,
+os `kenburns` e o `is_hook` e grava no tema com o mesmo título.
+
+Prontos (out/2026): Career Levels — Nurse, Pilot, Lawyer; Deu Tudo Errado — baleia do Oregon, Tacoma Narrows, Vasa, Mars Climate Orbiter.
+Lembrete: o texto sai de graça, mas as imagens dependem da cota grátis do Cloudflare (~170 por dia, cerca de 3 vídeos longos).

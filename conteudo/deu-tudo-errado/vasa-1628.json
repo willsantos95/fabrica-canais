@@ -1,0 +1,453 @@
+{
+ "channel_slug": "deu-tudo-errado",
+ "title": "O dia em que um navio de guerra afundou na viagem inaugural: o Vasa (1628)",
+ "priority": 70,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "O navio que afundou com 1.300 metros de viagem",
+    "Vasa: o navio de guerra que afundou na estreia",
+    "O navio mais poderoso da Suécia não aguentou uma brisa",
+    "Afundou na frente de todo mundo (e ninguém foi punido)",
+    "O teste dos 30 homens que todo mundo ignorou",
+    "O navio que voltou do fundo do mar 333 anos depois",
+    "Vasa, 1628: o maior vexame naval da história",
+    "Por que o navio do rei afundou numa brisa",
+    "O navio que ninguém teve coragem de cancelar",
+    "Do fundo do porto ao museu mais visitado da Suécia"
+   ],
+   "chosen_title": "O navio que afundou com 1.300 metros de viagem",
+   "hook_options": [
+    "O navio de guerra mais poderoso da Suécia navegou pouco mais de um quilômetro e afundou.",
+    "Trinta marinheiros correram pelo convés e o navio quase virou. Mesmo assim, ele zarpou.",
+    "Não teve inimigo, nem tempestade. Bastou uma brisa.",
+    "O rei queria culpados. No fim, todo mundo foi promovido.",
+    "Ele afundou em 1628 e voltou à superfície 333 anos depois, quase inteiro."
+   ],
+   "subject": "navio Vasa",
+   "tags": [
+    "navio vasa",
+    "vasa 1628",
+    "navio que afundou",
+    "museu vasa",
+    "deu tudo errado",
+    "história real",
+    "curiosidades",
+    "naufrágio",
+    "suécia história",
+    "erro de engenharia"
+   ],
+   "hashtags": [
+    "DeuTudoErrado",
+    "HistoriaReal",
+    "Curiosidades"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "AFUNDOU",
+     "NA ESTREIA"
+    ],
+    "image_prompt": "a huge ornate 17th century warship heeling over and sinking in a harbor, water pouring into gunports, on the right two thirds, shocked crowd small on the shore, left third dark sky empty for text, high contrast, illustrated"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Vasa – wrecked on 10 August 1628 — Vasamuseet",
+    "url": "https://www.vasamuseet.se/en/visit/exhibitions/brickwrecks/brickwrecks-english-text/vasa/first-the-worst",
+    "claim": "Orgulho da marinha sueca, virou com uma rajada leve na viagem inaugural, depois de navegar cerca de 1.300 m; mais canhões e mais pesados que qualquer navio sueco anterior; 30 mortos, a maioria presa no casco; repousou a cerca de 32 m com os mastros acima da água; resgatado 333 anos depois; navio do século 17 mais bem preservado do mundo."
+   },
+   {
+    "id": "src2",
+    "title": "The inquest — Vasamuseet",
+    "url": "https://www.vasamuseet.se/en/vasa-history/inquest",
+    "claim": "Capitão Söfring Hansson preso e interrogado; construtores Hein Jacobsson e Arendt de Groote questionados; demonstração com 30 homens correndo pelo convés diante do vice-almirante Klas Fleming quase virou o navio no cais e foi interrompida; frase 'se Sua Majestade estivesse em casa'; 120 t de pedra como lastro; Henrik Hybertsson morreu no ano anterior; o rei, na Prússia, exigiu culpados; ninguém foi punido e todos foram promovidos."
+   },
+   {
+    "id": "src3",
+    "title": "Back to the drawing board: Vasa — Military History Matters",
+    "url": "https://military-history.org/articles/back-to-the-drawing-board-vasa.htm",
+    "claim": "Cerca de 1.000 carvalhos, mastros de 50 m, 64 canhões (48 de 24 libras), bordada de ~300 kg, contra 38 canhões do Solen; partiu no domingo 10/08/1628; água entrou pelas portinholas abertas."
+   },
+   {
+    "id": "src4",
+    "title": "The salvage — Vasamuseet",
+    "url": "https://www.vasamuseet.se/en/vasa-history/salvage",
+    "claim": "Em 4/9/1956 os mergulhadores Per Edvin Fälting e Sven Persson confirmaram o achado de Anders Franzén; 1957–1959 seis túneis sob o casco com cabos de aço; pontões Oden e Frigg; canhão içado ao vivo no rádio em 5/9/1958; primeiro içamento em 20/8/1959, 18 etapas; casco aflorou em 24/4/1961 às 09h03; mais de 1.000 objetos e ossos de cinco pessoas no convés de canhões; mais de 700 esculturas."
+   },
+   {
+    "id": "src5",
+    "title": "Vasa Museum — Wikipedia (espelho)",
+    "url": "https://www.chise.org/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco/wiki/Vasa_Museum.html",
+    "claim": "Tratado com polietilenoglicol de 1961 a 1988 em abrigo provisório; museu aberto em 15/6/1990; 1.143.404 visitantes em 2008 e mais de 25 milhões no total."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b01",
+    "title": "Mil e trezentos metros",
+    "source_ids": [
+     "src1",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Imagine passar anos construindo o navio de guerra mais poderoso do seu país. Gastar uma fortuna. Encher de canhões, de esculturas douradas, de bandeiras.",
+      "a magnificent 17th century warship with gilded carvings and red and gold decorations moored in a harbor, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "E então, no dia da estreia, diante de uma multidão, ele zarpa, navega um pouco mais de um quilômetro, inclina para o lado e afunda.",
+      "the warship heeling dramatically to one side in the harbor while a crowd watches from the shore, cinematic illustrated documentary style, 17th century Stockholm",
+      "1.300 METROS"
+     ],
+     [
+      "Não foi uma batalha. Não houve inimigo, nem tempestade, nem rocha escondida no caminho. Bastou uma rajada leve de vento, daquelas que mal balançam as árvores.",
+      "sails catching a light gust of wind under a calm summer sky, the ship tilting, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Esse foi o destino do Vasa, o orgulho da marinha sueca, no dia dez de agosto de 1628. Um dos fiascos mais caros e mais constrangedores da história naval.",
+      "the ship sinking with only its masts above the water, small boats rushing toward it, cinematic illustrated documentary style, 17th century Stockholm",
+      "10 DE AGOSTO DE 1628"
+     ],
+     [
+      "Os sinais de que algo estava errado apareceram antes. Teve um teste que quase virou o navio no cais, gente importante que viu tudo de perto, e uma decisão de seguir em frente mesmo assim.",
+      "the warship rocking at the quay while officials on the dock exchange worried looks, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "E o mais incrível dessa história não é só como ele afundou. É que, mais de três séculos depois, ele voltou à superfície quase inteiro.",
+      "a dark wooden hull emerging from gray water in the 20th century, divers and cranes around it, cinematic illustrated documentary style, Stockholm",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "O rei queria o maior navio",
+    "source_ids": [
+     "src3",
+     "src2"
+    ],
+    "shots": [
+     [
+      "No começo do século dezessete, a Suécia era uma potência em ascensão. O rei Gustavo Segundo Adolfo estava em guerra e precisava dominar o mar Báltico.",
+      "King Gustavus Adolphus of Sweden, a tall blond man with a pointed beard, in 17th century armor and a wide hat standing over a map of the Baltic Sea in a candlelit war room, cinematic illustrated documentary style, 17th century Stockholm",
+      "GUSTAVO II ADOLFO"
+     ],
+     [
+      "Para isso, encomendou uma frota de navios novos. E um deles seria especial: um navio real, que mostrasse ao mundo o poder da coroa sueca.",
+      "King Gustavus Adolphus of Sweden, a tall blond man with a pointed beard, in 17th century armor and a wide hat reviewing ship drawings presented by shipbuilders, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "A obra ficou a cargo do mestre construtor holandês Henrik Hybertsson, num estaleiro em Estocolmo. Para erguer o casco, foram usados cerca de mil carvalhos.",
+      "a busy 17th century shipyard with hundreds of workers and a huge wooden hull under construction, logs of oak everywhere, cinematic illustrated documentary style, 17th century Stockholm",
+      "~1.000 CARVALHOS"
+     ],
+     [
+      "O navio teria dois conveses de canhões, algo raro na época. Ao todo, sessenta e quatro canhões, quarenta e oito deles de vinte e quatro libras.",
+      "cross-section illustration of the warship showing two decks lined with heavy bronze cannons, cinematic illustrated documentary style, 17th century Stockholm",
+      "64 CANHÕES"
+     ],
+     [
+      "Só para comparar, o navio Solen, um dos anteriores, tinha trinta e oito canhões. O Vasa podia disparar de um lado só cerca de trezentos quilos de ferro.",
+      "side by side comparison of a smaller older galleon and the much larger new warship, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Os canhões de bronze eram pesadíssimos. Fundir, transportar e instalar dezenas deles custou uma pequena fortuna para um reino que já estava gastando muito com a guerra.",
+      "workers using ropes and pulleys to hoist a heavy bronze cannon aboard the warship, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Os mastros chegariam a cinquenta metros de altura. E a popa seria coberta de centenas de esculturas pintadas: leões, imperadores romanos, sereias, anjos. Era um navio de guerra e uma obra de arte ao mesmo tempo.",
+      "close-up of the ornate stern of the warship covered in painted wooden sculptures of lions, warriors and mermaids, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "Alto demais, estreito demais",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Mas havia um problema no desenho. Para carregar tantos canhões pesados lá em cima, o navio ficou alto e estreito demais para o lastro que conseguia levar.",
+      "technical illustration of the ship's hull with a high center of gravity marked, cannons stacked high, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Em termos simples: o peso estava concentrado em cima. E um navio com muito peso em cima vira com facilidade, como um brinquedo de equilibrar que tomba ao menor empurrão.",
+      "a simple diagram of a tall narrow ship tipping over next to a wide stable one, cinematic illustrated documentary style, 17th century Stockholm",
+      "PESO NO ALTO"
+     ],
+     [
+      "Para piorar, o construtor Henrik Hybertsson morreu antes do fim da obra. Os trabalhos passaram para outros mestres, como Hein Jacobsson, que seguiram com o projeto.",
+      "a somber shipyard scene with workers removing their hats near a covered body, the hull in the background, cinematic illustrated documentary style, 17th century Stockholm",
+      "HENRIK HYBERTSSON"
+     ],
+     [
+      "No fundo do casco, colocaram cento e vinte toneladas de pedras como lastro, para baixar o centro de gravidade. Mas não havia espaço para muito mais.",
+      "workers carrying heavy stones into the dark lower hold of the ship, lanterns lighting the scene, cinematic illustrated documentary style, 17th century Stockholm",
+      "120 T DE LASTRO"
+     ],
+     [
+      "Na época, não existiam cálculos de estabilidade como os de hoje. Os construtores trabalhavam com experiência, tabelas de proporções e muita intuição. E um navio com dois conveses de canhões pesados era uma novidade para eles.",
+      "an old shipbuilder measuring a wooden hull with a rope and compass, puzzled expression, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "E ninguém tinha coragem de dizer ao rei que o navio que ele tanto queria talvez não fosse capaz de ficar de pé.",
+      "nervous shipbuilders whispering among themselves while looking at a royal letter with a wax seal, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "O teste dos trinta homens",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Antes da viagem, o capitão Söfring Hansson organizou um teste de estabilidade, diante do vice-almirante Klas Fleming, um dos homens mais importantes da marinha.",
+      "the admiral, a stern man in his forties with a 17th century black doublet and white collar standing on the dock watching the ship with arms crossed, the captain beside him, cinematic illustrated documentary style, 17th century Stockholm",
+      "KLAS FLEMING"
+     ],
+     [
+      "O teste era simples. Trinta marinheiros correram juntos de um lado para o outro do convés, para ver quanto o navio balançava.",
+      "thirty sailors running together across the upper deck of the moored warship, cinematic illustrated documentary style, 17th century Stockholm",
+      "30 HOMENS"
+     ],
+     [
+      "Na primeira corrida, o navio inclinou. Na segunda, mais ainda. Na terceira, inclinou tanto que quase virou ali mesmo, amarrado no cais.",
+      "the warship rolling heavily at the quay while sailors cling to the railings, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "O teste foi interrompido. E, segundo um depoimento dado depois, o almirante teria murmurado uma frase: se Sua Majestade estivesse em casa.",
+      "the admiral, a stern man in his forties with a 17th century black doublet and white collar murmuring with a worried face as the ship rocks behind him, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "O problema é que o rei não estava em casa. Ele estava com o exército, longe, e queria o navio no mar o quanto antes.",
+      "King Gustavus Adolphus of Sweden, a tall blond man with a pointed beard, in 17th century armor and a wide hat on horseback with his army in a muddy field far from home, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Imagine a situação dos homens no cais. Dizer que o navio não estava pronto seria atrasar uma ordem direta do rei, no meio de uma guerra. Seria arriscar o próprio cargo, ou coisa pior.",
+      "the captain and the admiral standing on the dock in silence, avoiding each other's eyes, the ship behind them, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Ninguém mandou mudar o projeto. Ninguém cancelou a viagem. A data foi mantida, e o Vasa foi preparado para partir.",
+      "sailors loading barrels and gunpowder onto the warship under a clear summer sky, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "Um domingo em Estocolmo",
+    "source_ids": [
+     "src1",
+     "src3"
+    ],
+    "shots": [
+     [
+      "No domingo, dez de agosto de 1628, o porto de Estocolmo estava em festa. Moradores, diplomatas estrangeiros e famílias da tripulação se reuniram para ver a partida.",
+      "a festive crowd in 17th century clothing gathered along the Stockholm waterfront, flags waving, cinematic illustrated documentary style, 17th century Stockholm",
+      "DOMINGO"
+     ],
+     [
+      "A tripulação ocupou seus postos. As portinholas dos canhões estavam abertas, para disparar a salva de despedida, um costume da época na saída de um navio de guerra.",
+      "the open gunports of the warship with cannons pointing out, smoke from a ceremonial salute, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "O navio foi rebocado e depois abriu algumas velas. Navegou devagar, majestoso, enquanto a multidão aplaudia.",
+      "the warship sailing slowly out of the harbor with a few sails open, small boats around it, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Então veio uma rajada de vento. Nada demais. O Vasa inclinou para o lado. Depois se endireitou um pouco.",
+      "the ship heeling to port as wind fills the sails, sailors looking up worried, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Os marinheiros correram para soltar as cordas das velas e aliviar a pressão do vento. Mas o navio estava inclinado demais, e o peso dos canhões puxava tudo ainda mais para baixo.",
+      "sailors frantically pulling ropes on the steeply tilted deck as cannons roll, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Mas logo veio outra rajada. E dessa vez ele inclinou tanto que a água entrou pelas portinholas abertas dos canhões.",
+      "seawater pouring into the open lower gunports of the heeling ship, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Com a água entrando, não houve volta. Em poucos minutos, o navio mais poderoso da Suécia afundou na frente de todo mundo, depois de navegar só uns mil e trezentos metros.",
+      "the warship sinking quickly in the harbor while the crowd on the shore screams in horror, cinematic illustrated documentary style, 17th century Stockholm",
+      "AFUNDOU"
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "Quem é o culpado?",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "O navio parou no fundo, a cerca de trinta e dois metros, tão perto da superfície que as pontas dos mastros ficaram para fora da água.",
+      "underwater illustration of the ship resting upright on the seabed with its mast tips sticking out of the surface, cinematic illustrated documentary style, 17th century Stockholm",
+      "32 METROS"
+     ],
+     [
+      "Alguns sobreviventes se agarraram aos mastros até serem resgatados por pequenos barcos. Mas trinta pessoas morreram, a maioria presa dentro do casco.",
+      "survivors clinging to the masts above the water as rowboats approach, cinematic illustrated documentary style, 17th century Stockholm",
+      "30 MORTOS"
+     ],
+     [
+      "Quando o rei soube, ficou furioso. A notícia chegou até ele longe de casa, no meio da campanha militar. Na resposta, ele foi direto: queria saber a causa, e queria que os culpados fossem punidos.",
+      "King Gustavus Adolphus of Sweden, a tall blond man with a pointed beard, in 17th century armor and a wide hat reading a letter in a tent and slamming his fist on a table, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "O capitão Söfring Hansson foi preso e interrogado. Os construtores foram chamados a depor. O responsável pelo lastro também.",
+      "a 17th century courtroom with officials in dark robes questioning a captain, cinematic illustrated documentary style, 17th century Stockholm",
+      "O INQUÉRITO"
+     ],
+     [
+      "Cada um tinha uma resposta. O capitão disse que tudo a bordo estava em ordem. O responsável pelo lastro disse que colocou o máximo possível. Os construtores disseram que seguiram as medidas aprovadas pelo rei.",
+      "three men giving testimony one after another in front of a panel of judges, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Ficou claro que o navio era instável desde o começo. Mas as medidas tinham sido aprovadas, e o mestre construtor original já estava morto. Não havia um vilão óbvio para entregar ao rei.",
+      "an official pointing at the ship's design drawings spread on a table while others shrug, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "No fim, culpar alguém significaria apontar para quem tinha aprovado o projeto. E quem tinha aprovado era o próprio rei.",
+      "a portrait of King Gustavus Adolphus of Sweden, a tall blond man with a pointed beard, in 17th century armor and a wide hat hanging on the courtroom wall while officials look up at it nervously, cinematic illustrated documentary style, 17th century Stockholm",
+      null
+     ],
+     [
+      "Resultado: ninguém foi punido. E, com o tempo, todos os interrogados acabaram sendo promovidos.",
+      "officials shaking hands and closing a thick file marked with a wax seal, cinematic illustrated documentary style, 17th century Stockholm",
+      "NINGUÉM PUNIDO"
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "Trezentos e trinta e três anos depois",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "Depois disso, o Vasa foi ficando esquecido no fundo do porto. A lama cobriu o casco, e a água fria e pouco salgada do Báltico ajudou a conservar a madeira. Séculos passaram. Até que, nos anos cinquenta, um pesquisador amador decidiu procurá-lo.",
+      "a 1950s man in a sweater on a small boat lowering a metal coring tool into the harbor water, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "O nome dele era Anders Franzén. Ele usava uma ferramenta para tirar amostras do fundo. Em 1956, ela voltou com pedaços de carvalho escuro.",
+      "close-up of dark old oak wood fragments in a 1950s researcher's hand on a boat, cinematic illustrated documentary style, Stockholm",
+      "ANDERS FRANZÉN"
+     ],
+     [
+      "No dia quatro de setembro, os mergulhadores Per Edvin Fälting e Sven Persson desceram e confirmaram: havia um navio enorme lá embaixo.",
+      "a 1950s diver in a heavy brass helmet touching a huge wooden hull in murky water, cinematic illustrated documentary style, Stockholm",
+      "4 DE SETEMBRO DE 1956"
+     ],
+     [
+      "O resgate foi uma obra de engenharia. Entre 1957 e 1959, mergulhadores da marinha cavaram seis túneis por baixo do casco, na lama, e passaram cabos de aço por eles.",
+      "divers digging tunnels in the mud beneath the ancient hull and threading steel cables, cinematic illustrated documentary style, Stockholm",
+      "6 TÚNEIS"
+     ],
+     [
+      "Os cabos foram presos a dois pontões, chamados Oden e Frigg. Em dezoito etapas, o navio foi levantado e arrastado aos poucos para águas mais rasas.",
+      "two large salvage pontoons on the surface with cables descending into the water, cinematic illustrated documentary style, Stockholm",
+      "ODEN E FRIGG"
+     ],
+     [
+      "Era um trabalho perigoso e lento. Os mergulhadores enxergavam quase nada naquela água escura, e o casco antigo podia desmoronar sobre eles a qualquer momento.",
+      "a diver with a lamp in near-total darkness working under the massive wooden hull, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "Em 1958, um dos canhões foi içado ao vivo, transmitido pelo rádio sueco. O país inteiro acompanhou.",
+      "a family in 1950s Sweden listening to a radio broadcast while a bronze cannon is lifted on a newspaper photo, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "E então, no dia vinte e quatro de abril de 1961, às nove e três da manhã, a silhueta do Vasa apareceu na superfície de Estocolmo, trezentos e trinta e três anos depois de afundar.",
+      "the dark ancient warship hull breaking the water surface at dawn, crowds and press boats around, cinematic illustrated documentary style, Stockholm",
+      "24 DE ABRIL DE 1961"
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "O fracasso que virou museu",
+    "source_ids": [
+     "src4",
+     "src5",
+     "src1"
+    ],
+    "shots": [
+     [
+      "Dentro do navio, os arqueólogos encontraram mais de mil objetos: moedas, ferramentas, roupas, e também ossos de tripulantes. Além de mais de setecentas esculturas.",
+      "archaeologists in a 1960s lab cleaning carved wooden sculptures and coins from the ship, cinematic illustrated documentary style, Stockholm",
+      "+700 ESCULTURAS"
+     ],
+     [
+      "Preservar tudo aquilo era um desafio. Madeira que passa séculos debaixo d'água racha e encolhe ao secar. Por anos, o casco foi borrifado com um produto chamado polietilenoglicol, que entrou no lugar da água na madeira.",
+      "workers spraying the ancient hull with a fine mist inside a temporary hall, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "Em 1990, o navio ganhou um museu só para ele em Estocolmo. Hoje é o navio do século dezessete mais bem preservado do mundo, e mais de vinte e cinco milhões de pessoas já foram vê-lo.",
+      "the restored warship towering inside a modern dark museum hall, visitors looking up at it, cinematic illustrated documentary style, Stockholm",
+      "+25 MILHÕES DE VISITANTES"
+     ],
+     [
+      "O navio que você vê hoje no museu é praticamente o mesmo que afundou em 1628. Os conveses, os canhões, as esculturas, até as marcas das ferramentas dos carpinteiros.",
+      "museum visitors examining the carved details and tool marks on the ship's wooden hull up close, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "É uma ironia e tanto. Um navio que não serviu nem um dia na guerra virou um dos maiores tesouros da Suécia.",
+      "close-up of the restored gilded stern of the warship lit dramatically in the museum, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "E o Vasa também virou uma lição que é ensinada até hoje, inclusive em cursos de engenharia e administração: quando todo mundo vê o problema, mas ninguém tem coragem de dizer não para quem manda.",
+      "a modern classroom with a slide showing the warship and the words decision making, students listening, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "Os sinais estavam todos lá. O navio alto demais, o lastro insuficiente, o teste dos trinta homens. Bastaria uma conversa honesta.",
+      "a split illustration of the thirty sailors test and the ship sinking, connected by a red line, cinematic illustrated documentary style, Stockholm",
+      null
+     ],
+     [
+      "E você, já viu um projeto que todo mundo sabia que ia dar errado, mas ninguém teve coragem de parar? Me conta aqui nos comentários.",
+      "the warship sailing proudly out of the harbor just before the gust, crowd waving, cinematic illustrated documentary style, Stockholm",
+      "JÁ VIU ISSO?"
+     ]
+    ]
+   }
+  ]
+ }
+}

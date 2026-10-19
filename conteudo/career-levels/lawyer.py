@@ -1,0 +1,171 @@
+"""Career Levels — Every Level of a Lawyer's Career (script and shotlist written by Claude).
+Numbers: BLS OEWS May 2025 (United States) via WageDex; NALP 2025 associate survey via ABA Journal; ABA bar passage 2024.
+"""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from _compact import save
+
+CHANNEL, TITLE, PRIORITY = "career-levels", "Every Level of a Lawyer's Career", 50
+
+SOURCES = [
+    {"id": "src1", "title": "Lawyers (SOC 23-1011) — BLS OEWS May 2025, via WageDex",
+     "url": "https://wagedex.com/jobs/lawyers",
+     "claim": "United States, May 2025: median $159,670, mean $185,840, 10th percentile $78,360, 90th percentile $351,600, 754,500 jobs; typical entry education doctoral or professional degree."},
+    {"id": "src2", "title": "Think new BigLaw associates are all making $225K? Think again, new NALP report says — ABA Journal",
+     "url": "https://www.abajournal.com/news/article/think-new-biglaw-associates-are-all-making-225k-think-again-report-says",
+     "claim": "NALP 2025 survey (as of Jan. 1, 2025): median first-year base salary $215,000 at firms with 700+ lawyers and $200,000 across 437 responding firms; 45% of the largest firms and 32% of all firms paid $225,000."},
+    {"id": "src3", "title": "First-time bar passage rate increased — ABA News (March 2025)",
+     "url": "https://www.americanbar.org/news/abanews/aba-news-archives/2025/03/first-time-bar-passage-rate-increased/",
+     "claim": "2024 first-time bar passage for ABA-approved law school graduates 82.79%; ultimate passage within two years for the class of 2022 90.41%."},
+    {"id": "src4", "title": "Judges, Magistrate Judges, and Magistrates (SOC 23-1023) — BLS OEWS May 2025, via WageDex",
+     "url": "https://wagedex.com/jobs/judges-magistrate-judges-and-magistrates",
+     "claim": "United States, May 2025: median $153,990, 10th percentile $46,950, 90th percentile $221,710, 24,030 jobs; typically 5+ years of related experience."},
+]
+
+L = "a lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses"
+ST = "cinematic illustrated style, warm office lighting"
+
+BLOCKS = [
+    ("b00", "The question", ["src1"], [
+        ("What does it take to go from a college student staring at a practice test to the person in the black robe deciding who wins the case?",
+         f"{L}, in her early twenties, sitting alone in a college library with a thick practice test book, {ST}", None),
+        ("There are about three quarters of a million lawyers working in the United States. And the gap between the lowest and highest paid among them is enormous.",
+         "a grand courthouse with tall columns at dusk, people in suits climbing the stairs, illustrated", "754,500 LAWYERS (US)"),
+        ("Behind that gap there is a ladder. Exams, debt, brutal hours, and a few big decisions that send lawyers down very different paths.",
+         "a tall ladder made of law books rising toward a judge's bench, symbolic illustration", None),
+        ("Let's climb it one level at a time. And at the end, I want you to tell me which level you are on right now.",
+         f"{L} closing her laptop and looking up with determination, {ST}", None),
+    ]),
+    ("b01", "Level 1 - The Pre-Law Student", ["src1"], [
+        ("Level one is the pre-law student. In the United States, law is not an undergraduate major you can go straight into. First you need a bachelor's degree in anything: history, economics, philosophy, even engineering.",
+         f"{L} as an undergraduate in a lecture hall with a political science slide on the screen, {ST}", "LEVEL 1"),
+        ("Then comes the admission test. Most law schools look closely at a standardized exam full of logic games, reading and arguments, where every point can change which schools say yes.",
+         f"{L} timing herself with a stopwatch over a practice exam, eraser shavings everywhere, {ST}", None),
+        ("Grades matter too. Students build applications with internships, debate teams, volunteer work in legal clinics and letters from professors.",
+         "a stack of application folders, recommendation letters and a college transcript on a dorm desk, illustrated", None),
+        ("This is also when many people quietly change their minds. A summer inside a real law office shows that the job is less about dramatic speeches in court and much more about reading, writing and deadlines.",
+         f"{L} reading a long contract under a desk lamp, a coffee cup going cold beside her, {ST}", None),
+        ("Pay at this level? Nothing. Many pre-law students work part time as paralegals or office assistants at law firms, just to see what the job really looks like from the inside.",
+         f"{L} as a young assistant carrying boxes of files through a busy law office, {ST}", "PAY: $0"),
+    ]),
+    ("b02", "Level 2 - The Law Student", ["src1"], [
+        ("Level two is law school. A full time Juris Doctor program takes three years, and the first one is famous for being one of the hardest years of any education. Contracts, torts, property, criminal law, constitutional law and civil procedure, all at once.",
+         f"{L} entering a gothic law school building with a heavy backpack, {ST}", "LEVEL 2"),
+        ("Professors use the Socratic method. They can call on any student at any moment and question them about a case in front of a hundred classmates. There is nowhere to hide, so students read hundreds of pages every single week.",
+         f"{L} standing up in a crowded tiered classroom answering a professor's question, everyone watching, {ST}", None),
+        ("In many classes, the whole grade comes down to one final exam. And grades are curved, so you are not just competing with the material. You are competing with the person sitting next to you.",
+         "a bell curve drawn on a chalkboard with tiny student figures crowded along it, illustrated", None),
+        ("Outside class, students write legal briefs, argue fake cases in moot court competitions and work in legal clinics, where they help real clients with real problems under a professor's supervision.",
+         f"{L} arguing in front of a panel of three student judges in a moot court room, {ST}", "MOOT COURT"),
+        ("The best students compete for spots on the law review and for summer jobs at big firms. Those summer jobs often turn into job offers worth more than two hundred thousand dollars a year.",
+         f"{L} in a borrowed suit shaking hands with recruiters at a law firm reception event, {ST}", None),
+        ("The summer between the second and third year is the most important. At big firms, summer associates are wined, dined and tested, and most hope to leave with a permanent offer in hand.",
+         f"{L} at a rooftop summer associate event with a city skyline behind her, holding a glass of water, {ST}", None),
+        ("And then there is the cost. Tuition, books and three years without a full salary leave many graduates with student debt that can follow them for a decade or more.",
+         "a mountain of envelopes marked student loan towering over a small figure with a diploma, illustrated", None),
+    ]),
+    ("b03", "Level 3 - The New Lawyer", ["src3", "src2"], [
+        ("Level three starts with the most feared test of the profession: the bar exam. Without passing it in a state, you cannot practice law there.",
+         f"{L} in a huge exam hall filled with rows of desks and nervous graduates, {ST}", "LEVEL 3"),
+        ("Graduates spend around two months studying full time, often ten hours a day, for a test that usually lasts two days.",
+         f"{L} surrounded by sticky notes and outlines on every wall of a small apartment, {ST}", None),
+        ("The good news: in 2024, about eighty three percent of graduates from accredited law schools passed on the first try. And within two years, more than ninety percent eventually pass.",
+         "an illustrated results screen with a large green PASS stamp and confetti", "83% FIRST TRY (2024)"),
+        ("Beyond the exam, every state also checks your character and fitness. Unpaid debts, past problems with the law or lying on an application can delay or even block your license.",
+         "a background check form with a magnifying glass over it on an official desk, illustrated", None),
+        ("And then the day finally comes. New lawyers raise their right hand in a courtroom, take an oath, and are officially admitted to practice.",
+         f"{L} raising her right hand with a group of new lawyers in a courtroom swearing-in ceremony, families watching, {ST}", "SWORN IN"),
+        ("Now you are an associate, the entry level lawyer at a firm. And this is where the paths split dramatically.",
+         "a fork in a road, one path leading to glass skyscrapers, the other to a small town law office and a public defender building, illustrated", None),
+        ("At the largest firms, the median starting salary was two hundred fifteen thousand dollars in early 2025, and nearly half of those big firms paid two hundred twenty five thousand.",
+         "a sleek skyscraper lobby with a big law firm logo shape, number 215,000 floating, infographic illustration", "$215,000 BIG LAW START"),
+        ("But that is the top of the market. Public defenders, prosecutors and lawyers at small firms often start far lower. In May 2025, the lowest paid ten percent of all lawyers earned under seventy nine thousand dollars a year.",
+         f"{L} in a modest government office with stacks of case files on every surface, {ST}", "$78,360 BOTTOM 10% (US)"),
+    ]),
+    ("b04", "Level 4 - The Associate Grind", ["src1", "src2"], [
+        ("Level four is the associate grind. At big firms, junior lawyers are measured by the billable hour, and the yearly targets often run around two thousand hours billed to clients.",
+         f"{L} at her desk at midnight in a glass office tower, city lights outside, takeout box beside her laptop, {ST}", "LEVEL 4"),
+        ("Billing two thousand hours means working many more, because not every minute in the office can be charged to a client. Weekends, holidays and canceled vacations become part of the deal.",
+         "an hourglass with a law firm skyline inside, sand running fast, symbolic illustration", "~2,000 BILLABLE HOURS"),
+        ("Time is usually tracked in tenths of an hour, so every six minutes counts. Phone calls, emails, research, even a quick question from a partner in the hallway, all of it goes on the timesheet.",
+         "a computer screen showing a timesheet with tiny time entries like 0.1 and 0.3 hours, illustrated close-up", "0.1 HOUR"),
+        ("Junior associates do the heavy lifting. Reviewing thousands of documents, drafting contracts, researching case law and writing memos that a partner might read for five minutes.",
+         "piles of documents on a conference table with sticky tabs in every color, a tired associate highlighting text, illustrated", None),
+        ("Outside big law, the grind looks different but it is just as real. A young prosecutor or public defender may juggle a hundred cases at once, with hearings almost every day.",
+         f"{L} running between courtrooms with a cart of case files, {ST}", None),
+        ("Many leave after a few years. Some move to smaller firms for a better life, some go to work inside companies, and some join the government. It is one of the biggest turning points in a legal career.",
+         f"{L} looking out the window of her office at sunrise, resignation letter half written on the screen, {ST}", None),
+        ("Those who stay climb a salary ladder that rises every year, and the middle of the whole profession, counting every kind of lawyer in the United States, earned about one hundred sixty thousand dollars in May 2025.",
+         "an illustrated staircase of increasing paychecks with the label 159,670 highlighted in the middle", "$159,670 MEDIAN (US)"),
+    ]),
+    ("b05", "Level 5 - The Senior Associate", ["src1"], [
+        ("Level five is the senior associate. After five or six years, you are no longer the one doing the first draft. You are the one running the case day to day.",
+         f"{L}, now in her early thirties, leading a meeting with junior associates around a conference table, {ST}", "LEVEL 5"),
+        ("Senior associates manage junior lawyers, talk directly with clients, and in litigation they may take depositions or argue motions in court. In deals, they negotiate contract terms line by line with the lawyers on the other side.",
+         f"{L} questioning a witness in a deposition room while a court reporter types, {ST}", None),
+        ("The work gets more strategic. Instead of asking what the law says, you start asking what the client actually needs, and how to win without spending years and millions in court.",
+         f"{L} on a video call with a client, drawing a strategy diagram on a whiteboard behind her, {ST}", None),
+        ("This is also the tryout. Partners are watching to see who can bring in clients, who can lead, and who can be trusted with the firm's reputation.",
+         "two older partners watching through a glass wall as a younger lawyer presents to clients, illustrated", None),
+        ("At some firms there is a middle step called counsel. It is a senior role for experienced lawyers who are highly valued, but who are not, or not yet, partners.",
+         "a door with a brass nameplate being changed from Associate to Counsel, illustrated", "COUNSEL"),
+    ]),
+    ("b06", "Level 6 - The Partner", ["src1"], [
+        ("Level six is the goal many big firm associates chase for a decade: partner. The vote usually happens after eight to ten years, and only a fraction of each starting class makes it.",
+         f"{L}, in her late thirties, receiving a phone call in her office and covering her mouth in surprise, {ST}", "LEVEL 6"),
+        ("Partners are owners of the firm. Instead of just a salary, many share in the firm's profits. And in a great year, those profits can be enormous.",
+         "an elegant corner office with a view over a city, a partner's name on the glass door, illustrated", None),
+        ("The top ten percent of all lawyers in the United States earned more than three hundred fifty one thousand dollars in May 2025, and partners at the most profitable firms can earn several times that.",
+         "infographic illustration of a peak on a chart labeled 351,600 with an arrow continuing upward into the clouds", "$351,600+ TOP 10% (US)"),
+        ("Partners also carry the risk. If the firm has a bad year, their pay falls. If a big client leaves, it is their job to replace it.",
+         "an illustrated chart with a profit line dipping, a worried partner looking at it", None),
+        ("But being a partner is not just being a great lawyer. It is being a business. Partners are expected to bring in clients, keep them happy and keep the whole team busy.",
+         f"{L} as a partner at a business dinner with clients, laughing and closing a deal, {ST}", "RAINMAKER"),
+        ("Other lawyers reach the top in a different way: as general counsel, the chief lawyer inside a company, who answers directly to the chief executive and the board.",
+         f"{L} in a corporate boardroom advising executives, documents spread across the table, {ST}", "GENERAL COUNSEL"),
+    ]),
+    ("b07", "Level 7 - The Judge", ["src4"], [
+        ("And level seven, for some, is the bench. Becoming a judge is not a promotion inside a firm. Depending on the court, judges are appointed or elected, and they usually have many years of legal experience.",
+         f"{L}, now in her fifties with silver streaks in her hair, putting on a black judicial robe in chambers, {ST}", "LEVEL 7"),
+        ("A judge's job is not to win. It is to be fair. To rule on evidence, guide juries, decide sentences and write decisions that other courts may follow for years.",
+         f"{L} as a judge on the bench in a wood paneled courtroom, gavel in front of her, {ST}", None),
+        ("Surprisingly, many judges earn less than top lawyers. The median pay for judges and magistrates in the United States was about one hundred fifty four thousand dollars in May 2025.",
+         "infographic illustration comparing a gavel labeled 153,990 with a skyscraper labeled partner, illustrated", "$153,990 MEDIAN (US)"),
+        ("Federal judges are nominated by the president and confirmed by the Senate, and they serve for life. Many state judges, on the other hand, have to run in elections, just like politicians.",
+         "split illustration: the Capitol dome on one side, a state election campaign sign on the other", None),
+        ("So why take the job? Prestige, stability, public service, and a chance to shape the law itself instead of just arguing about it. For many lawyers who spent decades fighting for one side, finally being the neutral voice in the room is the real reward.",
+         f"{L} as a judge signing a written opinion in quiet chambers, law books behind her, {ST}", None),
+    ]),
+    ("b08", "Your level", ["src1", "src3"], [
+        ("So that is the ladder. Pre-law student, law student, new lawyer, associate, senior associate, partner or general counsel, and finally, for some, the judge's bench.",
+         "the ladder of law books again, now complete, with a small figure at each rung from student to judge, symbolic illustration", None),
+        ("It is a career with one of the widest pay ranges of any profession, and one where a few decisions early on can change where you end up decades later.",
+         "a split road map showing many different legal career paths branching from one law school building, illustrated", None),
+        ("Some lawyers chase the corner office. Others spend their whole lives defending people who cannot pay. Both started with the same exam, the same casebooks and the same sleepless nights.",
+         f"{L} as a public defender standing beside a client in court, determined face, {ST}", None),
+        ("Whichever path they choose, the best lawyers share the same habits: they read everything, they never stop learning, and they remember that behind every case there is a real person waiting for an answer.",
+         f"{L} reading a thick file late at night with a photo of a client family pinned to her board, {ST}", None),
+        ("Now it is your turn. Are you a lawyer, a law student, or just someone who loves courtroom dramas? Tell me in the comments which level you are on right now, and which one you are aiming for.",
+         f"{L} in a sharp suit on the courthouse steps, looking at the viewer with a confident smile, {ST}", "WHAT LEVEL ARE YOU?"),
+    ]),
+]
+
+META = {
+    "titles": ["Every Level of a Lawyer's Career", "From Law Student to Judge: Every Level Explained",
+               "How Much Lawyers Really Make at Every Level", "The 7 Levels of a Legal Career",
+               "Every Level of Becoming a Partner (or a Judge)"],
+    "chosen_title": "Every Level of a Lawyer's Career",
+    "hook_options": ["What does it take to go from a practice test to the judge's bench?",
+                     "Some lawyers start at $215,000. Others start under $79,000. Here is the whole ladder.",
+                     "There are 750,000 lawyers in the US, and the gap between them is enormous."],
+    "subject": "lawyer career levels",
+    "tags": ["lawyer career", "lawyer salary", "big law", "law school", "bar exam", "law firm partner",
+             "associate salary", "how to become a judge", "career levels", "lawyer salary 2025"],
+    "hashtags": ["Lawyer", "CareerLevels", "LawSchool"],
+    "thumbnail": {"phrases": ["LEVEL 1 → 7", "LAWYER"],
+                  "image_prompt": "a confident lawyer, a woman with straight black hair in a low bun and dark-rimmed glasses, on the right third, courthouse columns behind her, left half clean dark background for text, high contrast, illustrated"},
+}
+
+if __name__ == "__main__":
+    save(__file__, CHANNEL, TITLE, PRIORITY, META, SOURCES, BLOCKS, min_words=1600, max_words=1920)

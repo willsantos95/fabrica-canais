@@ -1,0 +1,173 @@
+"""Career Levels — Every Level of a Nurse's Career (script and shotlist written by Claude).
+Numbers: BLS OEWS May 2025 (United States) via WageDex; NCLEX facts via Wikipedia/NCSBN.
+"""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from _compact import save
+
+CHANNEL, TITLE, PRIORITY = "career-levels", "Every Level of a Nurse's Career", 20
+
+SOURCES = [
+    {"id": "src1", "title": "Registered Nurses (SOC 29-1141) — BLS OEWS May 2025, via WageDex",
+     "url": "https://wagedex.com/jobs/registered-nurses",
+     "claim": "United States, May 2025: median $97,550 ($46.90/h), mean $101,420, 10th percentile $68,940, 90th percentile $137,470, 3,379,720 jobs; typical entry education bachelor's degree; May 2024 median $93,600."},
+    {"id": "src2", "title": "Nurse Practitioners — career outlook (BLS), via WageDex",
+     "url": "https://wagedex.com/outlook/nurse-practitioners",
+     "claim": "Median $132,300 ($63.61/h, May 2025); employment projected to grow 40.1% from 2024 to 2034 (320,400 to 448,800); typical education master's degree."},
+    {"id": "src3", "title": "Medical and Health Services Managers (SOC 11-9111) — BLS OEWS May 2025, via WageDex",
+     "url": "https://wagedex.com/jobs/medical-and-health-services-managers",
+     "claim": "United States, May 2025: median $123,860, mean $140,970, 10th percentile $73,390, 90th percentile $224,340, 597,080 jobs."},
+    {"id": "src4", "title": "National Council Licensure Examination — Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/National_Council_Licensure_Examination",
+     "claim": "NCLEX owned by NCSBN; computerized adaptive test of 75 to 145 questions, up to 5 hours; Next Generation NCLEX since April 1, 2023; 2023 NCLEX-RN pass rate across all candidates 69.66%."},
+]
+
+N = "a nurse, a woman with dark curly hair tied back"
+ST = "cinematic illustrated style, warm hospital lighting"
+
+BLOCKS = [
+    ("b00", "The question", ["src1"], [
+        ("What does it really take to go from a nervous student who has never touched a patient to the person who runs nursing for an entire hospital?",
+         f"{N} as a student standing at the entrance of a huge modern hospital at dawn, looking up, {ST}", None),
+        ("Nursing is one of the biggest professions in America. In May 2025 there were more than three point three million registered nurses working in the United States.",
+         "aerial view of a busy city hospital at night, hundreds of lit windows, ambulances arriving, cinematic illustrated style", "3.3 MILLION RNs (US)"),
+        ("But a nurse is not just a nurse. Behind those scrubs there is a ladder, with very different jobs, very different responsibilities, and very different paychecks at every step.",
+         "a tall glowing ladder rising through floors of a hospital, figures in scrubs standing on different rungs, symbolic illustration", None),
+        ("Today we are climbing that ladder, one level at a time. And at the end, I want you to tell me which level you are on right now.",
+         f"{N} putting on a stethoscope in a locker room, determined look, {ST}", None),
+    ]),
+    ("b01", "Level 1 - The Nursing Student", ["src1", "src4"], [
+        ("Level one is the nursing student. Most nurses start in a two year associate degree or a four year bachelor's program, and the bachelor's is what employers increasingly expect for new hires.",
+         f"{N} as a student in a lecture hall full of anatomy slides, taking notes, {ST}", "LEVEL 1"),
+        ("The first months are pure science. Anatomy, physiology, microbiology, pharmacology. Hundreds of drug names, doses and side effects that have to live in your head, not on a cheat sheet.",
+         "a desk covered with thick pharmacology textbooks, flashcards and highlighters under a lamp at night, illustrated", None),
+        ("Then come the clinical rotations. Students go into real hospitals, wearing a different color uniform, and take care of real patients under the eye of an instructor.",
+         f"{N} as a student in light blue scrubs checking a patient's blood pressure while an instructor watches, {ST}", None),
+        ("This is where many people discover if nursing is for them. The first time you see a code, the first time a patient dies on your shift, the first twelve hour day on your feet.",
+         "a tense hospital hallway with a crash cart rushing past, a student pressed against the wall watching, illustrated drama", None),
+        ("Students learn the basics that every nurse does a thousand times. Washing hands the right way, turning a patient so they do not get pressure sores, starting an IV, documenting everything. Because in a hospital, if it was not written down, it legally did not happen.",
+         f"{N} as a student practicing an IV insertion on a training mannequin arm in a simulation lab, {ST}", None),
+        ("The pay at this level is zero. In fact, it is negative. Students pay tuition, and many work as nursing assistants on weekends just to keep up.",
+         f"{N} as a student counting coins and bills at a kitchen table with a tuition invoice, tired face, {ST}", "PAY: $0"),
+    ]),
+    ("b02", "Level 2 - The New Graduate", ["src1", "src4"], [
+        ("Level two is the new graduate. But a diploma is not enough. To work as a registered nurse in the United States, you must pass the NCLEX, the national licensing exam.",
+         f"{N} holding a diploma outside a testing center, nervous expression, {ST}", "LEVEL 2"),
+        ("The NCLEX is a computer adaptive test. Every answer changes the next question. You can get as few as seventy five questions or as many as one hundred forty five, with up to five hours on the clock.",
+         "close-up of a computer screen in a quiet testing room showing a multiple choice question, timer in the corner, illustrated", "75–145 QUESTIONS"),
+        ("Since April 2023 the exam has focused even more on clinical judgment. It is not just what you know, but what you would do first when a patient starts to crash.",
+         "split illustration: a patient monitor with falling oxygen numbers and a brain made of decision arrows", None),
+        ("And it is no formality. In 2023, counting everyone who sat for the registered nurse version, including repeat test takers and nurses educated abroad, just under seventy percent passed.",
+         "a crowd of test takers leaving a building, some celebrating, some looking at their phones in disappointment, illustrated", "~70% PASSED (2023)"),
+        ("Those who pass get three letters after their name: R N. And their first job is usually on a medical surgical floor or in a residency program for new grads.",
+         f"{N} pinning a new RN badge onto her scrubs in front of a mirror, proud smile, {ST}", None),
+        ("New graduates are usually paired with a preceptor, an experienced nurse who shadows them for the first weeks. At first the preceptor does almost everything. Then, slowly, the new nurse takes over one patient, then two, then a full assignment.",
+         f"{N} as a new nurse being guided by an older experienced nurse at a patient bedside, {ST}", None),
+        ("The first year is famously hard. Nurses joke that you learn more in your first six months on the floor than in four years of school. And it is not really a joke.",
+         f"{N} running between patient rooms on a night shift, charts in hand, clock showing 3 a.m., {ST}", None),
+    ]),
+    ("b03", "Level 3 - The Staff Nurse", ["src1"], [
+        ("Level three is the staff registered nurse. This is the backbone of every hospital, and where most nurses spend a big part of their career.",
+         f"{N} confidently managing a patient room with IV pumps and monitors, {ST}", "LEVEL 3"),
+        ("A typical shift is twelve hours, often three per week. During that time one nurse might care for four to six patients on a regular floor, giving medications, watching vital signs and catching problems before doctors do.",
+         "illustrated nurses station with a whiteboard listing patient rooms, a clock and coffee cups", None),
+        ("And the money? In May 2025, the median registered nurse in the United States earned ninety seven thousand five hundred fifty dollars a year. That is about forty seven dollars an hour.",
+         "a paycheck stub floating over a hospital background with the number 97,550 highlighted, clean infographic illustration", "$97,550 MEDIAN (US)"),
+        ("The range is wide. The lowest paid ten percent made under sixty nine thousand dollars, while the top ten percent passed one hundred thirty seven thousand. State, shift and specialty make all the difference.",
+         "a map of the United States with states colored from light to dark green by pay, illustrated infographic", "$68,940 → $137,470"),
+        ("Pay has been climbing, too. Just one year earlier, in May 2024, the median was ninety three thousand six hundred dollars. That is a jump of almost four thousand dollars in a single year.",
+         "illustrated bar chart with two bars labeled 2024 and 2025, the second taller, hospital icons in the background", "+$3,950 IN ONE YEAR"),
+        ("Night shifts, weekends and holidays pay extra. Many nurses also pick up overtime or travel contracts to push those numbers even higher, at the cost of their sleep.",
+         f"{N} sleeping in a car in a hospital parking lot at sunrise after a night shift, {ST}", None),
+    ]),
+    ("b04", "Level 4 - The Specialist and Charge Nurse", ["src1"], [
+        ("Level four is where nurses start to specialize. Intensive care, emergency, operating room, labor and delivery, oncology, pediatrics. Each one has its own skills and its own certifications.",
+         f"{N} in an intensive care unit surrounded by ventilators and monitors, focused, {ST}", "LEVEL 4"),
+        ("An ICU nurse might care for only one or two patients, but those patients are on ventilators, with multiple drips running, and the smallest change can mean life or death.",
+         "close-up of hands adjusting several IV pumps beside a ventilator, dramatic blue lighting, illustrated", None),
+        ("This is also where the charge nurse appears. The charge nurse runs the unit for the shift: assigns patients, solves conflicts, handles emergencies and is the first call when anything goes wrong.",
+         f"{N} standing at the center of a nurses station giving assignments to a small team, clipboard in hand, {ST}", "CHARGE NURSE"),
+        ("Specialty certifications have their own exams and usually require a set number of hours working in that area first. Each new set of letters after a nurse's name is proof of years of practice in one of the hardest corners of the hospital.",
+         f"{N} looking at a wall certificate for critical care nursing, several pins on her badge reel, {ST}", None),
+        ("It is leadership without a fancy office. You still have patients, but now you also carry the whole floor on your shoulders.",
+         f"{N} looking over a busy hospital floor from the station, phone ringing, several people waiting for her, {ST}", None),
+        ("Specialized and experienced nurses tend to sit in the upper part of that pay range, and some of the best paid bedside nurses in the country are found in critical care and the operating room.",
+         "illustrated operating room with surgical team in action, bright overhead lights", None),
+    ]),
+    ("b05", "Level 5 - The Nurse Practitioner", ["src2"], [
+        ("Level five is a big jump: the advanced practice nurse. The most famous one is the nurse practitioner, often called the N P.",
+         f"{N}, now in her late thirties and confident, in a white coat over scrubs, entering a clinic exam room, {ST}", "LEVEL 5"),
+        ("To get here, a registered nurse goes back to school for a master's or a doctorate, then passes a national certification exam in an area like family health, acute care or psychiatry.",
+         f"{N} studying late at night with a laptop and graduate textbooks while still in scrubs, {ST}", None),
+        ("Nurse practitioners can examine patients, diagnose conditions and prescribe medications. In many states they can even run their own practice without a doctor supervising them.",
+         f"{N} in a white coat writing a prescription for a patient in a small clinic, {ST}", None),
+        ("The path is long. Most programs require real experience as a registered nurse before you even apply, and then another two to four years of graduate school with hundreds of supervised clinical hours.",
+         "a winding road illustrated as a timeline with milestones: RN, experience, graduate school, certification, clinic", None),
+        ("There are other advanced roles too: nurse anesthetists who put patients to sleep for surgery, nurse midwives who deliver babies, and clinical nurse specialists who become the experts every unit calls when nothing else works.",
+         "three illustrated portraits side by side: a nurse anesthetist in an operating room, a midwife holding a newborn, a specialist teaching nurses", None),
+        ("The median nurse practitioner earned one hundred thirty two thousand three hundred dollars in May 2025. That is about sixty four dollars an hour.",
+         "infographic illustration of a rising bar chart with the number 132,300 on top, medical icons around", "$132,300 MEDIAN (US)"),
+        ("And demand is exploding. Employment of nurse practitioners is projected to grow about forty percent from 2024 to 2034, one of the fastest rates of any occupation in the country.",
+         "a line chart shooting upward over a city skyline of clinics, arrow labeled 2034, illustrated", "+40% BY 2034"),
+    ]),
+    ("b06", "Level 6 - The Nurse Manager and Director", ["src3"], [
+        ("Level six leaves the bedside behind. The nurse manager runs an entire unit, not just for one shift, but every day of the year.",
+         f"{N}, in her forties, in business casual with a hospital badge, sitting in a small office with schedules on the wall, {ST}", "LEVEL 6"),
+        ("Budgets, staffing schedules, hiring, firing, quality numbers, patient complaints. A manager might be responsible for fifty, eighty or more nurses.",
+         "a desk covered with spreadsheets, a staffing calendar full of colored names, and a laptop showing charts, illustrated", None),
+        ("And when a shift is short because three nurses called in sick, guess who gets the phone call at five in the morning. The manager's job is to make sure the unit never stops, no matter what.",
+         f"{N} answering her phone in the dark at home, alarm clock showing 5:00, worried face, {ST}", None),
+        ("Above the manager sits the director of nursing, who oversees several units or a whole service line, like all surgical floors or all critical care.",
+         f"{N} walking through a hospital corridor with two managers, discussing a tablet, {ST}", None),
+        ("In government statistics these leaders are grouped as medical and health services managers. In May 2025 their median pay was about one hundred twenty four thousand dollars, and the top ten percent made more than two hundred twenty four thousand.",
+         "infographic with a hospital building icon and two numbers 123,860 and 224,340 on rising steps, clean illustration", "$123,860 MEDIAN (US)"),
+        ("Many of these leaders hold a master's degree in nursing or business. The trade off is clear: more money and more influence, but fewer moments holding a patient's hand.",
+         f"{N} pausing in a doorway to watch a staff nurse comfort a patient, nostalgic expression, {ST}", None),
+    ]),
+    ("b07", "Level 7 - The Chief Nursing Officer", ["src3"], [
+        ("And level seven, the top of the ladder: the chief nursing officer. The C N O sits in the executive suite next to the hospital's chief executive and chief medical officer.",
+         f"{N}, now in her fifties with gray streaks in her hair, wearing a suit, in a glass boardroom with executives, {ST}", "LEVEL 7"),
+        ("This person is responsible for every nurse in the organization. In a large health system, that can mean thousands of people across several hospitals.",
+         "aerial illustration of a health system with several hospital buildings connected by glowing lines", None),
+        ("The decisions here shape everything: how many nurses work per patient, which technology gets bought, how the hospital responds to a pandemic or a staffing crisis.",
+         f"{N} as an executive presenting a staffing plan on a large screen to a board, {ST}", None),
+        ("A chief nursing officer usually holds a master's or a doctorate, often in nursing leadership or health administration, and has spent years as a manager and director before getting the job.",
+         "a bookshelf with framed diplomas and leadership books in an executive office, soft light, illustrated", None),
+        ("Pay at this level varies enormously with the size of the hospital, and in big systems it can sit well above the top numbers we have seen today.",
+         "an elegant executive office overlooking a city at sunset, nameplate on the desk reading Chief Nursing Officer, illustrated", None),
+        ("Most chief nursing officers have decades of experience, and almost all of them started exactly where we did: as a scared student taking a blood pressure for the very first time.",
+         f"{N} as an executive looking at an old framed photo of herself as a student in light blue scrubs, {ST}", None),
+    ]),
+    ("b08", "Your level", ["src1", "src2"], [
+        ("So that is the ladder. Student, new grad, staff nurse, specialist and charge nurse, nurse practitioner, manager and director, and finally chief nursing officer.",
+         "the glowing hospital ladder again, now with each rung labeled with an icon for each level, symbolic illustration", None),
+        ("Not everyone wants to climb all the way. Many of the best nurses stay at the bedside their whole lives, because that is where they feel they make the biggest difference.",
+         f"{N} as a veteran bedside nurse in navy scrubs holding the hand of an elderly patient, warm light, {ST}", None),
+        ("Every level asks for something different. Science and stamina at the start, judgment and calm in the middle, and at the top, the ability to lead people you will never meet through decisions they will feel on every shift.",
+         "symbolic illustration of three nurses' silhouettes in a row: a student with books, a nurse at a monitor, an executive at a window", None),
+        ("And with millions of nurses already working and demand for advanced roles growing fast, there have never been more ways to move up.",
+         "a diverse group of nurses walking together down a bright hospital corridor toward the camera, illustrated", None),
+        ("Now it is your turn. Are you a nurse, a student or thinking about starting? Tell me in the comments which level you are on right now, and which one you want to reach next.",
+         f"{N} looking directly at the viewer with a soft smile, stethoscope around her neck, {ST}", "WHAT LEVEL ARE YOU?"),
+    ]),
+]
+
+META = {
+    "titles": ["Every Level of a Nurse's Career", "Every Level of Nursing Explained (and What Each One Pays)",
+               "From Nursing Student to Chief Nursing Officer", "The 7 Levels of a Nurse's Career",
+               "How Much Nurses Really Make at Every Level"],
+    "chosen_title": "Every Level of a Nurse's Career",
+    "hook_options": ["What does it take to go from nursing student to running nursing for an entire hospital?",
+                     "There are more than 3.3 million registered nurses in the US, but they are not all doing the same job.",
+                     "A nurse is not just a nurse. There is a ladder, and every step pays differently."],
+    "subject": "nurse career levels",
+    "tags": ["nurse career", "nursing career levels", "registered nurse salary", "nurse practitioner", "NCLEX",
+             "charge nurse", "chief nursing officer", "nursing salary 2025", "career levels", "how much do nurses make"],
+    "hashtags": ["Nursing", "CareerLevels", "Nurse"],
+    "thumbnail": {"phrases": ["LEVEL 1 → 7", "NURSE"],
+                  "image_prompt": f"a confident nurse in navy blue scrubs with dark curly hair on the right third, confident, with a glowing ladder of hospital levels behind her, left half clean dark blue background for text, high contrast, illustrated"},
+}
+
+if __name__ == "__main__":
+    save(__file__, CHANNEL, TITLE, PRIORITY, META, SOURCES, BLOCKS, min_words=1600, max_words=1920)

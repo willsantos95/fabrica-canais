@@ -1,0 +1,181 @@
+"""Roteiro e shotlist escritos pelo Claude para o Deu Tudo Errado.
+Tema: O dia em que um erro de unidades destruiu uma sonda em Marte (1999)
+"""
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from _compact import save
+
+CHANNEL = "deu-tudo-errado"
+TITLE = "O dia em que um erro de unidades destruiu uma sonda em Marte (1999)"
+PRIORITY = 90
+
+SOURCES = [
+    {"id": "src1", "title": "Mars Climate Orbiter failure (resumo do relatório do Mishap Investigation Board) — Univ. of Cincinnati",
+     "url": "https://homepages.uc.edu/~thomam/Implications_IT/pdf/ch8/mars_orbiter_failure.pdf",
+     "claim": "TCM-4 calculada em 8/9 e executada em 15/9/1999; inserção planejada em 23/9 a 226 km; estimativas caíram para 150–170 km e 110 km; mínimo sobrevivível ~80 km; trajetória final a 57 km; software 'Small Forces' (SM_FORCES) gerou impulso em libra-força-segundo em vez de newton-segundo exigido pela especificação; dados entraram no arquivo AMD; efeito subestimado por um fator de 4,45; ao menos dois navegadores notaram a discrepância e foram ignorados; TCM-5 discutida mas não executada; relatório Fase I em 10/11/1999."},
+    {"id": "src2", "title": "Mars Climate Orbiter: the biggest facepalm of spaceflight history — Everyday Astronaut",
+     "url": "https://everydayastronaut.com/mars-climate-orbiter",
+     "claim": "Lançamento em 11/12/1998 num Delta II, Cabo Canaveral; queima de inserção às 09:00:46 UTC de 23/9/1999; sinal perdido 49 s antes do previsto atrás de Marte e nunca recuperado; controladores tentaram por mais dois dias; custo de US$ 327 milhões; Mars Polar Lander também falhou em 1999 por outro motivo; equipe de navegação fora do projeto inicial."},
+    {"id": "src3", "title": "NASA's metric confusion caused Mars orbiter loss — SimScale",
+     "url": "https://www.simscale.com/blog/nasa-mars-climate-orbiter-metric/",
+     "claim": "Sonda construída pela Lockheed Martin Astronautics (Colorado), navegação pelo JPL; Lockheed trabalhou em unidades inglesas e o JPL em métricas; orbitador de US$ 125 milhões; a resistência da NASA ao sistema métrico mudou logo depois da investigação."},
+    {"id": "src4", "title": "Most expensive metric-imperial conversion error — Guinness World Records",
+     "url": "https://www.guinnessworldrecords.com/world-records/101255-most-expensive-metric-imperial-conversion-error",
+     "claim": "Recorde de erro de conversão métrico-imperial mais caro: missão Mars Climate Orbiter de US$ 327,6 milhões."},
+    {"id": "src5", "title": "Mars Climate Orbiter — SEDS",
+     "url": "https://spider.seds.org/spider/Mars/ms98mco.html",
+     "claim": "Objetivo: estudar atmosfera, clima, vapor d'água, poeira e nuvens de Marte e servir de retransmissor para a Mars Polar Lander; lançada em 11/12/1998 num Delta II 7425; perdida na inserção em 23/9/1999, provavelmente a cerca de 50 km de altitude em vez dos ~80 km seguros."},
+]
+
+NAV = "a NASA navigation engineer in her thirties with short dark hair, a 1990s polo shirt and an ID badge"
+ENGS = "1990s aerospace engineers in short-sleeved shirts and ties"
+ST = "cinematic illustrated documentary style, late 1990s"
+
+BLOCKS = [
+    ("b01", "Perdida em Marte", ["src2", "src4"], [
+        ("Vinte e três de setembro de 1999. Numa sala de controle na Califórnia, engenheiros da NASA olham para as telas e esperam um sinal vindo de Marte.",
+         f"a dim 1990s mission control room with rows of CRT monitors and engineers staring at the screens, {ST}", "23 DE SETEMBRO DE 1999"),
+        ("Depois de nove meses e meio de viagem, uma sonda acabou de passar por trás do planeta. Em poucos minutos, ela deveria reaparecer do outro lado, já em órbita.",
+         f"a small spacecraft with a solar panel disappearing behind the red planet Mars, stars in the background, {ST}", None),
+        ("Vinte e um minutos depois, era para o sinal voltar. Na sala, ninguém fala. Alguns olham para o relógio, outros conferem os cabos, como se o problema pudesse estar ali, do lado de cá.",
+         f"engineers in the control room checking a wall clock and cables nervously, {ST}", None),
+        ("Os minutos passam. Nada. Mais minutos. Silêncio total. A sonda nunca mais deu sinal de vida.",
+         f"close-up of a monitor showing a flat signal line labeled no signal, an engineer's hand frozen over a keyboard, {ST}", "SEM SINAL"),
+        ("O que destruiu essa sonda não foi um meteoro, nem uma pane elétrica, nem um defeito no motor. Foi algo que qualquer estudante aprende na escola: a diferença entre dois sistemas de medida.",
+         f"a school ruler with inches on one side and centimeters on the other floating in space next to Mars, symbolic illustration, {ST}", None),
+        ("Essa é a história da Mars Climate Orbiter. Para o Guinness, o erro de conversão de unidades mais caro da história.",
+         f"a dramatic illustration of the spacecraft glowing as it skims the thin Martian atmosphere, {ST}", "US$ 327,6 MILHÕES"),
+    ]),
+    ("b02", "Uma meteorologista em Marte", ["src5", "src2", "src3"], [
+        ("No fim dos anos noventa, a NASA tinha um plano ambicioso para Marte. Mandar missões mais baratas e mais rápidas, uma atrás da outra, para estudar o planeta de perto.",
+         f"{ENGS} gathered around a table with a model of Mars and mission patches, {ST}", None),
+        ("A agência preparou duas sondas para chegar a Marte em 1999. Uma delas era a Mars Climate Orbiter, uma espécie de satélite meteorológico para Marte.",
+         f"the spacecraft in a clean room being assembled by technicians in white bunny suits, {ST}", "MARS CLIMATE ORBITER"),
+        ("A missão dela era estudar a atmosfera marciana: os ventos, as nuvens, a poeira, o vapor d'água. Entender como funciona o clima de outro planeta.",
+         f"illustration of Mars with dust storms and thin clouds swirling over red plains, {ST}", None),
+        ("E ela tinha um segundo trabalho muito importante. Serviria de retransmissora para a outra sonda, a Mars Polar Lander, que ia pousar perto do polo sul e precisaria mandar dados para a Terra.",
+         f"a lander on the icy south pole of Mars sending a radio beam up to an orbiter overhead, {ST}", "MARS POLAR LANDER"),
+        ("A sonda foi construída pela empresa Lockheed Martin Astronautics, no Colorado. Já a navegação, ou seja, calcular o caminho até Marte, ficou com o Laboratório de Propulsão a Jato da NASA, o JPL, na Califórnia.",
+         f"split illustration: a factory in the Colorado mountains on one side and a NASA lab in California on the other, connected by a data cable, {ST}", "LOCKHEED MARTIN + JPL"),
+        ("A filosofia da época era fazer missões mais rápidas, melhores e mais baratas. Equipes menores, prazos apertados, menos gente checando cada detalhe. Por um tempo, isso funcionou muito bem.",
+         f"a 1990s presentation slide reading faster better cheaper in a NASA auditorium, {ST}", "MAIS RÁPIDO, MELHOR, MAIS BARATO"),
+        ("Duas equipes, em dois estados diferentes, trocando arquivos de dados o tempo todo. Guarde essa informação, porque ela é o centro de tudo.",
+         f"two teams of {ENGS} in different offices sending files over 1990s computers, {ST}", None),
+    ]),
+    ("b03", "Rumo ao planeta vermelho", ["src2", "src5", "src1"], [
+        ("A Mars Climate Orbiter foi lançada no dia onze de dezembro de 1998, num foguete Delta Dois, a partir do Cabo Canaveral, na Flórida.",
+         f"a Delta II rocket lifting off from Cape Canaveral in a column of fire and smoke, {ST}", "11 DE DEZEMBRO DE 1998"),
+        ("A viagem até Marte levaria cerca de nove meses e meio. E durante esse tempo, a sonda precisaria de pequenos ajustes de rota.",
+         f"the spacecraft cruising through deep space with Earth small behind it and Mars far ahead, {ST}", None),
+        ("Tem um detalhe importante aqui. Durante a viagem, a sonda ia acumulando um pequeno giro indesejado, como um pião que vai ganhando velocidade aos poucos. As rodas internas que controlavam a orientação chegavam ao limite.",
+         f"the spacecraft with a single large solar panel, sunlight rays pushing on it, a curved arrow showing rotation, {ST}", None),
+        ("Para descarregar esse giro, de tempos em tempos, a sonda acendia pequenos propulsores. Cada uma dessas acendidas dava um empurrãozinho na nave e mudava um pouquinho a trajetória.",
+         f"close-up of small thrusters firing tiny bursts of gas on the side of the spacecraft, {ST}", None),
+        ("Esses empurrões eram minúsculos. Mas, ao longo de meses, somados, faziam diferença. Por isso, os navegadores precisavam saber exatamente a força de cada um.",
+         f"{NAV} at a 1990s workstation looking at a long table of small thruster firings, {ST}", None),
+        ("Esse processo tinha até nome técnico: dessaturação do momento angular. Toda vez que acontecia, a nave ganhava um empurrão minúsculo, e esse empurrão precisava entrar nas contas da rota.",
+         f"diagram of the spacecraft with reaction wheels inside and small thruster puffs, a tiny arrow showing a push, {ST}", None),
+        ("Quem calculava esses dados era um programa da equipe da Lockheed Martin, chamado Small Forces, algo como pequenas forças. Os resultados iam para um arquivo, que era enviado para os navegadores do JPL.",
+         f"a 1990s computer screen showing a program window titled Small Forces and a file being transferred, {ST}", "SMALL FORCES"),
+    ]),
+    ("b04", "Libras e newtons", ["src1", "src3"], [
+        ("Aqui está o erro. O contrato entre as equipes dizia que esses números deveriam vir em newton-segundo, uma unidade do sistema métrico.",
+         f"a document titled Software Interface Specification with the words newton seconds highlighted, {ST}", "NEWTON-SEGUNDO"),
+        ("Mas o programa da Lockheed Martin entregava os valores em libra-força-segundo, uma unidade do sistema inglês, o mesmo das polegadas, pés e milhas.",
+         f"a printout full of numbers labeled pound-force seconds on an engineer's desk in Colorado, {ST}", "LIBRA-FORÇA-SEGUNDO"),
+        ("Ninguém avisou e ninguém percebeu. O arquivo chegava ao JPL com os números certos, mas na unidade errada. E o software de navegação lia tudo como se fosse newton.",
+         f"a data file traveling between two computers, the unit label changing color from red to green without anyone noticing, {ST}", None),
+        ("Uma libra-força equivale a cerca de quatro vírgula quarenta e cinco newtons. Ou seja, cada empurrão dos propulsores era quatro vezes e meia mais forte do que a navegação achava.",
+         f"infographic illustration of a balance scale with one pound on one side and 4.45 newtons on the other, {ST}", "x 4,45"),
+        ("É como se alguém te dissesse que falta uma milha para chegar e você entendesse um quilômetro. Num percurso curto, não faz tanta diferença. Numa viagem de centenas de milhões de quilômetros, faz toda.",
+         f"a road sign showing 1 mile next to another showing 1 km, the road stretching toward Mars, symbolic illustration, {ST}", None),
+        ("Repara que o número em si não estava errado. Só faltava uma etiqueta dizendo qual era a unidade. E era justamente essa etiqueta que ninguém conferiu na passagem de uma equipe para a outra.",
+         f"close-up of a spreadsheet cell with a number and an empty unit column highlighted in yellow, {ST}", None),
+        ("A cada pequeno ajuste, o erro aumentava um pouquinho. Mês após mês, a sonda foi se desviando sem que o modelo dos navegadores mostrasse a verdade.",
+         f"two diverging trajectory lines from Earth to Mars, one planned and one real, slowly separating, {ST}", None),
+    ]),
+    ("b05", "Os sinais que ninguém ouviu", ["src1", "src2"], [
+        ("Só que alguém notou. Nas semanas finais, pelo menos dois navegadores perceberam que a posição da sonda não batia com os cálculos.",
+         f"{NAV} frowning at two different numbers on her screen, a cup of coffee forgotten beside her, {ST}", None),
+        ("A última grande correção de rota, chamada TCM quatro, foi feita no dia quinze de setembro de 1999. A ideia era chegar a Marte a cerca de duzentos e vinte e seis quilômetros de altura.",
+         f"a trajectory chart on a 1990s screen with a target altitude of 226 km marked near Mars, {ST}", "META: 226 KM"),
+        ("Mas as estimativas começaram a cair. Cento e setenta quilômetros. Cento e cinquenta. Vinte e quatro horas antes da chegada, os cálculos já mostravam algo perto de cento e dez.",
+         f"a sequence of numbers on a monitor going down: 170, 150, 110, highlighted in red, {ST}", "226 → 150 → 110 KM"),
+        ("Os navegadores estavam vendo a sonda descer na tela sem conseguir explicar direito o porquê. O modelo deles dizia uma coisa, os dados de rastreamento diziam outra.",
+         f"{NAV} comparing two plotted trajectories on paper printouts spread across a desk, {ST}", None),
+        ("E o limite de segurança era de uns oitenta quilômetros. Abaixo disso, a sonda entraria fundo demais na atmosfera de Marte.",
+         f"diagram of Mars with a red danger zone line drawn at 80 km above the surface, {ST}", "MÍNIMO: 80 KM"),
+        ("Houve uma reunião para discutir uma correção extra, a TCM cinco. Os participantes lembram de ter concordado em fazer a manobra. Mas ela nunca foi executada.",
+         f"{ENGS} in a meeting room nodding around a table, a whiteboard with TCM-5 written and a question mark, {ST}", "TCM-5"),
+        ("Parte do problema é que as preocupações não foram registradas pelos canais formais. E a equipe de navegação nem fazia parte do grupo que tinha desenhado a missão no começo.",
+         f"{NAV} walking away from a closed office door holding a printout, other engineers busy and not looking up, {ST}", None),
+    ]),
+    ("b06", "Cinquenta e sete quilômetros", ["src2", "src1"], [
+        ("No dia vinte e três de setembro, às nove horas, zero minuto e quarenta e seis segundos no horário universal, a sonda acendeu o motor principal para frear e entrar em órbita.",
+         f"the spacecraft firing its main engine as it approaches the red surface of Mars, {ST}", "09:00:46 UTC"),
+        ("Pouco depois, ela passou por trás de Marte, como previsto. Só que o sinal sumiu quarenta e nove segundos antes da hora esperada.",
+         f"the spacecraft passing behind the edge of Mars, the radio signal line cut off, {ST}", "49 SEGUNDOS ANTES"),
+        ("Era o primeiro sinal de que a sonda estava muito mais baixa do que deveria. Vinte e um minutos depois, quando era para ela reaparecer do outro lado, não apareceu.",
+         f"mission control engineers leaning toward the screens, one with hands on his head, {ST}", None),
+        ("Aos poucos, a sala foi entendendo o tamanho do problema. A sonda que eles tinham acompanhado por meses, e que tinha custado anos de trabalho, simplesmente não estava mais lá.",
+         f"a wide shot of the quiet control room with engineers sitting in silence, screens still glowing, {ST}", None),
+        ("Os controladores tentaram contato por mais dois dias, mandando comandos e ouvindo todas as frequências possíveis, na esperança de que a sonda tivesse sobrevivido de algum jeito. Não adiantou.",
+         f"an engineer alone in the control room at night still trying to send commands, {ST}", None),
+        ("Mais tarde, a investigação concluiu que a sonda tinha chegado a apenas cinquenta e sete quilômetros da superfície. Muito abaixo do limite de segurança.",
+         f"illustration of the spacecraft skimming very low through the thin orange Martian atmosphere, heat glow on its edges, {ST}", "57 KM"),
+        ("Naquela altura, o atrito com a atmosfera e o calor eram demais para uma nave que não tinha sido feita para isso. A conclusão mais provável é que ela se desintegrou ali mesmo, nos céus de Marte.",
+         f"the spacecraft breaking apart in a streak of fire high above the Martian surface, {ST}", None),
+    ]),
+    ("b07", "A culpa foi de quem?", ["src1", "src3", "src2"], [
+        ("Em novembro de 1999, saiu o primeiro relatório da comissão de investigação. A causa principal estava escrita com todas as letras: dados em unidades inglesas usados num software que exigia unidades métricas.",
+         f"a thick report on a desk with the NASA logo shape and a highlighted paragraph about units, {ST}", "10 DE NOVEMBRO DE 1999"),
+        ("Imagina a cena. Anos de trabalho, centenas de pessoas, uma das missões mais estudadas da década. E o motivo do fracasso cabia numa linha: alguém esqueceu de converter as unidades.",
+         f"a single line of computer code on a screen with a unit comment missing, glowing in the dark, {ST}", None),
+        ("Mas a comissão foi além. O erro de unidade foi o gatilho, mas os sistemas que deveriam pegar esse erro também falharam.",
+         f"a chain of broken links illustration, each link labeled with a different check that failed, {ST}", None),
+        ("Faltou conferir o arquivo. Faltou levar a sério os navegadores que viram a diferença. Faltou fazer a manobra de correção. Uma falha só virou desastre porque várias barreiras falharam ao mesmo tempo.",
+         f"a row of dominoes falling, each domino representing a missed check, ending with a spacecraft, symbolic illustration, {ST}", None),
+        ("E para completar o ano ruim, no fim daquele mesmo 1999, a Mars Polar Lander também foi perdida ao tentar pousar. Por outro motivo, mas um golpe duro do mesmo jeito.",
+         f"a lander descending toward the icy polar region of Mars and then a blank screen in mission control, {ST}", None),
+        ("Com isso, a NASA perdeu as duas sondas daquela leva. E o mundo inteiro ficou sabendo que a agência espacial mais avançada do planeta tinha se perdido numa conversão de unidades.",
+         f"1999 newspaper front pages with headlines about the lost Mars probes, {ST}", None),
+    ]),
+    ("b08", "A lição de 327 milhões", ["src4", "src3"], [
+        ("A missão inteira custou trezentos e vinte e sete vírgula seis milhões de dólares. Por isso, o caso entrou para o livro dos recordes como o erro de conversão métrico-imperial mais caro da história.",
+         f"a giant receipt unrolling in space next to Mars with the total 327.6 million, symbolic illustration, {ST}", "US$ 327,6 MILHÕES"),
+        ("Depois da investigação, a NASA endureceu as regras. O uso do sistema métrico ganhou força, e a verificação de dados trocados entre equipes passou a ser levada muito mais a sério.",
+         f"{ENGS} in a modern review meeting checking unit labels on every line of a spreadsheet, {ST}", None),
+        ("E não é só na NASA. Hospitais, fábricas e companhias aéreas já tiveram problemas sérios por causa de unidades misturadas. A Mars Climate Orbiter virou o exemplo mais famoso de um erro que se repete em muitos lugares.",
+         f"a collage of a pharmacy dose label, a factory gauge and an airplane fuel gauge with mixed units, {ST}", None),
+        ("Hoje, a Mars Climate Orbiter é ensinada em cursos de engenharia, de programação e de gestão de projetos no mundo todo. Sempre com a mesma pergunta: em que unidade está esse número?",
+         f"a university classroom with a slide showing the spacecraft and the words always check your units, {ST}", None),
+        ("É uma história que mostra que até os maiores especialistas do planeta podem tropeçar no básico. E que, num projeto grande, quem levanta a mão para dizer que algo não bate merece ser ouvido.",
+         f"{NAV} raising her hand in a crowded meeting room while others turn to look at her, {ST}", None),
+        ("E você, já viu um erro bobo causar um prejuízo gigante, no trabalho ou em casa? Me conta aqui nos comentários.",
+         f"the lonely spacecraft drifting near Mars with the Sun rising behind the planet, {ST}", "JÁ VIU ISSO?"),
+    ]),
+]
+
+META = {
+    "titles": ["A NASA perdeu uma sonda por causa de polegadas", "O erro de conversão de 327 milhões de dólares",
+               "Libras ou newtons? O erro que destruiu uma sonda em Marte", "Esqueceram de converter as unidades. Adeus, sonda",
+               "Mars Climate Orbiter: o erro mais caro da matemática", "Dois navegadores avisaram. Ninguém ouviu",
+               "A sonda que mergulhou em Marte por um erro de unidade", "Como a NASA errou o caminho até Marte",
+               "O dia em que o sistema métrico venceu a NASA", "57 km: a altitude que matou uma sonda"],
+    "chosen_title": "A NASA perdeu uma sonda por causa de polegadas",
+    "hook_options": ["Uma sonda da NASA viajou nove meses até Marte e foi destruída por um erro de conversão de unidades.",
+                     "Uma equipe usou libras. A outra, newtons. A conta custou 327 milhões de dólares.",
+                     "Dois navegadores perceberam que a sonda estava baixa demais. Ninguém fez nada.",
+                     "O sinal sumiu 49 segundos antes da hora. E nunca mais voltou.",
+                     "O erro de conversão mais caro da história aconteceu na NASA."],
+    "subject": "Mars Climate Orbiter",
+    "tags": ["mars climate orbiter", "erro da nasa", "sonda marte", "erro de conversão", "sistema métrico",
+             "deu tudo errado", "história real", "curiosidades", "nasa 1999", "erro de engenharia"],
+    "hashtags": ["DeuTudoErrado", "HistoriaReal", "NASA"],
+    "thumbnail": {"phrases": ["LIBRAS", "OU NEWTONS?"],
+                  "image_prompt": "a small spacecraft burning up as it skims the orange atmosphere of Mars, on the right two thirds, a glowing ruler with inches and centimeters floating near it, left third dark space empty for text, high contrast, illustrated"},
+}
+
+if __name__ == "__main__":
+    save(__file__, CHANNEL, TITLE, PRIORITY, META, SOURCES, BLOCKS, min_words=1500, max_words=2100)
