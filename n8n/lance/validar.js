@@ -51,7 +51,9 @@ const tags = [...new Set([...(s.tags || []), LABEL[sport], ...(yt.default_tags |
 
 const usage = resp.usage || {};
 const P = { 'gpt-5.4-mini': { in: 0.75, out: 4.5 }, 'gpt-5.4-nano': { in: 0.2, out: 1.25 }, ...(cfg.prices || {}) };
-const pr = P[String(resp.model || '').replace(/-\d{4}-\d{2}-\d{2}$/, '')] || P['gpt-5.4-mini'];
+// Gemini (plano grátis) e texto pronto custam zero
+const pr = resp.provider && resp.provider !== 'openai' ? { in: 0, out: 0 }
+  : (P[String(resp.model || '').replace(/-\d{4}-\d{2}-\d{2}$/, '')] || P['gpt-5.4-mini']);
 const cost_usd = Math.round(((usage.input_tokens || 0) * pr.in + (usage.output_tokens || 0) * pr.out) / 1e6 * 10000) / 10000;
 
 const spec = {
@@ -59,7 +61,7 @@ const spec = {
   headline, chosen_title: title, titles: [title],
   publishing: { title, description, tags, category_id: yt.category_id || '17', language: 'pt-BR',
     contains_synthetic_media: yt.contains_synthetic_media !== false, made_for_kids: false, kind: 'short' },
-  sources: notes.sources || [], beats, checks, usage: { script: { ...usage, model: resp.model }, cost_usd },
+  sources: notes.sources || [], beats, checks, usage: { script: { ...usage, model: resp.model, provider: resp.provider || 'openai' }, cost_usd },
 };
 const color = cfg.visual?.sport_colors?.[sport];
 const job = {

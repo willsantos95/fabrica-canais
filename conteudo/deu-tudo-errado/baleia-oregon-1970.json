@@ -1,0 +1,561 @@
+{
+ "channel_slug": "deu-tudo-errado",
+ "title": "O dia em que uma baleia foi explodida numa praia do Oregon (1970)",
+ "priority": 50,
+ "author": "claude",
+ "prepared": {
+  "script": {
+   "titles": [
+    "Explodiram uma baleia na praia (e choveu gordura)",
+    "A baleia explodida do Oregon: o plano que deu errado",
+    "O dia em que choveu baleia numa cidade dos EUA",
+    "Meia tonelada de dinamite contra uma baleia morta",
+    "Explodir uma baleia: a pior ideia de 1970",
+    "Por que nunca se deve explodir uma baleia",
+    "Baleia explosiva: a primeira história viral da internet",
+    "Engenheiros explodiram uma baleia. Não saiu como planejado",
+    "O carro novo, a baleia e a dinamite",
+    "Florence, 1970: a explosão que virou parque"
+   ],
+   "chosen_title": "Explodiram uma baleia na praia (e choveu gordura)",
+   "hook_options": [
+    "Em 1970, engenheiros do Oregon tiveram uma ideia para sumir com uma baleia morta: dinamite.",
+    "Meia tonelada de dinamite, uma baleia de oito toneladas e uma câmera ligada. O que podia dar errado?",
+    "Essa é a história do dia em que choveu baleia numa praia dos Estados Unidos.",
+    "Um homem avisou que a conta estava errada. Ninguém ouviu. E o carro novo dele pagou o preço.",
+    "Antes dos vídeos de gatinhos, o primeiro viral da internet foi uma baleia explodindo."
+   ],
+   "sources": [
+    {
+     "id": "src1",
+     "title": "Florence Whale Explosion — The Oregon Encyclopedia",
+     "url": "https://oregonencyclopedia.org/articles/florence_whale_explosion/",
+     "claim": "Cachalote de 45 pés e 8 toneladas encalhou em 9/11/1970; Oregon State Highway Division usou meia tonelada de dinamite em 12/11; coluna de areia e baleia de 100 pés; sedã esmagado; ninguém ferido; restos enterrados; coluna de Dave Barry em 20/05/1990; 'primeira história a viralizar na internet' (NPR, 2013); em 1979, 41 cachalotes foram enterrados."
+    },
+    {
+     "id": "src2",
+     "title": "Exploding whale — Wikipedia",
+     "url": "https://en.wikipedia.org/wiki/Exploding_whale",
+     "claim": "Detonação às 15h45 de 12/11/1970; George Thornton assumiu porque o chefe estava caçando; vinte caixas de dinamite; veterano sugeriu 20 bananas; pedaços a até 800 pés (cerca de 240 m); Paul Linnman e o cinegrafista Doug Brazil, da KATU; Thornton promovido para Medford; parque batizado em 2020."
+    },
+    {
+     "id": "src3",
+     "title": "An Oregon Park Has Been Named After The Infamous Exploding Whale Incident Of 1970 — IFLScience",
+     "url": "https://www.iflscience.com/editors-blog/an-oregon-park-has-been-named-after-the-infamous-exploding-whale-incident-of-1970/",
+     "claim": "Walt Umenhofer, treinado em explosivos na Segunda Guerra, avisou que a carga estava errada; carro novo comprado na promoção 'whale of a deal' teve o teto amassado; frases 'suco de tomate' de Linnman e 'saiu exatamente certo' de Thornton; votação nomeou o Exploding Whale Memorial Park."
+    }
+   ],
+   "blocks": [
+    {
+     "block_id": "b01",
+     "title": "O cheiro que ninguém aguentava",
+     "narration": "Imagine uma praia tranquila no Oregon, em novembro de 1970. Gaivotas, vento frio, ondas cinzentas. E, no meio da areia, uma montanha de carne de quatorze metros que ninguém sabe como tirar dali. Agora imagine que a solução escolhida pelas autoridades foi explodir essa montanha com meia tonelada de dinamite. Na frente de dezenas de curiosos. E de uma câmera de televisão. Parece piada, mas aconteceu. E o que veio depois daquela explosão virou uma das histórias mais famosas, e mais vergonhosas, da engenharia americana. Tudo começou no dia nove de novembro de 1970, quando uma cachalote encalhou na praia perto da cidadezinha de Florence, na costa sul do Oregon. Ela tinha cerca de quatorze metros de comprimento e pesava algo em torno de oito toneladas. Viva, uma criatura impressionante. Morta, na areia, um problema que crescia a cada hora. Porque uma baleia morta não fica parada esperando. Ela apodrece. E o cheiro de oito toneladas apodrecendo começou a se espalhar pela cidade. No começo, a baleia virou atração. Gente da região descia até a praia para ver de perto, tirar foto, mostrar para as crianças. Mas a cada dia que passava, a visita ficava mais curta. E o nariz ficava mais tampado.",
+     "source_ids": [
+      "src1",
+      "src2"
+     ]
+    },
+    {
+     "block_id": "b02",
+     "title": "Quem resolve uma baleia?",
+     "narration": "Os moradores reclamavam do mau cheiro. E havia um medo ainda maior: que curiosos subissem na carcaça, que o corpo estourasse sozinho ou que alguém caísse lá dentro. A responsabilidade ficou com a Divisão de Rodovias do Estado do Oregon. Isso mesmo: o órgão que cuidava de estradas teve que decidir o que fazer com uma baleia. O chefe do distrito, naquela semana, estava fora, caçando. Então o problema caiu no colo do engenheiro assistente, George Thornton. Thornton não era biólogo, nem especialista em animais marinhos. Era engenheiro de estradas. E engenheiro de estradas, quando encontra uma pedra enorme no caminho, sabe muito bem o que fazer. Ele decidiu tratar a baleia como se fosse uma rocha. Se uma rocha atrapalha, você explode. Simples assim. As alternativas não eram nada atraentes. Cortar oito toneladas de carne podre em pedaços, na mão, seria um trabalho lento e nojento. Arrastar aquilo para longe exigiria máquinas que atolariam na areia. A dinamite parecia o caminho rápido e limpo. Para não errar, a equipe consultou especialistas da Marinha dos Estados Unidos e de munições. A conclusão parecia lógica no papel: com explosivo suficiente, a baleia viraria pedacinhos.",
+     "source_ids": [
+      "src1",
+      "src2"
+     ]
+    },
+    {
+     "block_id": "b03",
+     "title": "O plano perfeito no papel",
+     "narration": "O plano era o seguinte. A dinamite seria colocada do lado da baleia voltado para a terra, para que a explosão empurrasse os restos em direção ao mar. O que sobrasse ficaria em pedaços pequenos. E aí entrariam os ajudantes da natureza: gaivotas, caranguejos e outros bichos que comem carniça dariam conta do resto. A quantidade escolhida foi de vinte caixas de dinamite. Meia tonelada de explosivo. Mais ou menos quatrocentos e cinquenta quilos. Antes da detonação, Thornton deu entrevista. Confiante, ele admitiu uma coisa curiosa: a equipe não tinha certeza de quanto explosivo seria preciso para desintegrar aquilo. Ou seja, ninguém sabia direito. Mas a decisão estava tomada, a dinamite estava na areia e a cidade inteira queria ver. E aqui está o detalhe que faltou na conta. Uma rocha é dura e se parte em pedaços. Uma baleia é carne, gordura e água. Ela não se comporta como pedra. E explosivo empurra tudo para o lado onde encontra menos resistência. Quem fazia aquilo pela primeira vez não tinha como prever. E, na prática, era exatamente isso: uma equipe de estradas fazendo, pela primeira vez, algo que quase ninguém no mundo tinha feito.",
+     "source_ids": [
+      "src1",
+      "src2",
+      "src3"
+     ]
+    },
+    {
+     "block_id": "b04",
+     "title": "O aviso que ninguém ouviu",
+     "narration": "No meio dos curiosos havia um homem chamado Walt Umenhofer. Empresário da região, ele tinha aprendido a lidar com explosivos durante a Segunda Guerra Mundial. Ele olhou para aquilo e percebeu que a conta não fechava. Foi até os responsáveis e avisou que a quantidade estava errada. Na opinião dele, o certo seriam vinte bananas de dinamite, não vinte caixas. Ou então muito, muito mais explosivo, para sumir de vez com a carcaça. O meio-termo era o pior dos mundos. O aviso foi ignorado. Umenhofer se afastou para assistir de longe. E há um detalhe que torna tudo ainda melhor: poucos dias antes, ele tinha comprado um carro novinho. A concessionária fazia uma promoção chamada, em inglês, de uma oferta do tamanho de uma baleia. Ele estacionou o carro novo ali perto. Guarde essa informação. Pense na cena. Um senhor que já tinha visto explosivo de verdade, na guerra, tentando explicar para uma equipe de estradas que aquilo ia dar errado. E a equipe seguindo em frente, porque o plano tinha sido aprovado. Também estavam lá o repórter Paul Linnman e o cinegrafista Doug Brazil, da emissora KATU, de Portland. Eles tinham ido gravar uma matéria curiosa. Iam gravar história.",
+     "source_ids": [
+      "src2",
+      "src3"
+     ]
+    },
+    {
+     "block_id": "b05",
+     "title": "Chuva de baleia",
+     "narration": "Doze de novembro de 1970, três e quarenta e cinco da tarde. O público foi afastado para cerca de quatrocentos metros. A contagem regressiva começou. E então a praia explodiu. Um jornal local descreveu a cena como uma coluna de areia e baleia com uns trinta metros de altura. O repórter da TV comparou com os filmes. Nas explosões de cinema, disse ele, a gente vê fogo e fumaça. Aquela parecia mais um jato gigante de suco de tomate. E aí veio o problema que ninguém tinha calculado: tudo o que sobe, desce. Pedaços de gordura de baleia começaram a cair do céu sobre a multidão. Alguns pedaços voaram até uns duzentos e quarenta metros. Caíram perto de prédios, em cima de carros no estacionamento, no meio das pessoas que corriam. Um pedaço enorme acertou em cheio um carro estacionado. Adivinhe de quem. O teto do carro novo de Walt Umenhofer afundou com o impacto. Vendo um funcionário tirar a gordura do carro com uma pá, ele soltou a frase que resume aquele dia: a seguradora nunca vai acreditar nisso. Quem estava lá lembra do cheiro, do barulho dos pedaços batendo no chão e da correria. A plateia que tinha ido ver um espetáculo virou alvo do espetáculo. O mais incrível de tudo: ninguém ficou ferido. Mas a baleia continuava ali. Grande parte da carcaça nem tinha se mexido.",
+     "source_ids": [
+      "src1",
+      "src2",
+      "src3"
+     ]
+    },
+    {
+     "block_id": "b06",
+     "title": "Saiu exatamente certo",
+     "narration": "E as gaivotas, que iam fazer a limpeza? Assustadas com o estrondo, elas sumiram. Ninguém quis chegar perto do que sobrou. A equipe da Divisão de Rodovias teve que voltar ao trabalho do jeito antigo. Os restos e os pedaços espalhados foram recolhidos e enterrados na areia. O cinegrafista da KATU tinha registrado tudo. A matéria foi ao ar, e o repórter fechou com uma ironia: se um dia outra baleia aparecer por ali, os responsáveis vão saber exatamente o que não fazer. E George Thornton? Depois da explosão, ele disse a um jornal que tudo tinha saído exatamente certo. Segundo ele, o problema foi a cratera que se formou embaixo da baleia, que mandou os pedaços na direção do público. Anos depois, ele ainda defendia a operação. Para Thornton, aquilo tinha sido um sucesso, transformado em desastre de imagem por uma imprensa que queria rir dele. E a carreira dele não sofreu. Pouco tempo depois, Thornton foi promovido para o escritório de Medford, onde trabalhou até se aposentar. Dá para entender os dois lados. Thornton recebeu um problema que não era da área dele, consultou especialistas e seguiu o que eles disseram. Mas também ignorou o único aviso que veio de alguém com experiência prática bem ali, na areia. E é aí que mora a lição desse dia. A teoria dizia uma coisa. A pessoa que já tinha mexido com explosivo de verdade dizia outra. E a praia de Florence mostrou, em poucos segundos, quem estava certo.",
+     "source_ids": [
+      "src1",
+      "src2",
+      "src3"
+     ]
+    },
+    {
+     "block_id": "b07",
+     "title": "A primeira história viral",
+     "narration": "O Oregon aprendeu a lição. Em 1979, quarenta e uma cachalotes encalharam e morreram numa praia ao sul de Florence. Dessa vez, ninguém falou em dinamite. Elas foram enterradas. Hoje, a regra no estado é essa: baleia encalhada é enterrada na areia. Simples, silencioso e sem chuva de gordura. Mas a história não morreu em 1970. Vinte anos depois, em maio de 1990, o colunista Dave Barry escreveu sobre a baleia explosiva, contando que tinha o vídeo e assistia sempre. Uma versão do texto foi parar nos primeiros fóruns da internet. E começou a circular como se fosse notícia fresca. O órgão de transportes do Oregon passou a receber ligações de gente indignada com uma explosão de vinte anos antes. Um porta-voz do órgão chegou a dizer que aquela foi a primeira história a viralizar na internet. Muito antes dos vídeos de gatinhos. Em 2020, os moradores de Florence votaram o nome de uma nova área de lazer da cidade. Concorriam nomes tranquilos, de parque de bairro. O vencedor foi Parque Memorial da Baleia Explosiva. O vídeo daquela tarde continua circulando até hoje e a história virou o exemplo clássico de plano que funciona no papel e explode na prática. E a cidade, em vez de esconder, abraçou a fama. Florence transformou o dia mais constrangedor da sua história em parte da própria identidade. No fim, uma baleia que ninguém sabia como tirar da praia virou monumento. E a frase que mais combina com esse dia é a do próprio engenheiro: saiu exatamente certo. E você, conhece alguma solução que parecia genial no papel e deu tudo errado na prática? Conta aqui nos comentários.",
+     "source_ids": [
+      "src1",
+      "src2",
+      "src3"
+     ]
+    }
+   ],
+   "subject": "baleia explodida",
+   "tags": [
+    "baleia explodida",
+    "baleia explosiva oregon",
+    "exploding whale",
+    "Florence Oregon 1970",
+    "deu tudo errado",
+    "histórias bizarras",
+    "curiosidades",
+    "história real",
+    "engenharia que deu errado",
+    "primeiro viral da internet"
+   ],
+   "hashtags": [
+    "DeuTudoErrado",
+    "HistoriaReal",
+    "Curiosidades"
+   ]
+  },
+  "shotlist": {
+   "blocks": [
+    {
+     "block_id": "b01",
+     "shots": [
+      {
+       "narration_span": "Imagine uma praia tranquila no Oregon, em novembro de 1970. Gaivotas, vento frio, ondas cinzentas. E, no meio da areia, uma montanha de carne de quatorze metros que ninguém sabe como tirar dali.",
+       "visual_prompt": "wide shot of a quiet gray Oregon beach in November, cold wind, seagulls, a huge dark sperm whale carcass lying on the sand in the distance",
+       "text_overlay": "OREGON, 1970",
+       "kenburns": "push_in",
+       "is_hook": true
+      },
+      {
+       "narration_span": "Agora imagine que a solução escolhida pelas autoridades foi explodir essa montanha com meia tonelada de dinamite. Na frente de dezenas de curiosos. E de uma câmera de televisão.",
+       "visual_prompt": "low angle shot of wooden crates of dynamite stacked on the sand next to the enormous whale carcass, curious people watching from far away",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": true
+      },
+      {
+       "narration_span": "Parece piada, mas aconteceu. E o que veio depois daquela explosão virou uma das histórias mais famosas, e mais vergonhosas, da engenharia americana.",
+       "visual_prompt": "dramatic silhouette of the whale carcass against a stormy sky, tense atmosphere, beach dunes on the horizon",
+       "text_overlay": null,
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Tudo começou no dia nove de novembro de 1970, quando uma cachalote encalhou na praia perto da cidadezinha de Florence, na costa sul do Oregon.",
+       "visual_prompt": "the sperm whale washed ashore at the tide line, small coastal town houses visible on the dunes behind, overcast morning",
+       "text_overlay": "9 DE NOVEMBRO",
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Ela tinha cerca de quatorze metros de comprimento e pesava algo em torno de oito toneladas. Viva, uma criatura impressionante. Morta, na areia, um problema que crescia a cada hora.",
+       "visual_prompt": "close-up of the wrinkled gray skin of the dead whale, scale shown by a small human figure standing next to it",
+       "text_overlay": "8 TONELADAS",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Porque uma baleia morta não fica parada esperando. Ela apodrece. E o cheiro de oito toneladas apodrecendo começou a se espalhar pela cidade.",
+       "visual_prompt": "townspeople on a beach path covering their noses with handkerchiefs, faint haze drifting from the carcass",
+       "text_overlay": null,
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "No começo, a baleia virou atração. Gente da região descia até a praia para ver de perto, tirar foto, mostrar para as crianças. Mas a cada dia que passava, a visita ficava mais curta. E o nariz ficava mais tampado.",
+       "visual_prompt": "families in 1970s coats taking photos next to the stranded whale, a child pinching his nose, seagulls nearby",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b02",
+     "shots": [
+      {
+       "narration_span": "Os moradores reclamavam do mau cheiro. E havia um medo ainda maior: que curiosos subissem na carcaça, que o corpo estourasse sozinho ou que alguém caísse lá dentro.",
+       "visual_prompt": "children and adults climbing near the whale carcass while a worried official waves them back, wind blowing sand",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "A responsabilidade ficou com a Divisão de Rodovias do Estado do Oregon. Isso mesmo: o órgão que cuidava de estradas teve que decidir o que fazer com uma baleia.",
+       "visual_prompt": "a 1970s state highway division office, desk with road maps and a rotary phone, a memo about the whale on the desk",
+       "text_overlay": "DIVISÃO DE RODOVIAS",
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O chefe do distrito, naquela semana, estava fora, caçando. Então o problema caiu no colo do engenheiro assistente, George Thornton.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat standing at a desk reading a report with a frown, empty chair of the absent boss beside him",
+       "text_overlay": "GEORGE THORNTON",
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Thornton não era biólogo, nem especialista em animais marinhos. Era engenheiro de estradas. E engenheiro de estradas, quando encontra uma pedra enorme no caminho, sabe muito bem o que fazer.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat looking at a large boulder on a mountain road under construction, workers with drills in the background",
+       "text_overlay": null,
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Ele decidiu tratar a baleia como se fosse uma rocha. Se uma rocha atrapalha, você explode. Simples assim.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat standing on the beach facing the whale carcass, hands on hips, determined expression, wide shot",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "As alternativas não eram nada atraentes. Cortar oito toneladas de carne podre em pedaços, na mão, seria um trabalho lento e nojento. Arrastar aquilo para longe exigiria máquinas que atolariam na areia. A dinamite parecia o caminho rápido e limpo.",
+       "visual_prompt": "workers with long knives and a stuck tractor near the carcass, wheels sunk in the sand, frustrated faces",
+       "text_overlay": null,
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Para não errar, a equipe consultou especialistas da Marinha dos Estados Unidos e de munições. A conclusão parecia lógica no papel: com explosivo suficiente, a baleia viraria pedacinhos.",
+       "visual_prompt": "a group of men in 1970s uniforms and work clothes leaning over a table with papers and sketches of the whale and blast radius",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b03",
+     "shots": [
+      {
+       "narration_span": "O plano era o seguinte. A dinamite seria colocada do lado da baleia voltado para a terra, para que a explosão empurrasse os restos em direção ao mar.",
+       "visual_prompt": "top-down diagram-like view of the beach, whale carcass with dynamite placed on the land side, arrows pointing toward the ocean",
+       "text_overlay": "O PLANO",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O que sobrasse ficaria em pedaços pequenos. E aí entrariam os ajudantes da natureza: gaivotas, caranguejos e outros bichos que comem carniça dariam conta do resto.",
+       "visual_prompt": "flock of seagulls circling over the ocean shore, waiting, golden light breaking through clouds",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "A quantidade escolhida foi de vinte caixas de dinamite. Meia tonelada de explosivo. Mais ou menos quatrocentos e cinquenta quilos.",
+       "visual_prompt": "workers in hard hats carrying wooden dynamite crates across the sand toward the whale, one after another",
+       "text_overlay": "20 CAIXAS",
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Antes da detonação, Thornton deu entrevista. Confiante, ele admitiu uma coisa curiosa: a equipe não tinha certeza de quanto explosivo seria preciso para desintegrar aquilo.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat talking to a young man in a 1970s suit and tie holding a microphone on the beach, the whale carcass behind them",
+       "text_overlay": null,
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Ou seja, ninguém sabia direito. Mas a decisão estava tomada, a dinamite estava na areia e a cidade inteira queria ver.",
+       "visual_prompt": "crowd of townspeople gathering on the dunes with binoculars and cameras, cars parked in a lot behind them",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E aqui está o detalhe que faltou na conta. Uma rocha é dura e se parte em pedaços. Uma baleia é carne, gordura e água. Ela não se comporta como pedra. E explosivo empurra tudo para o lado onde encontra menos resistência.",
+       "visual_prompt": "split image concept: on the left a rock cracking into stones, on the right the soft bulky whale carcass on wet sand",
+       "text_overlay": null,
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Quem fazia aquilo pela primeira vez não tinha como prever. E, na prática, era exatamente isso: uma equipe de estradas fazendo, pela primeira vez, algo que quase ninguém no mundo tinha feito.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat kneeling beside the dynamite crates, checking wires, sweat on his forehead despite the cold wind",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b04",
+     "shots": [
+      {
+       "narration_span": "No meio dos curiosos havia um homem chamado Walt Umenhofer. Empresário da região, ele tinha aprendido a lidar com explosivos durante a Segunda Guerra Mundial.",
+       "visual_prompt": "the veteran, an older man with a flat cap and a windbreaker, arms crossed standing among the crowd on the dunes, studying the dynamite crates with a skeptical look",
+       "text_overlay": "WALT UMENHOFER",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Ele olhou para aquilo e percebeu que a conta não fechava. Foi até os responsáveis e avisou que a quantidade estava errada.",
+       "visual_prompt": "the veteran, an older man with a flat cap and a windbreaker, arms crossed walking up to the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat, pointing at the dynamite crates, serious conversation",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Na opinião dele, o certo seriam vinte bananas de dinamite, não vinte caixas. Ou então muito, muito mais explosivo, para sumir de vez com a carcaça. O meio-termo era o pior dos mundos.",
+       "visual_prompt": "close-up comparison: a single stick of dynamite in a hand versus a full wooden crate packed with dozens of sticks",
+       "text_overlay": "20 BANANAS",
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O aviso foi ignorado. Umenhofer se afastou para assistir de longe. E há um detalhe que torna tudo ainda melhor: poucos dias antes, ele tinha comprado um carro novinho.",
+       "visual_prompt": "the veteran, an older man with a flat cap and a windbreaker, arms crossed walking away toward a parking lot where a shiny new 1970s sedan is parked",
+       "text_overlay": null,
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "A concessionária fazia uma promoção chamada, em inglês, de uma oferta do tamanho de uma baleia. Ele estacionou o carro novo ali perto. Guarde essa informação.",
+       "visual_prompt": "a shiny new 1970s sedan with a dealership tag parked near the dunes, the whale far in the background, ominous sky",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Pense na cena. Um senhor que já tinha visto explosivo de verdade, na guerra, tentando explicar para uma equipe de estradas que aquilo ia dar errado. E a equipe seguindo em frente, porque o plano tinha sido aprovado.",
+       "visual_prompt": "the veteran, an older man with a flat cap and a windbreaker, arms crossed looking back over his shoulder at the workers wiring the dynamite, shaking his head slowly",
+       "text_overlay": null,
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Também estavam lá o repórter Paul Linnman e o cinegrafista Doug Brazil, da emissora KATU, de Portland. Eles tinham ido gravar uma matéria curiosa. Iam gravar história.",
+       "visual_prompt": "the TV reporter, a young man in a 1970s suit and tie holding a microphone standing next to a cameraman with a large 1970s 16mm film camera on a tripod, pointed at the whale",
+       "text_overlay": "KATU, PORTLAND",
+       "kenburns": "pan_down",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b05",
+     "shots": [
+      {
+       "narration_span": "Doze de novembro de 1970, três e quarenta e cinco da tarde. O público foi afastado para cerca de quatrocentos metros. A contagem regressiva começou.",
+       "visual_prompt": "wide shot of the crowd standing far back on the dunes, everyone looking toward the distant whale, tense silence",
+       "text_overlay": "12 DE NOVEMBRO, 15H45",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E então a praia explodiu. Um jornal local descreveu a cena como uma coluna de areia e baleia com uns trinta metros de altura.",
+       "visual_prompt": "massive explosion on the beach, a tall column of sand and dark red debris shooting into the sky, shockwave rippling the sand",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O repórter da TV comparou com os filmes. Nas explosões de cinema, disse ele, a gente vê fogo e fumaça. Aquela parecia mais um jato gigante de suco de tomate.",
+       "visual_prompt": "slow-motion like view of reddish debris spraying through the air above the beach, crowd in the foreground looking up in shock",
+       "text_overlay": null,
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E aí veio o problema que ninguém tinha calculado: tudo o que sobe, desce. Pedaços de gordura de baleia começaram a cair do céu sobre a multidão.",
+       "visual_prompt": "people running and covering their heads as chunks of blubber fall from the sky onto the dunes and the parking lot",
+       "text_overlay": "TUDO O QUE SOBE...",
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Alguns pedaços voaram até uns duzentos e quarenta metros. Caíram perto de prédios, em cima de carros no estacionamento, no meio das pessoas que corriam.",
+       "visual_prompt": "aerial view of the beach and parking lot with debris scattered across cars and rooftops, people scattering",
+       "text_overlay": "240 METROS",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Um pedaço enorme acertou em cheio um carro estacionado. Adivinhe de quem. O teto do carro novo de Walt Umenhofer afundou com o impacto.",
+       "visual_prompt": "a huge chunk of blubber crushing the roof of the shiny new sedan in the parking lot, glass cracked",
+       "text_overlay": null,
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Vendo um funcionário tirar a gordura do carro com uma pá, ele soltou a frase que resume aquele dia: a seguradora nunca vai acreditar nisso.",
+       "visual_prompt": "the veteran, an older man with a flat cap and a windbreaker, arms crossed standing next to his crushed car while a worker scoops blubber off the roof with a shovel, deadpan expression",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Quem estava lá lembra do cheiro, do barulho dos pedaços batendo no chão e da correria. A plateia que tinha ido ver um espetáculo virou alvo do espetáculo.",
+       "visual_prompt": "spectators wiping their coats and hair, some laughing nervously, others disgusted, blubber stains on the sand",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O mais incrível de tudo: ninguém ficou ferido. Mas a baleia continuava ali. Grande parte da carcaça nem tinha se mexido.",
+       "visual_prompt": "the beach after the blast, a large crater and most of the whale carcass still lying there, seagulls keeping their distance",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b06",
+     "shots": [
+      {
+       "narration_span": "E as gaivotas, que iam fazer a limpeza? Assustadas com o estrondo, elas sumiram. Ninguém quis chegar perto do que sobrou.",
+       "visual_prompt": "empty sky over the beach, a few distant seagulls flying away from the shore, quiet aftermath",
+       "text_overlay": null,
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "A equipe da Divisão de Rodovias teve que voltar ao trabalho do jeito antigo. Os restos e os pedaços espalhados foram recolhidos e enterrados na areia.",
+       "visual_prompt": "highway workers with shovels and a small bulldozer burying the remains of the whale in the sand, overcast afternoon",
+       "text_overlay": null,
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O cinegrafista da KATU tinha registrado tudo. A matéria foi ao ar, e o repórter fechou com uma ironia: se um dia outra baleia aparecer por ali, os responsáveis vão saber exatamente o que não fazer.",
+       "visual_prompt": "the TV reporter, a young man in a 1970s suit and tie holding a microphone speaking to the camera on the beach with the burial work behind him, slight smirk",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E George Thornton? Depois da explosão, ele disse a um jornal que tudo tinha saído exatamente certo. Segundo ele, o problema foi a cratera que se formou embaixo da baleia, que mandou os pedaços na direção do público.",
+       "visual_prompt": "the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat giving an interview to newspaper reporters with notepads, gesturing calmly as if everything were fine",
+       "text_overlay": "\"EXATAMENTE CERTO\"",
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Anos depois, ele ainda defendia a operação. Para Thornton, aquilo tinha sido um sucesso, transformado em desastre de imagem por uma imprensa que queria rir dele.",
+       "visual_prompt": "older version of the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat, now retired, sitting in an armchair with old newspaper clippings on a coffee table",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E a carreira dele não sofreu. Pouco tempo depois, Thornton foi promovido para o escritório de Medford, onde trabalhou até se aposentar.",
+       "visual_prompt": "a small 1970s state office building in a sunny Oregon town, nameplate on an office door, quiet ordinary day",
+       "text_overlay": "MEDFORD",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Dá para entender os dois lados. Thornton recebeu um problema que não era da área dele, consultou especialistas e seguiu o que eles disseram. Mas também ignorou o único aviso que veio de alguém com experiência prática bem ali, na areia.",
+       "visual_prompt": "split composition: the highway engineer, a middle-aged man with short gray hair, tan 1970s work jacket and hard hat on one side studying papers, the veteran, an older man with a flat cap and a windbreaker, arms crossed on the other side shaking his head",
+       "text_overlay": null,
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E é aí que mora a lição desse dia. A teoria dizia uma coisa. A pessoa que já tinha mexido com explosivo de verdade dizia outra. E a praia de Florence mostrou, em poucos segundos, quem estava certo.",
+       "visual_prompt": "the crater on the beach with scattered debris, footprints of the crowd running away, late afternoon light",
+       "text_overlay": null,
+       "kenburns": "pull_out",
+       "is_hook": false
+      }
+     ]
+    },
+    {
+     "block_id": "b07",
+     "shots": [
+      {
+       "narration_span": "O Oregon aprendeu a lição. Em 1979, quarenta e uma cachalotes encalharam e morreram numa praia ao sul de Florence. Dessa vez, ninguém falou em dinamite. Elas foram enterradas.",
+       "visual_prompt": "a long beach with many stranded sperm whales at dusk, workers and machines beginning to dig, somber mood",
+       "text_overlay": "1979: 41 BALEIAS",
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Hoje, a regra no estado é essa: baleia encalhada é enterrada na areia. Simples, silencioso e sem chuva de gordura.",
+       "visual_prompt": "calm beach at sunset with a smooth mound of sand where a whale was buried, gentle waves",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Mas a história não morreu em 1970. Vinte anos depois, em maio de 1990, o colunista Dave Barry escreveu sobre a baleia explosiva, contando que tinha o vídeo e assistia sempre.",
+       "visual_prompt": "a newspaper column on a 1990 breakfast table next to a cup of coffee, a VHS tape labeled with a whale drawing beside it",
+       "text_overlay": "1990",
+       "kenburns": "pan_up",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Uma versão do texto foi parar nos primeiros fóruns da internet. E começou a circular como se fosse notícia fresca. O órgão de transportes do Oregon passou a receber ligações de gente indignada com uma explosão de vinte anos antes.",
+       "visual_prompt": "early 1990s computer screen with a green text bulletin board, a phone ringing on a cluttered office desk beside it",
+       "text_overlay": null,
+       "kenburns": "pan_down",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Um porta-voz do órgão chegou a dizer que aquela foi a primeira história a viralizar na internet. Muito antes dos vídeos de gatinhos.",
+       "visual_prompt": "montage of glowing old computer monitors in different homes, all showing the same blurry beach explosion video",
+       "text_overlay": "1º VIRAL DA INTERNET",
+       "kenburns": "push_in",
+       "is_hook": false
+      },
+      {
+       "narration_span": "Em 2020, os moradores de Florence votaram o nome de uma nova área de lazer da cidade. Concorriam nomes tranquilos, de parque de bairro. O vencedor foi Parque Memorial da Baleia Explosiva.",
+       "visual_prompt": "a small town park with a wooden sign shaped like a whale, families walking, playful mood, sunny day",
+       "text_overlay": "2020",
+       "kenburns": "pan_right",
+       "is_hook": false
+      },
+      {
+       "narration_span": "O vídeo daquela tarde continua circulando até hoje e a história virou o exemplo clássico de plano que funciona no papel e explode na prática. E a cidade, em vez de esconder, abraçou a fama. Florence transformou o dia mais constrangedor da sua história em parte da própria identidade.",
+       "visual_prompt": "a lecture hall with students watching the old explosion footage on a projector screen, some laughing",
+       "text_overlay": null,
+       "kenburns": "pull_out",
+       "is_hook": false
+      },
+      {
+       "narration_span": "No fim, uma baleia que ninguém sabia como tirar da praia virou monumento. E a frase que mais combina com esse dia é a do próprio engenheiro: saiu exatamente certo.",
+       "visual_prompt": "the whale-shaped park sign at golden hour with the ocean in the background, seagulls flying peacefully",
+       "text_overlay": null,
+       "kenburns": "pan_left",
+       "is_hook": false
+      },
+      {
+       "narration_span": "E você, conhece alguma solução que parecia genial no papel e deu tudo errado na prática? Conta aqui nos comentários.",
+       "visual_prompt": "the empty Oregon beach at dusk, gentle waves, a single seagull standing where the whale once was",
+       "text_overlay": null,
+       "kenburns": "push_in",
+       "is_hook": false
+      }
+     ]
+    }
+   ],
+   "thumbnail": {
+    "phrases": [
+     "EXPLODIRAM",
+     "UMA BALEIA"
+    ],
+    "image_prompt": "huge explosion of sand and red debris on a beach with a sperm whale silhouette, shocked crowd small in the foreground, subject on the right third, left half dark sky empty for text, high contrast"
+   }
+  }
+ }
+}
