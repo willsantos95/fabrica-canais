@@ -98,7 +98,7 @@ def _key(job: dict, name: str) -> str:
 # ---------------------------------------------------------------------------
 def h_tts(job: dict, inp: dict, wd: Path) -> dict:
     out = wd / f"{inp.get('name', 'narration')}.mp3"
-    words = tts.synthesize(inp["text"], inp["voice"], out, rate=inp.get("rate", "+0%"))
+    words = tts.synthesize_robust(inp["text"], inp["voice"], out, rate=inp.get("rate", "+0%"))
     dur = media.duration(out)
     url = storage.upload(out, _key(job, f"audio/{out.name}"), "audio/mpeg")
     return {"url": url, "duration_s": round(dur, 3), "words": words}
@@ -111,14 +111,10 @@ def h_voice(job: dict, inp: dict, wd: Path) -> dict:
     checks, total = [], 0.0
     for b in spec["blocks"]:
         out = wd / "audio" / f"{b['block_id']}.mp3"
-        words = []
-        for attempt in range(3):  # edge-tts às vezes devolve áudio vazio; tenta de novo
-            words = tts.synthesize(b["narration"], voice, out, rate=rate)
-            if out.exists() and out.stat().st_size > 1000 and words:
-                break
-            time.sleep(2 * (attempt + 1))
-        else:
-            raise RuntimeError(f"edge-tts falhou no bloco {b['block_id']}")
+        try:
+            words = tts.synthesize_robust(b["narration"], voice, out, rate=rate)
+        except RuntimeError as exc:
+            raise RuntimeError(f"bloco {b['block_id']}: {exc}") from exc
         dur = media.duration(out)
         total += dur
         sil = media.silences(out)
@@ -553,14 +549,7 @@ NEWS_TAIL_S = 2.3   # cartão final
 
 
 def _narrate(text: str, voice: str, rate: str, out: Path) -> tuple[Path, list[dict], float]:
-    words: list[dict] = []
-    for attempt in range(3):  # edge-tts às vezes devolve áudio vazio
-        words = tts.synthesize(newsvideo.clean_tts(text), voice, out, rate=rate)
-        if out.exists() and out.stat().st_size > 1000 and words:
-            break
-        time.sleep(2 * (attempt + 1))
-    else:
-        raise RuntimeError(f"edge-tts falhou: {text[:60]}")
+    words = tts.synthesize_robust(newsvideo.clean_tts(text), voice, out, rate=rate)
     return out, words, media.duration(out)
 
 
