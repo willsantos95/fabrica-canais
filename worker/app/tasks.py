@@ -283,14 +283,28 @@ def h_assemble(job: dict, inp: dict, wd: Path) -> dict:
 
     # 4) mixagem, loudness e legenda
     music = storage.download(inp["music_url"], wd / "music.src") if inp.get("music_url") else None
-    final = media.master(video, narration, wd / "FINAL.mp4", float(inp.get("loudness_lufs", -14)),
+    clean = media.master(video, narration, wd / "CLEAN.mp4", float(inp.get("loudness_lufs", -14)),
                          music, float(inp.get("music_volume_db", -22)))
     srt = media.write_srt(all_words, wd / "FINAL.srt") if all_words else None
+
+    # 5) legenda queimada (channels.config.captions.burn). A versão sem legenda continua
+    #    disponível em clean_url: os Shorts são cortados dela e ganham a legenda vertical deles.
+    cap = inp.get("captions") or {}
+    burned = bool(cap.get("burn")) and bool(all_words)
+    if burned:
+        ass = media.write_caption_ass(all_words, wd / "captions.ass", settings.width, settings.height, cap)
+        subbed = media.burn_subtitles(video, ass, wd / "video_subs.mp4")
+        final = media.remux(subbed, clean, wd / "FINAL.mp4")
+    else:
+        final = clean
     prev = media.preview(final, wd / "preview.mp4")
 
     final_dur = media.duration(final)
+    final_url = storage.upload(final, _key(job, "FINAL.mp4"), "video/mp4")
     outputs = {
-        "final_url": storage.upload(final, _key(job, "FINAL.mp4"), "video/mp4"),
+        "final_url": final_url,
+        "clean_url": storage.upload(clean, _key(job, "CLEAN.mp4"), "video/mp4") if burned else final_url,
+        "captions_burned": burned,
         "srt_url": storage.upload(srt, _key(job, "FINAL.srt"), "application/x-subrip") if srt else None,
         "preview_url": storage.upload(prev, _key(job, "preview.mp4"), "video/mp4"),
         "duration_s": round(final_dur, 2),
@@ -379,7 +393,9 @@ def h_package(job: dict, inp: dict, wd: Path) -> dict:
     cfg = inp.get("config") or {}
     n_shorts = int(inp.get("shorts", (cfg.get("format") or {}).get("shorts_per_video", 3)))
     n_thumbs = int(inp.get("thumbnails", 3))
-    final = storage.download(spec["outputs"]["final_url"], wd / "final.mp4")
+    # Shorts saem da versão sem legenda queimada (ganham a legenda vertical própria)
+    outs = spec["outputs"]
+    final = storage.download(outs.get("clean_url") or outs["final_url"], wd / "final.mp4")
 
     # 1) Shorts
     words = []

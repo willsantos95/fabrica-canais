@@ -231,6 +231,98 @@ def write_word_ass(words: list[dict], out: Path, group: int = 3, font: str = "De
     return out
 
 
+def _ass_color(hex_rgb: str, alpha: int = 0) -> str:
+    """'#RRGGBB' -> '&HAABBGGRR' (formato de cor do ASS)."""
+    h = (hex_rgb or "#FFFFFF").lstrip("#")
+    r, g, b = h[0:2], h[2:4], h[4:6]
+    return f"&H{alpha:02X}{b}{g}{r}".upper()
+
+
+def write_caption_ass(words: list[dict], out: Path, width: int, height: int, style: dict | None = None) -> Path:
+    """Legenda queimada do vídeo longo, no estilo dos canais de animação.
+
+    style (channels.config.captions):
+      mode       "word"  = uma palavra por vez, grande, no centro-baixo (padrão)
+                 "group" = grupos de até `group` palavras com a palavra falada em destaque
+      group      tamanho do grupo no modo "group" (padrão 3)
+      font       nome da fonte instalada no worker (padrão "Inter"; reserva "DejaVu Sans")
+      size       tamanho da fonte em % da altura do vídeo (padrão 8.5)
+      bottom     distância da base em % da altura (padrão 12)
+      color      cor do texto (padrão "#FFFFFF");  highlight: cor da palavra falada no modo group ("#FFE500")
+      outline    espessura da borda preta (padrão 6);  uppercase: true/false (padrão true)
+    """
+    st = style or {}
+    mode = st.get("mode", "word")
+    group = max(1, int(st.get("group", 3)))
+    font = st.get("font") or "Inter"
+    size = round(height * float(st.get("size", 8.5)) / 100)
+    margin_v = round(height * float(st.get("bottom", 12)) / 100)
+    color = _ass_color(st.get("color", "#FFFFFF"))
+    hi = _ass_color(st.get("highlight", "#FFE500"))
+    outline = int(st.get("outline", 6))
+    upper = st.get("uppercase", True)
+
+    def txt(w: str) -> str:
+        t = _ass_escape(w)
+        return t.upper() if upper else t
+
+    head = (
+        f"[Script Info]\nScriptType: v4.00+\nPlayResX: {width}\nPlayResY: {height}\nWrapStyle: 2\n\n"
+        "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
+        "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
+        "Alignment, MarginL, MarginR, MarginV, Encoding\n"
+        f"Style: C,{font},{size},{color},{color},&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,{outline},2,2,"
+        f"80,80,{margin_v},1\n\n"
+        "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+    )
+    ws = [w for w in words if str(w.get("w", "")).strip()]
+    events = []
+    if mode == "group":
+        chunks, cur = [], []
+        for w in ws:
+            cur.append(w)
+            if len(cur) == group or re.search(r"[.!?,;:]$", w["w"]):
+                chunks.append(cur)
+                cur = []
+        if cur:
+            chunks.append(cur)
+        for ci, chunk in enumerate(chunks):
+            nxt = chunks[ci + 1][0]["s"] if ci + 1 < len(chunks) else None
+            for i, w in enumerate(chunk):
+                end = chunk[i + 1]["s"] if i + 1 < len(chunk) else w["e"]
+                if nxt is not None and i + 1 == len(chunk):
+                    end = max(end, min(nxt, w["e"] + 0.3))
+                parts = [("{\\c" + hi + "}" + txt(x["w"]) + "{\\c" + color + "}") if j == i else txt(x["w"])
+                         for j, x in enumerate(chunk)]
+                events.append(f"Dialogue: 0,{_ts(w['s'], '.')[1:-1]},{_ts(end, '.')[1:-1]},C,,0,0,0,," + " ".join(parts))
+    else:
+        for i, w in enumerate(ws):
+            nxt = ws[i + 1]["s"] if i + 1 < len(ws) else None
+            # fica na tela até a próxima palavra (pausas curtas), no máximo 0,6 s depois do fim da fala
+            end = w["e"] if nxt is None else max(w["e"], min(nxt, w["e"] + 0.6))
+            # palavra só com pontuação some (ex.: travessão solto)
+            word = re.sub(r"^[\"“”'(¿¡]+|[\"“”').,;:!?…]+$", "", w["w"])
+            if not re.search(r"\w", word):
+                continue
+            events.append(f"Dialogue: 0,{_ts(w['s'], '.')[1:-1]},{_ts(end, '.')[1:-1]},C,,0,0,0,," + txt(word))
+    out.write_text(head + "\n".join(events) + "\n", encoding="utf-8")
+    return out
+
+
+def burn_subtitles(video: Path, ass: Path, out: Path) -> Path:
+    """Queima a legenda .ass no vídeo (sem áudio). Usa as fontes do sistema (Inter, DejaVu)."""
+    ass_path = str(ass).replace("\\", "/").replace(":", r"\:").replace("'", r"\'")
+    run(["ffmpeg", "-y", "-v", "error", "-i", str(video), "-vf", f"ass='{ass_path}'", *_x264(), "-an", str(out)])
+    return out
+
+
+def remux(video: Path, audio_from: Path, out: Path) -> Path:
+    """Junta o vídeo de um arquivo com o áudio (já masterizado) de outro, sem recodificar."""
+    run(["ffmpeg", "-y", "-v", "error", "-i", str(video), "-i", str(audio_from), "-map", "0:v", "-map", "1:a",
+         "-c", "copy", "-shortest", "-movflags", "+faststart", str(out)])
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Shorts
 # ---------------------------------------------------------------------------
