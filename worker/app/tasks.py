@@ -13,7 +13,7 @@ from pathlib import Path
 
 import httpx
 
-from . import align, commons, images, media, newsvideo, storage, thumbnail, tts
+from . import align, commons, images, media, motion, newsvideo, storage, thumbnail, tts
 from .settings import settings
 
 log = logging.getLogger("fabrica.worker")
@@ -221,7 +221,7 @@ def h_kenburns(job: dict, inp: dict, wd: Path) -> dict:
     return {"url": storage.upload(out, inp.get("out_key") or _key(job, "clips/kenburns.mp4"), "video/mp4")}
 
 
-def _render_shot(shot: dict, seconds: float, wd: Path) -> Path:
+def _render_shot(shot: dict, seconds: float, wd: Path, motion_cfg: dict | None = None) -> Path:
     sid = shot["shot_id"]
     out = wd / "clips" / f"{shot['order']:03d}-{sid}.mp4"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -235,6 +235,8 @@ def _render_shot(shot: dict, seconds: float, wd: Path) -> Path:
         raise ValueError(f"plano {sid} sem imagem")
     img = storage.download(image_url, wd / "src" / f"{sid}.img")
     mode = shot["motion"].get("kenburns") or ("push_in" if shot["order"] % 2 else "pan_right")
+    if (motion_cfg or {}).get("style") == "dynamic":
+        return motion.render_shot(img, out, seconds, mode, overlay, motion_cfg, seed=int(shot["order"]))
     return media.kenburns(img, out, seconds, mode, overlay)
 
 
@@ -277,7 +279,8 @@ def h_assemble(job: dict, inp: dict, wd: Path) -> dict:
         # duração em quadros inteiros a partir da linha do tempo global: sem deriva entre vídeo e áudio
         fps = settings.fps
         clips = list(pool.map(
-            lambda s: _render_shot(s, (round(s["end_s"] * fps) - round(s["start_s"] * fps)) / fps, wd),
+            lambda s: _render_shot(s, (round(s["end_s"] * fps) - round(s["start_s"] * fps)) / fps, wd,
+                                   inp.get("motion")),
             all_shots))
     video = media.concat_videos(clips, wd / "video_only.mp4")
 

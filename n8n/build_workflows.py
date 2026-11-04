@@ -410,7 +410,7 @@ return [{ json: { video_id: c.video_id, spec, key: `videos/${c.video_id}/video_s
                           f"loudness_lufs: {cfg}.audio.loudness_lufs, "
                           f"music_volume_db: {cfg}.audio.music_volume_db ?? -22, "
                           f"min_duration_s: Math.round({cfg}.format.long_minutes[0] * 60 * 0.8), "
-                          f"captions: {cfg}.captions || null }}")),
+                          f"captions: {cfg}.captions || null, motion: {cfg}.motion || null }}")),
           creds=CRED_WORKER, **RETRY)
     f.link("Status: montagem", "Worker: montagem")
     f.add("Aguardar montagem", "n8n-nodes-base.wait", 1.1, wait_callback(3), creds=CRED_CALLBACK,

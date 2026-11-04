@@ -1,0 +1,470 @@
+{
+ "channel_slug": "um-ano-preso",
+ "title": "365 Dias no Bunker do Meu Avô Durante um Apocalipse Zumbi",
+ "priority": 10,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "365 Dias no Bunker do Meu Avô Durante um Apocalipse Zumbi",
+    "Sobrevivi 1 Ano num Bunker Embaixo de uma Oficina",
+    "1 Ano Trancado num Bunker: a Conta da Água Não Fecha",
+    "E Se Você Passasse 365 Dias num Bunker?",
+    "O Bunker, a Menina e o Rádio: 1 Ano de Apocalipse"
+   ],
+   "chosen_title": "365 Dias no Bunker do Meu Avô Durante um Apocalipse Zumbi",
+   "hook_options": [
+    "A sirene começa às seis e quarenta. Não é teste. E a escotilha só vai abrir de novo daqui a um ano.",
+    "Mil e quatrocentos litros de água para um ano. Você tem quatrocentos.",
+    "No dia cento e sessenta e sete, alguém bate três vezes na escotilha."
+   ],
+   "subject": "1 ano num bunker no apocalipse zumbi",
+   "tags": [
+    "apocalipse zumbi",
+    "1 ano no bunker",
+    "sobrevivência",
+    "e se fosse você",
+    "365 dias",
+    "história de sobrevivência",
+    "bunker",
+    "animação",
+    "zumbi",
+    "historia animada"
+   ],
+   "hashtags": [
+    "ApocalipseZumbi",
+    "365Dias",
+    "Sobrevivência"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "365 DIAS",
+     "NO BUNKER"
+    ],
+    "image_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sitting in a small concrete bunker room with metal shelves of canned food, two blue water barrels, a bunk bed and a workbench with an old ham radio, hanging bulbs, scratch marks on the hatch above, tense, main subject on the right third, left half dark and empty for text"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Ready.gov — Water (arquivo de 2009, UNT Web Archive)",
+    "url": "https://webarchive.library.unt.edu/web/20090507175617/http:/www.ready.gov/america/getakit/water.html",
+    "claim": "Reserva de emergência: cerca de um galão (3,8 litros) de água por pessoa por dia, para beber e higiene."
+   },
+   {
+    "id": "src2",
+    "title": "How Acidity Affects The Shelf Life Of Canned Foods — Food Republic",
+    "url": "https://www.foodrepublic.com/1555933/how-acidity-affects-canned-foods/",
+    "claim": "Enlatados ácidos (frutas, tomate) duram cerca de 18 meses; os pouco ácidos (feijão, carne, legumes) de 2 a 5 anos; latas estufadas devem ser descartadas."
+   },
+   {
+    "id": "src3",
+    "title": "Sleep-wake cycles on a 520-day trip to Mars — Penn Today (2013)",
+    "url": "https://penntoday.upenn.edu/2013-02-21/research/sleep-wake-cycles-520-day-trip-mars",
+    "claim": "No Mars-500 (520 dias de confinamento), quem manteve horários fixos de trabalho, comida e sono se saiu melhor; a recomendação é luz que imite o dia e a noite da Terra."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b01",
+    "title": "Dia zero",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "A sirene começa às seis e quarenta da manhã. Não é teste. Do outro lado da rua, alguém grita, e o grito não para.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket standing frozen at a kitchen window at dawn, a city street outside with people running, a siren pole in the distance",
+      "DIA 0"
+     ],
+     [
+      "Você tem um lugar para onde correr. A oficina do seu avô, no fundo do quintal, e o alçapão de ferro que ele construiu embaixo dela, quando todo mundo dizia que era exagero.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket running across a backyard toward an old wooden workshop shed, morning light, panic in the background",
+      "DIA 0"
+     ],
+     [
+      "Você puxa a argola, desce a escada e fecha a escotilha por dentro. Três trancas. O barulho lá de cima vira um zumbido abafado.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket closing a heavy round metal hatch from inside, standing on a ladder, three bolt locks, dim light",
+      "DIA 0"
+     ],
+     [
+      "Você acende a luz. E pela primeira vez entende o que o seu avô passou anos montando ali embaixo.",
+      "wide view of a small concrete bunker room with metal shelves of canned food, two blue water barrels, a bunk bed and a workbench with an old ham radio, hanging bulbs, a single bulb just turned on, dust in the air",
+      "DIA 0"
+     ],
+     [
+      "Prateleiras de metal do chão ao teto. Dois barris azuis. Um beliche, uma bancada com ferramentas, um rádio antigo coberto de poeira. E, pregado na parede, um calendário de papel com trezentos e sessenta e cinco quadradinhos em branco.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket walking slowly along the metal shelves, touching the dusty radio on the workbench, a paper calendar on the wall",
+      "DIA 0"
+     ],
+     [
+      "A pergunta agora é simples, e assustadora: quanto tempo dá para viver aqui dentro? Porque a escotilha só vai abrir de novo daqui a um ano.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sitting on the bunk bed looking at a wall calendar with 365 days, the closed hatch above",
+      "DIA 0"
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "A conta da água",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "A primeira coisa que você faz é contar. Contar tudo. Porque aqui dentro, cada coisa que acaba não volta.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket holding a clipboard and pencil in front of the shelves, counting cans",
+      "DIA 1"
+     ],
+     [
+      "A regra que o seu avô deixou escrita na parede é a mesma dos manuais de emergência: cerca de três litros e oitocentos de água por pessoa, por dia, para beber e para a higiene.",
+      "close-up of a handwritten note taped on a concrete wall with a water drop drawing and the number 3.8 L, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket reading it",
+      "DIA 1"
+     ],
+     [
+      "Você faz a conta. Um ano inteiro dá quase mil e quatrocentos litros. Nos dois barris azuis, há pouco mais de quatrocentos.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket looking worried at two blue plastic water barrels, simple chalk math on the wall",
+      "DIA 1"
+     ],
+     [
+      "Mas o avô pensou nisso também. Um cano desce da calha da oficina até uma caixa d'água enterrada, com um filtro de areia e carvão no meio do caminho.",
+      "cutaway diagram style illustration of a gutter pipe going from a shed roof down through the ground into an underground tank with a sand filter",
+      "DIA 2"
+     ],
+     [
+      "Você passa a primeira semana inteira aprendendo aquele cano. Onde ele faz curva, onde dá para abrir, onde o filtro precisa ser lavado. Porque, se ele falhar, o relógio da água começa a correr contra você.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket kneeling next to the pipe with a wrench and a flashlight, studying a sand and charcoal filter box",
+      "DIA 3"
+     ],
+     [
+      "Toda chuva vira estoque. Mas toda seca vira medo.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket listening with an ear against the pipe, hearing rain, hopeful expression",
+      "DIA 4"
+     ],
+     [
+      "Depois vem a comida. Seiscentas e doze latas. E aqui você descobre um detalhe que muda tudo: nem toda lata dura o mesmo tempo.",
+      "rows of canned food on metal shelves, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket holding two different cans side by side",
+      "DIA 5"
+     ],
+     [
+      "Fruta e tomate, que são mais ácidos, aguentam cerca de um ano e meio. Feijão, carne e legumes podem durar de dois a cinco anos.",
+      "two groups of cans on a table, peaches and tomatoes on one side, beans and meat on the other, an hourglass between them",
+      "DIA 5"
+     ],
+     [
+      "Então você inverte a lógica: come primeiro o que estraga primeiro. E qualquer lata estufada vai direto para fora, sem pena.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket putting a slightly bulging can into a bucket marked with an X, serious face",
+      "DIA 6"
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "O silêncio",
+    "source_ids": [
+     "src3"
+    ],
+    "shots": [
+     [
+      "No começo, o silêncio parece um alívio. Depois de algumas semanas, ele vira outra coisa.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket lying on the bunk bed staring at the ceiling, the bunker quiet and dim",
+      "DIA 23"
+     ],
+     [
+      "Você perde a noção do dia. Dorme às três da tarde, acorda às duas da manhã, e não sabe dizer se ontem foi terça ou sábado.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sleeping at a table with a wall clock showing confusing hours and a calendar with question marks",
+      "DIA 31"
+     ],
+     [
+      "Então você lembra de uma coisa que leu uma vez: numa simulação de viagem a Marte, seis homens ficaram quinhentos e vinte dias trancados. Quem manteve horário fixo para comer, trabalhar e dormir se saiu melhor.",
+      "symbolic illustration of six tiny stick figures inside a capsule-shaped habitat with a clock on the wall, red planet outside a small window",
+      "DIA 32"
+     ],
+     [
+      "Você cria regras. Luz acesa às sete, luz apagada às dez. Exercício depois do café. Uma página no diário antes de dormir.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket doing push-ups next to the bunk bed, a schedule written on the wall with times",
+      "DIA 35"
+     ],
+     [
+      "Você usa as lâmpadas como se fossem o sol. Acende todas de manhã, deixa só uma à tarde, e apaga tudo à noite. Parece bobagem. Mas o corpo entende o recado.",
+      "the bunker in three small panels: bright lights in the morning, one bulb in the afternoon, darkness at night, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket in each",
+      "DIA 40"
+     ],
+     [
+      "Você também começa a conversar sozinho. Primeiro baixinho, depois em voz alta, narrando o que está fazendo. Abrindo a lata quarenta e dois. Lavando o filtro. Só para ouvir uma voz.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket talking to a can of beans held up like a microphone, a little smile, the bunker around",
+      "DIA 47"
+     ],
+     [
+      "E funciona. Os dias ganham forma de novo. Até a noite do dia cinquenta e oito.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket writing in a notebook under a desk lamp, calm expression",
+      "DIA 58"
+     ],
+     [
+      "Às duas da manhã, você acorda com um som que não vem de dentro. Unhas. Raspando o ferro da escotilha. Devagar.",
+      "the round metal hatch in the ceiling seen from below in darkness, faint scratch marks, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sitting up in bed terrified",
+      "DIA 58"
+     ],
+     [
+      "Você não respira. Não acende a luz. Vinte minutos depois, o som para. E você descobre que o pior não é ouvir. É esperar ouvir de novo.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket hugging the knees in the dark corner of the bunker, eyes wide open, only a thin line of light",
+      "DIA 58"
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "Estação Sete",
+    "source_ids": [
+     "src3"
+    ],
+    "shots": [
+     [
+      "No dia noventa e quatro, você resolve mexer no rádio velho do avô. Ninguém nunca soube se ele funcionava.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket at the workbench opening the back of an old ham radio, wires and a screwdriver",
+      "DIA 94"
+     ],
+     [
+      "Você troca um fusível, limpa os contatos, gira o botão bem devagar. Chiado. Chiado. E então, uma voz.",
+      "close-up of a stick figure hand turning the dial of an old radio, the needle glowing",
+      "DIA 94"
+     ],
+     [
+      "Estação Sete. Se alguém estiver ouvindo, nós temos água, comida e muros. Repetimos todo domingo, às oito da noite.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket leaning toward the radio speaker, sound waves drawn coming out of it, hopeful face",
+      "DIA 94"
+     ],
+     [
+      "Você chora. Não de medo. Porque é a primeira prova, em três meses, de que ainda existe gente lá fora.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sitting in front of the radio with tears, a warm light on the face",
+      "DIA 94"
+     ],
+     [
+      "A partir daí, todo domingo vira um compromisso. Oito em ponto, você está sentado na frente do rádio, caderno aberto, anotando cada palavra.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket writing notes in a notebook next to the radio, a calendar with Sundays circled in red",
+      "DIA 101"
+     ],
+     [
+      "Você tenta responder. Aperta o botão do microfone, fala o seu nome, diz que está num bunker, que tem água e comida. Do outro lado, nada. O rádio do avô escuta muito bem, mas transmite mal.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket holding an old radio microphone and speaking into it, a small antenna cable going up through the ceiling",
+      "DIA 112"
+     ],
+     [
+      "Eles falam de um posto ao norte, de rotas seguras, de quantas pessoas chegaram. Mas nunca dizem onde ficam. E você entende o porquê.",
+      "a hand-drawn map pinned on the wall with a question mark in the north and dotted routes",
+      "DIA 140"
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "Três batidas",
+    "source_ids": [],
+    "shots": [
+     [
+      "Dia cento e sessenta e sete. Começo da tarde. Três batidas no ferro da escotilha. Pausa. Mais três.",
+      "the metal hatch seen from below, three impact marks drawn as small stars, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket frozen with a can in hand",
+      "DIA 167"
+     ],
+     [
+      "Coisa morta não bate em ritmo. Coisa morta não espera a resposta. Isso foi uma pessoa.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket slowly climbing the ladder toward the hatch, careful, listening",
+      "DIA 167"
+     ],
+     [
+      "Pela fresta da tranca, você ouve uma voz pequena. Uma menina. Pedindo água. E, junto dela, um latido curto.",
+      "view through a narrow gap in the hatch: a small girl in a yellow raincoat and a small scruffy brown dog with a red bandana outside in the workshop",
+      "DIA 167"
+     ],
+     [
+      "Agora a conta da água muda. Dois de vocês. Talvez três, contando o cachorro. Abrir pode significar não chegar ao fim do ano.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket looking at the chalk water math on the wall, the number being crossed out and doubled",
+      "DIA 167"
+     ],
+     [
+      "Você fica ali, com a mão na tranca, pensando em tudo que pode dar errado. Ela pode estar mordida. Pode não estar sozinha. Pode ser uma armadilha. E pode ser só uma criança com sede.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket with one hand on the hatch bolt, eyes closed, thought bubbles showing a bite mark, a group of shadows and a crying child",
+      "DIA 167"
+     ],
+     [
+      "Você respira fundo. E abre.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket pulling the bolts of the hatch open, light coming in from above",
+      "DIA 167"
+     ],
+     [
+      "O nome dela é Lia. O cachorro é o Pipoca. Ela caminhou quatro dias sozinha seguindo o mesmo sinal de rádio que você ouve aos domingos.",
+      "a small stick figure girl with a round white head, small dot eyes and a yellow raincoat sitting on the bunk bed holding a cup of water, a small scruffy brown cartoon dog with a red bandana next to her, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket kneeling in front of them",
+      "DIA 167"
+     ],
+     [
+      "Você cria uma regra na hora: quarenta e oito horas na parte de cima da oficina, porta trancada, observando. Ninguém sabe ainda como a coisa passa de um para o outro.",
+      "a small stick figure girl with a round white head, small dot eyes and a yellow raincoat and a small scruffy brown cartoon dog with a red bandana sitting inside a locked workshop room, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket watching through a small window with a clock",
+      "DIA 168"
+     ],
+     [
+      "Você deixa água, duas latas e um cobertor do lado de dentro da porta. A Lia não reclama. Ela entende a regra melhor do que você esperava.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket sliding a water bottle and two cans through a small opening in a door, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat nodding",
+      "DIA 168"
+     ],
+     [
+      "No terceiro dia, ela está bem. E o bunker, pela primeira vez, tem duas vozes.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket and a small stick figure girl with a round white head, small dot eyes and a yellow raincoat eating from cans at the small table, a small scruffy brown cartoon dog with a red bandana waiting for food, warm light",
+      "DIA 170"
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "A seca",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Só que o outono chega sem chuva. Uma semana. Duas. Quatro. O barulho do cano, que antes era a sua trilha sonora, some.",
+      "the gutter pipe inside the bunker completely dry, a small cup under it with no water",
+      "DIA 214"
+     ],
+     [
+      "A caixa enterrada baixa um palmo por semana. Você corta a água do banho, depois a da louça. Cada gole agora é calculado.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket measuring water with a small cup into two bottles, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat watching, the blue barrels almost empty",
+      "DIA 226"
+     ],
+     [
+      "E então, a chuva vem. Forte. Mas o cano continua seco. Alguma coisa entupiu a calha lá em cima.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket hitting the dry pipe while heavy rain sounds come from above, frustrated",
+      "DIA 231"
+     ],
+     [
+      "Alguém precisa subir. À noite, no meio da tempestade, que é quando eles menos ouvem.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket putting on the jacket and holding a flashlight under the hatch, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat holding the dog",
+      "DIA 231"
+     ],
+     [
+      "Você sobe no telhado da oficina, encharcado, e encontra a calha cheia de folhas e de um pássaro morto. Você limpa com as mãos.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket on a shed roof at night in heavy rain cleaning leaves out of a gutter, lightning in the sky",
+      "DIA 231"
+     ],
+     [
+      "A água começa a escorrer pela calha. Você ouve o barulho dela descendo pelo cano, em direção à caixa. Funcionou.",
+      "rain water flowing through a cleaned gutter into a downspout pipe at night, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket watching from the roof",
+      "DIA 231"
+     ],
+     [
+      "Lá embaixo, o Pipoca começa a latir. Não para você. Para o portão.",
+      "a small scruffy brown cartoon dog with a red bandana barking toward a dark backyard gate, rain, the workshop door half open",
+      "DIA 231"
+     ],
+     [
+      "Você desce do telhado de uma vez, entra, fecha o alçapão. E, pela primeira vez em meses, ouve o barulho mais bonito do mundo: água correndo no cano.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat and a small scruffy brown cartoon dog with a red bandana inside the bunker listening to water flowing through the pipe, relief on their faces",
+      "DIA 231"
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "O rádio cala",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Com dois para comer, as latas de fruta acabam antes do previsto. Sobra feijão. Muito feijão.",
+      "empty shelves where fruit cans used to be, a full shelf of bean cans, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat sighing",
+      "DIA 262"
+     ],
+     [
+      "A Lia tem uma ideia: em vez de comer todo o feijão seco do saco do avô, plantar uma parte embaixo da lâmpada.",
+      "a small stick figure girl with a round white head, small dot eyes and a yellow raincoat placing beans in a long tray of soil under a hanging bulb, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket watching curious",
+      "DIA 270"
+     ],
+     [
+      "Cinco dias depois, aparecem os primeiros brotos. Verdes. A única coisa verde que vocês veem em quase nove meses.",
+      "close-up of small green bean sprouts in a tray under a warm lamp, two stick figure faces smiling behind it",
+      "DIA 275"
+     ],
+     [
+      "O feijão que brota tem gosto de grama. Mas é fresco. E a Lia passa a chamar aquela bandeja de jardim.",
+      "a small stick figure girl with a round white head, small dot eyes and a yellow raincoat proudly holding the tray of bean sprouts like a garden, a small scruffy brown cartoon dog with a red bandana sniffing it, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket laughing",
+      "DIA 278"
+     ],
+     [
+      "A rotina segura vocês de pé. Luz às sete, apagada às dez. Treino, diário, rádio no domingo.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket and a small stick figure girl with a round white head, small dot eyes and a yellow raincoat doing exercises together in the bunker, a schedule on the wall",
+      "DIA 290"
+     ],
+     [
+      "Até que, num domingo, às oito em ponto, a Estação Sete não fala. Só chiado.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket and a small stick figure girl with a round white head, small dot eyes and a yellow raincoat sitting in front of the radio, the speaker showing only static lines, worried faces",
+      "DIA 301"
+     ],
+     [
+      "No domingo seguinte, também não. Nem no outro. Você deixa o rádio ligado a noite inteira, girando o botão de um lado para o outro, procurando qualquer voz.",
+      "a calendar with three Sundays crossed out in red, the radio silent on the workbench",
+      "DIA 315"
+     ],
+     [
+      "Você não fala nada para a Lia. Mas os dois sabem o que o silêncio pode significar.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket lying awake on the top bunk, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat awake on the bottom bunk, a small scruffy brown cartoon dog with a red bandana between them, darkness",
+      "DIA 315"
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "A escotilha",
+    "source_ids": [],
+    "shots": [
+     [
+      "Dia trezentos e sessenta e cinco. Vocês acordam antes da luz. Ninguém precisa dizer nada.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket and a small stick figure girl with a round white head, small dot eyes and a yellow raincoat standing under the closed hatch at dawn, a small scruffy brown cartoon dog with a red bandana sitting, backpacks ready",
+      "DIA 365"
+     ],
+     [
+      "Você destrava a primeira tranca. A segunda. A terceira. E empurra.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket on the ladder pushing the round metal hatch open, dust falling, light pouring in",
+      "DIA 365"
+     ],
+     [
+      "O ar lá fora é frio e tem cheiro de mato. A oficina do avô está de pé. O quintal virou capim alto.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket climbing out into an overgrown backyard at sunrise, the old workshop behind, tall grass",
+      "DIA 365"
+     ],
+     [
+      "E na porta da oficina, pelo lado de fora, alguém pintou uma mensagem em letras grandes e vermelhas.",
+      "the outside of an old wooden workshop door with large red painted shapes, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket and a small stick figure girl with a round white head, small dot eyes and a yellow raincoat staring at it from behind",
+      "DIA 365"
+     ],
+     [
+      "Estação Sete. Quarenta quilômetros ao norte. Estamos esperando vocês.",
+      "close-up of a weathered wooden door with a red arrow pointing north painted on it, morning light",
+      "DIA 365"
+     ],
+     [
+      "Alguém esteve aqui. Alguém sabia que vocês estavam lá embaixo. E alguém, por algum motivo, decidiu não bater.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket looking around the empty backyard with suspicion, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat holding the dog close",
+      "DIA 365"
+     ],
+     [
+      "Quarenta quilômetros. Água para três dias. Uma menina, um cachorro, e uma estrada que vocês não veem há um ano.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket, a small stick figure girl with a round white head, small dot eyes and a yellow raincoat and a small scruffy brown cartoon dog with a red bandana standing at the edge of an empty road at sunrise looking north, long shadows",
+      "DIA 365"
+     ],
+     [
+      "Você olha para trás. A escotilha aberta, o bunker que foi a sua casa por um ano inteiro, com água, comida e trancas. E olha para frente. Uma seta vermelha e uma promessa.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket looking back at the open bunker hatch and then forward to the empty road, morning sun",
+      "DIA 365"
+     ],
+     [
+      "Agora me conta nos comentários: você seguiria a seta para o norte, ou voltaria para o bunker e fecharia a escotilha por mais um ano?",
+      "split image: on the left a road going north with a red arrow, on the right the open bunker hatch, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green hooded jacket standing in the middle",
+      "DIA 365"
+     ]
+    ]
+   }
+  ]
+ }
+}
