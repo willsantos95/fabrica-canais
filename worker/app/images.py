@@ -59,7 +59,8 @@ def _cloudflare(prompt: str, aspect: str) -> tuple[bytes, str]:
             continue
         low = r.text.lower()
         if r.status_code >= 400 and any(k in low for k in ("neurons", "daily", "allocation", "3036")):
-            raise QuotaError("cloudflare: cota grátis diária de neurons esgotada (renova à 0h UTC, 21h em Brasília)")
+            raise QuotaError("cloudflare: cota grátis diária de neurons esgotada (renova à 0h UTC, 21h em Brasília)"
+                             f" | resposta: HTTP {r.status_code} {r.text[:240]}")
         if r.status_code == 429:
             last = f"cloudflare: HTTP 429 {r.text[:200]}"
             time.sleep(5 * (attempt + 1))
