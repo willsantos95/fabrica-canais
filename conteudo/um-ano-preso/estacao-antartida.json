@@ -1,0 +1,488 @@
+{
+ "channel_slug": "um-ano-preso",
+ "title": "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+ "priority": 10,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+    "365 Dias Preso numa Estação no Fim do Mundo",
+    "1 Ano na Antártida: o Gerador Parou a -71°C",
+    "E Se Você Ficasse 1 Ano Preso no Gelo?",
+    "O Último Avião Foi Embora: 1 Ano na Antártida"
+   ],
+   "chosen_title": "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+   "hook_options": [
+    "O último avião vai embora em fevereiro. O próximo só pousa em novembro. E o sol vai sumir por seis meses.",
+    "Três e dez da manhã, setenta e um graus negativos, e o gerador acabou de parar.",
+    "Aqui não existe pôr do sol todo dia. Existe um por ano."
+   ],
+   "subject": "1 ano preso numa estação na Antártida",
+   "tags": [
+    "antártida",
+    "1 ano na antártida",
+    "sobrevivência",
+    "e se fosse você",
+    "365 dias",
+    "polo sul",
+    "inverno polar",
+    "história animada",
+    "frio extremo",
+    "um ano preso"
+   ],
+   "hashtags": [
+    "Antártida",
+    "365Dias",
+    "Sobrevivência"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "365 DIAS",
+     "NO GELO"
+    ],
+    "image_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing alone outside a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in the polar night, green aurora above, frost on the parka, main subject on the right third, left half dark and empty for text"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Sunset at South Pole signals 6 months of darkness — NOAA",
+    "url": "https://www.noaa.gov/stories/sunset-at-south-pole-signals-6-months-of-darkness",
+    "claim": "No Polo Sul há um único nascer e um único pôr do sol por ano; depois do pôr do sol de março vêm seis meses de escuridão, e o frio e o escuro do inverno impedem os voos."
+   },
+   {
+    "id": "src2",
+    "title": "What's a winterover? — WIPAC / IceCube, University of Wisconsin–Madison",
+    "url": "https://wipac.wisc.edu/?p=13035",
+    "claim": "O último avião sai em meados de fevereiro e o próximo só pousa no começo de novembro; o querosene de aviação pode gelar no frio; no inverno as máximas ficam perto de -59 °C, as mínimas perto de -75 °C, e o recorde é -82 °C."
+   },
+   {
+    "id": "src3",
+    "title": "Water at the South Pole (Rodwell) — Lawrence Berkeley National Laboratory",
+    "url": "https://glacier.lbl.gov/gtp/SouthPole/rod_well.html",
+    "claim": "A água da estação do Polo Sul vem de um poço derretido no gelo com o calor que sobra do gerador; antes de 1995 a água vinha de neve derretida."
+   },
+   {
+    "id": "src4",
+    "title": "Antarctic researchers enter a state of 'psychological hibernation' — Frontiers (2019)",
+    "url": "https://www.frontiersin.org/news/2019/02/05/antarctic-researchers-enter-a-state-of-psychological-hibernation-study-finds",
+    "claim": "Na estação Concordia, ao longo do inverno o sono piorou, as emoções positivas caíram e as estratégias para lidar com problemas diminuíram; tudo voltou quando o sol voltou. Os autores chamam isso de 'hibernação psicológica'."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b01",
+    "title": "O sol que não se põe",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "O avião pousa às duas da manhã. E o sol está lá em cima, no céu, como se fosse meio-dia.",
+      "a small ski-equipped cargo plane landing on a white ice plateau under a bright sun, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka looking out of the window amazed",
+      "DIA 0"
+     ],
+     [
+      "Você desce a escada e o frio entra pelo nariz feito agulha. Trinta graus negativos. E isso, dizem, é o verão.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka stepping down from a plane onto snow, breath turning into a cloud, covering the face with a glove",
+      "DIA 0"
+     ],
+     [
+      "Na sua frente, a Estação Kestrel. Três caixas laranja em cima de pernas de metal, no meio de um nada branco que não acaba nunca.",
+      "wide view of a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka walking toward it with a duffel bag",
+      "DIA 0"
+     ],
+     [
+      "Você foi contratado como mecânico do gerador. Parece um trabalho pequeno. Não é. Aqui, o gerador dá luz, dá calor e, como você vai descobrir, dá até a água.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing in front of a big diesel generator in a small machine room, pipes going in every direction",
+      "DIA 0"
+     ],
+     [
+      "A equipe de inverno são quatro pessoas. O Tomás, o chefe, que já passou seis invernos no gelo. A Nina, médica. O Bento, cozinheiro e operador de rádio. E você.",
+      "group portrait inside a small kitchen: an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing side by side",
+      "DIA 1"
+     ],
+     [
+      "No primeiro jantar, o Tomás explica a regra mais importante: em meados de fevereiro, o último avião vai embora. E o próximo só pousa em novembro.",
+      "an older stick figure with a round white head, a grey beard and a red parka at the head of a long table pointing at a wall calendar with February and November circled, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka listening",
+      "DIA 1"
+     ],
+     [
+      "Não é falta de vontade de vir buscar vocês. No inverno, o frio é tanto que o próprio combustível do avião pode gelar dentro do tanque.",
+      "simple cutaway illustration of an airplane fuel tank with the fuel turning into thick ice crystals, a thermometer far below zero",
+      "DIA 1"
+     ],
+     [
+      "Você ri, achando que é exagero de veterano. Ainda não sabe que ele está sendo gentil.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka laughing at the dinner table while an older stick figure with a round white head, a grey beard and a red parka looks at him seriously",
+      "DIA 1"
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "O último avião",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Os meses de verão passam rápido. O sol gira em volta do céu sem nunca descer, e você aprende a dormir com uma toalha em cima do rosto.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka sleeping in a bunk with a towel over the eyes while bright sunlight comes through a small window at night time on the clock",
+      "DIA 40"
+     ],
+     [
+      "O Tomás te ensina as regras do gelo. Nunca sair sozinho sem avisar pelo rádio. Nunca tirar a luva lá fora, nem por um segundo. E sempre, sempre, saber onde fica a porta mais próxima.",
+      "an older stick figure with a round white head, a grey beard and a red parka counting rules on his gloved fingers in front of the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka outside the station, a radio on his chest",
+      "DIA 45"
+     ],
+     [
+      "Você também aprende o segredo da água. Não existe rio, não existe chuva. Existe gelo. E o gelo só vira água se alguém esquentar.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka holding a glass of water next to a window with endless ice outside",
+      "DIA 52"
+     ],
+     [
+      "O calor que sobra do gerador desce por um cano até um buraco fundo no gelo, derrete tudo lá embaixo e forma um poço. É a mesma ideia usada na estação do Polo Sul.",
+      "cutaway diagram of a polar station: hot pipe from the generator going down into the ice, melting a deep round water well, a pump bringing water back up",
+      "DIA 52"
+     ],
+     [
+      "Ou seja: se o gerador para, para o calor. E se para o calor, o seu poço começa a virar gelo de novo.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka looking at the generator and then at a water tap, a worried thought bubble showing a frozen well",
+      "DIA 53"
+     ],
+     [
+      "Dia cento e dois. O último avião da temporada. Quarenta pessoas do verão embarcam rindo, abraçando, prometendo mandar fotos.",
+      "a crowd of stick figures with luggage boarding a cargo plane on the ice, waving goodbye",
+      "DIA 102"
+     ],
+     [
+      "Vocês quatro ficam na pista, vendo o avião virar um ponto e depois sumir.",
+      "an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing on the ice watching a tiny plane disappear in the sky",
+      "DIA 102"
+     ],
+     [
+      "O silêncio que vem depois tem peso. Daqui até novembro, não entra ninguém. Não sai ninguém. Se algo der errado, quem resolve são vocês.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka alone outside a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, total silence, wind lines in the snow",
+      "DIA 102"
+     ],
+     [
+      "Na despensa, comida para oito meses. No tanque, diesel contado para o inverno, com uma margem pequena. Bem pequena.",
+      "a chubby stick figure with a round white head, round glasses and a blue parka with a clipboard in a pantry full of boxes, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka checking a fuel gauge on a big tank",
+      "DIA 103"
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "O último pôr do sol",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "Então o sol começa a descer. Pela primeira vez desde que você chegou.",
+      "the sun very low on the horizon over an ice plateau, long orange shadows, a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in silhouette",
+      "DIA 120"
+     ],
+     [
+      "Aqui não existe pôr do sol todo dia. Existe um por ano. E, depois dele, seis meses de escuridão.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka and an older stick figure with a round white head, a grey beard and a red parka standing outside watching the sun touch the horizon, sky turning pink and purple",
+      "DIA 135"
+     ],
+     [
+      "Vocês quatro saem para assistir. Ninguém fala nada. O Bento grava um vídeo que ninguém vai poder mandar para lugar nenhum.",
+      "an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka holding a small camera and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka lined up on the snow at sunset",
+      "DIA 135"
+     ],
+     [
+      "Dias depois, só sobra uma faixa azul no horizonte. Depois, nem ela.",
+      "a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau under a dark blue sky with a thin pale line on the horizon, first stars",
+      "DIA 150"
+     ],
+     [
+      "O frio despenca. Menos cinquenta. Menos sessenta. Nas piores noites de inverno, perto dos setenta e cinco negativos.",
+      "a big outdoor thermometer on the station wall with the needle falling to minus 75, frost covering everything",
+      "DIA 165"
+     ],
+     [
+      "O Tomás conta que a temperatura mais baixa já medida no Polo Sul foi de oitenta e dois graus negativos. Você não sabe se ele contou para assustar ou para consolar.",
+      "an older stick figure with a round white head, a grey beard and a red parka telling a story at the table with a mug, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka with wide eyes, a frost-covered window behind",
+      "DIA 166"
+     ],
+     [
+      "E aí, numa noite qualquer, o céu se acende. Faixas verdes, enormes, dançando em cima da estação.",
+      "green aurora australis waving across a starry sky above a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka looking up with open mouth",
+      "DIA 171"
+     ],
+     [
+      "Por alguns minutos, você esquece o frio, o escuro e o calendário.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka lying on the snow looking at the green aurora, small and alone under the huge sky",
+      "DIA 171"
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "Hibernação",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "Mas a aurora não dura. O escuro dura.",
+      "the cramped interior of a small polar station: a narrow corridor, a tiny kitchen with a long table, bunk rooms and a loud generator room, dim lights, frost on the small windows, the clock showing noon but darkness outside",
+      "DIA 180"
+     ],
+     [
+      "Você começa a dormir mal. Acorda cansado. Coisas que antes eram engraçadas não têm mais graça.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka sitting on the edge of a bunk staring at the floor, tired face",
+      "DIA 186"
+     ],
+     [
+      "Você acha que é só com você. Até ver a Nina olhando para a parede por vinte minutos seguidos, com o café esfriando na mão.",
+      "a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch sitting at the kitchen table staring blankly at a wall, a cold coffee mug, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka watching from the door",
+      "DIA 189"
+     ],
+     [
+      "Ela conhece o fenômeno. Numa estação chamada Concordia, pesquisadores acompanharam equipes durante o inverno inteiro. O sono piorava, as emoções boas iam sumindo, e as pessoas faziam cada vez menos esforço para resolver os problemas.",
+      "a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch showing the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka a simple chart on a laptop: lines for sleep and mood going down during dark months and up when the sun returns",
+      "DIA 190"
+     ],
+     [
+      "Os cientistas deram um nome a isso: hibernação psicológica. Como se a cabeça desligasse o que não precisa, para aguentar até o sol voltar.",
+      "symbolic illustration of a stick figure curled up like a sleeping bear inside a snow cave, a small sun waiting outside",
+      "DIA 190"
+     ],
+     [
+      "Então vocês combinam: ninguém hiberna sozinho. Todo domingo, o Bento faz pizza. Toda quarta, filme. E ninguém pula o jantar.",
+      "a chubby stick figure with a round white head, round glasses and a blue parka pulling a pizza out of a small oven, an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka cheering at the table",
+      "DIA 194"
+     ],
+     [
+      "Funciona mais ou menos. Até a noite do dia cento e noventa e seis.",
+      "an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka watching a movie on a small screen, blankets, relaxed",
+      "DIA 196"
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "O gerador",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Três e dez da manhã. O barulho que você ouve todos os dias, o tempo todo, para. E o silêncio te acorda.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka sitting up in the bunk in total darkness, eyes wide open, a dead silent generator icon",
+      "DIA 196"
+     ],
+     [
+      "As luzes de emergência piscam. Lá fora, setenta e um graus negativos. Dentro, o aquecimento acabou de morrer.",
+      "red emergency lights flashing in the cramped interior of a small polar station: a narrow corridor, a tiny kitchen with a long table, bunk rooms and a loud generator room, a thermometer outside the window showing minus 71",
+      "DIA 196"
+     ],
+     [
+      "Você corre para a sala do gerador de lanterna na boca. O Tomás chega logo atrás, ainda vestindo a jaqueta.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka running down a dark corridor with a flashlight, an older stick figure with a round white head, a grey beard and a red parka following and putting on a red parka",
+      "DIA 196"
+     ],
+     [
+      "O motor está frio. E você faz a conta que não queria fazer: em poucas horas, a estação congela. E o poço, sem calor, começa a fechar.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka touching a cold generator, frost forming on the pipes, a clock showing 3:20",
+      "DIA 196"
+     ],
+     [
+      "O problema está no filtro de combustível. O diesel ficou grosso, cheio de cristais, e entupiu a passagem. O mesmo frio que impede o avião de vir agora está tentando matar o seu motor.",
+      "close-up of a fuel filter clogged with thick waxy crystals, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka holding it under a flashlight",
+      "DIA 196"
+     ],
+     [
+      "Tem um filtro reserva. Mas ele fica no contêiner do lado de fora. Cinquenta metros de escuro, a setenta graus negativos.",
+      "a dark snowy path between a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau and a small storage container, only a flashlight beam, strong wind",
+      "DIA 196"
+     ],
+     [
+      "O Tomás vai. Você fica no motor, aquecendo a linha de combustível com um soprador de ar quente, centímetro por centímetro.",
+      "split image: an older stick figure with a round white head, a grey beard and a red parka walking into the dark wind holding a rope, and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka heating a fuel pipe with a hot air gun",
+      "DIA 196"
+     ],
+     [
+      "Você conta os minutos no relógio da parede. Cinco. Oito. Dez. Pelo rádio, só a respiração dele, curta e pesada, e o vento batendo no microfone.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka staring at a wall clock while holding a radio close to the ear, the hot air gun still in the other hand",
+      "DIA 196"
+     ],
+     [
+      "Doze minutos depois, ele volta com o filtro na mão. E com as pontas dos dedos brancas.",
+      "an older stick figure with a round white head, a grey beard and a red parka coming back inside covered in frost, holding a box, his bare fingers pale white",
+      "DIA 196"
+     ],
+     [
+      "Você troca a peça. Gira a chave. O motor tosse, falha, tosse de novo. E pega.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka turning a key on the generator control panel, smoke puffing, lights turning back on",
+      "DIA 196"
+     ],
+     [
+      "O barulho volta. O calor volta. E a água volta a correr. Mas o preço daquela noite ainda não chegou.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka sitting on the floor exhausted next to the running generator, a chubby stick figure with a round white head, round glasses and a blue parka bringing a hot mug",
+      "DIA 196"
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "Os dedos do Tomás",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Os dedos do Tomás ficam vermelhos, depois roxos, depois cheios de bolhas.",
+      "a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch examining an older stick figure with a round white head, a grey beard and a red parka's hand in a small medical room, bandages and a lamp",
+      "DIA 198"
+     ],
+     [
+      "A Nina aquece as mãos dele devagar em água morna, troca os curativos duas vezes por dia, e passa as noites acordada vigiando a cor da pele.",
+      "a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch placing an older stick figure with a round white head, a grey beard and a red parka's hand in a basin of warm water, a clock on the wall, night",
+      "DIA 202"
+     ],
+     [
+      "Num hospital, ela teria um especialista do lado. Aqui, tem um rádio, uma ligação ruim e um médico do outro lado do continente dando conselhos.",
+      "a chubby stick figure with a round white head, round glasses and a blue parka at a radio desk holding a microphone, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch leaning in to listen, static waves coming out",
+      "DIA 205"
+     ],
+     [
+      "Nenhum avião pode vir. Não em julho. Não com esse frio.",
+      "a wall calendar showing July with a red X over a small airplane drawing",
+      "DIA 210"
+     ],
+     [
+      "O Tomás, que nunca reclama, passa a ficar calado. Uma noite, ele te chama e diz: se eu perder os dedos, a culpa não é sua. Fui eu que decidi ir.",
+      "an older stick figure with a round white head, a grey beard and a red parka sitting on a bunk with bandaged hands talking quietly to the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka, dim lamp",
+      "DIA 214"
+     ],
+     [
+      "Três semanas depois, a Nina tira o último curativo. Dois dedos ficaram escuros na ponta. Mas a mão foi salva.",
+      "a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch unwrapping a bandage, an older stick figure with a round white head, a grey beard and a red parka looking at his healed hand, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka and a chubby stick figure with a round white head, round glasses and a blue parka smiling behind",
+      "DIA 221"
+     ],
+     [
+      "Naquela noite, o Bento faz pizza fora do domingo. É a primeira regra que vocês quebram de propósito.",
+      "all four eating pizza together at the kitchen table, laughing, warm light",
+      "DIA 221"
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "Primeira luz",
+    "source_ids": [
+     "src1",
+     "src4"
+    ],
+    "shots": [
+     [
+      "Agosto chega com um problema novo: o diesel. A noite do gerador gastou parte da margem. E a margem já era pequena.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka tapping a fuel gauge pointing close to the red zone, a chart on the wall",
+      "DIA 280"
+     ],
+     [
+      "Vocês fecham um dos módulos e passam a viver em dois. Banho a cada três dias. Luz só onde tem gente.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka closing a door with a sign, the other three moving mattresses into one small room",
+      "DIA 285"
+     ],
+     [
+      "Você passa as noites refazendo a conta no caderno. Litros por dia, dias até novembro. Cada vez que a conta fecha, você confere de novo, porque não acredita.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka writing numbers in a notebook under a small lamp, crossed out calculations, a fuel drum drawing",
+      "DIA 290"
+     ],
+     [
+      "Até que, ao meio-dia, alguém grita do corredor. O Bento, apontando para a janela.",
+      "a chubby stick figure with a round white head, round glasses and a blue parka pointing excitedly at a small window, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka running toward him",
+      "DIA 300"
+     ],
+     [
+      "No horizonte, uma linha vermelha. Fraca. Mas é ela.",
+      "a thin red glow on a dark horizon over the ice plateau, a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau still in darkness",
+      "DIA 300"
+     ],
+     [
+      "Dia após dia, a linha fica mais forte. Até que o sol inteiro sobe de novo, pela primeira vez em seis meses.",
+      "the sun rising slowly over the ice plateau, golden light hitting a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, long shadows",
+      "DIA 320"
+     ],
+     [
+      "E acontece exatamente o que a pesquisa da Concordia mostrou: o sono volta. O apetite volta. As piadas voltam a ter graça.",
+      "an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka laughing in the sunlight outside the station, arms raised",
+      "DIA 322"
+     ],
+     [
+      "Você percebe que passou meses meio adormecido por dentro. E só nota agora, que acordou.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka alone at a sunny window, eyes closed, warm light on the face",
+      "DIA 325"
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "O avião de novembro",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Começo de novembro. Dia trezentos e sessenta e cinco. Vocês quatro estão na pista desde cedo, de olho no céu.",
+      "an older stick figure with a round white head, a grey beard and a red parka, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch, a chubby stick figure with a round white head, round glasses and a blue parka and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing on an ice runway marked with flags, looking at the sky",
+      "DIA 365"
+     ],
+     [
+      "Primeiro vem o som. Um zumbido distante. Depois, um ponto preto que cresce.",
+      "a tiny airplane appearing in a bright blue sky over the ice, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka shading the eyes with a hand",
+      "DIA 365"
+     ],
+     [
+      "Você sente o coração bater forte. Um ano inteiro com as mesmas três caras, o mesmo corredor, o mesmo barulho de motor. E agora, o mundo vindo te buscar.",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka with a hand on the chest watching the plane approach, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch hugging a chubby stick figure with a round white head, round glasses and a blue parka beside him",
+      "DIA 365"
+     ],
+     [
+      "O avião pousa, a porta abre, e sai gente nova, de casaco limpo, olhando tudo com a mesma cara que você tinha um ano atrás.",
+      "new stick figures in clean parkas stepping out of a plane onto the snow, amazed faces",
+      "DIA 365"
+     ],
+     [
+      "Laranjas. Alguém trouxe laranjas. E você descobre que fruta fresca, depois de oito meses, pode fazer um adulto chorar.",
+      "a chubby stick figure with a round white head, round glasses and a blue parka holding a crate of oranges, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka biting an orange with tears of joy",
+      "DIA 365"
+     ],
+     [
+      "Aí o piloto te chama de lado. A equipe do próximo inverno está sem mecânico. O substituto desistiu na última hora.",
+      "a pilot stick figure talking to the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka next to the plane, a clipboard with an empty name slot",
+      "DIA 365"
+     ],
+     [
+      "Se você embarcar agora, volta para casa, para o calor, para a sua família. Se ficar, a Kestrel passa mais um inverno com luz, calor e água.",
+      "split image: on the left a warm city with a family waiting, on the right a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in the polar night",
+      "DIA 365"
+     ],
+     [
+      "O Tomás já disse que fica. A Nina vai embora. O Bento ainda não decidiu. E todo mundo está olhando para você.",
+      "an older stick figure with a round white head, a grey beard and a red parka standing near the station, a stick figure woman with a round white head, a purple beanie and a white parka with a small red cross patch at the plane door with a bag, a chubby stick figure with a round white head, round glasses and a blue parka in the middle, all looking at the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka",
+      "DIA 365"
+     ],
+     [
+      "Agora me conta nos comentários: você embarcaria nesse avião, ou ficaria mais um ano preso no gelo?",
+      "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing between the open plane door and a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, a choice, bright sun on the snow",
+      "DIA 365"
+     ]
+    ]
+   }
+  ]
+ }
+}
