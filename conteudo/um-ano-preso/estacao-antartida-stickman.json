@@ -1,0 +1,1263 @@
+{
+ "channel_slug": "um-ano-preso",
+ "title": "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+ "priority": 10,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+    "365 Dias Preso numa Estação no Fim do Mundo",
+    "1 Ano na Antártida: o Gerador Parou a -71°C",
+    "E Se Você Ficasse 1 Ano Preso no Gelo?",
+    "O Último Avião Foi Embora: 1 Ano na Antártida"
+   ],
+   "chosen_title": "Fiquei Preso 1 Ano na Antártida (e o Sol Sumiu por 6 Meses)",
+   "hook_options": [
+    "O último avião vai embora em fevereiro. O próximo só pousa em novembro. E o sol vai sumir por seis meses.",
+    "Três e dez da manhã, setenta e um graus negativos, e o gerador acabou de parar.",
+    "Aqui não existe pôr do sol todo dia. Existe um por ano."
+   ],
+   "subject": "1 ano preso numa estação na Antártida",
+   "tags": [
+    "antártida",
+    "1 ano na antártida",
+    "sobrevivência",
+    "e se fosse você",
+    "365 dias",
+    "polo sul",
+    "inverno polar",
+    "história animada",
+    "frio extremo",
+    "um ano preso"
+   ],
+   "hashtags": [
+    "Antártida",
+    "365Dias",
+    "Sobrevivência"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "365 DIAS",
+     "NO GELO"
+    ],
+    "image_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka standing alone outside a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in the polar night, green aurora above, frost on the parka, main subject on the right third, left half dark and empty for text"
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Sunset at South Pole signals 6 months of darkness — NOAA",
+    "url": "https://www.noaa.gov/stories/sunset-at-south-pole-signals-6-months-of-darkness",
+    "claim": "No Polo Sul há um único nascer e um único pôr do sol por ano; depois do pôr do sol de março vêm seis meses de escuridão, e o frio e o escuro do inverno impedem os voos."
+   },
+   {
+    "id": "src2",
+    "title": "What's a winterover? — WIPAC / IceCube, University of Wisconsin–Madison",
+    "url": "https://wipac.wisc.edu/?p=13035",
+    "claim": "O último avião sai em meados de fevereiro e o próximo só pousa no começo de novembro; o querosene de aviação pode gelar no frio; no inverno as máximas ficam perto de -59 °C, as mínimas perto de -75 °C, e o recorde é -82 °C."
+   },
+   {
+    "id": "src3",
+    "title": "Water at the South Pole (Rodwell) — Lawrence Berkeley National Laboratory",
+    "url": "https://glacier.lbl.gov/gtp/SouthPole/rod_well.html",
+    "claim": "A água da estação do Polo Sul vem de um poço derretido no gelo com o calor que sobra do gerador; antes de 1995 a água vinha de neve derretida."
+   },
+   {
+    "id": "src4",
+    "title": "Antarctic researchers enter a state of 'psychological hibernation' — Frontiers (2019)",
+    "url": "https://www.frontiersin.org/news/2019/02/05/antarctic-researchers-enter-a-state-of-psychological-hibernation-study-finds",
+    "claim": "Na estação Concordia, ao longo do inverno o sono piorou, as emoções positivas caíram e as estratégias para lidar com problemas diminuíram; tudo voltou quando o sol voltou. Os autores chamam isso de 'hibernação psicológica'."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b01",
+    "title": "O sol que não se põe",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "O avião pousa às duas da manhã. E o sol está lá em cima, no céu, como se fosse meio-dia.",
+      "a small ski-equipped cargo plane landing on a white ice plateau under a bright sun, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka looking out of the window amazed",
+      "DIA 0"
+     ],
+     [
+      "Você desce a escada e o frio entra pelo nariz feito agulha. Trinta graus negativos. E isso, dizem, é o verão.",
+      "the side of a parked ski-equipped cargo plane on snow with a short metal stair, bright sun, open snow in front",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "shiver",
+         "x": 0.46
+        }
+       ]
+      }
+     ],
+     [
+      "Na sua frente, a Estação Kestrel. Três caixas laranja em cima de pernas de metal, no meio de um nada branco que não acaba nunca.",
+      "wide view of a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau, bright polar summer sun, open snow in the foreground",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.12,
+         "to": 0.42
+        }
+       ]
+      }
+     ],
+     [
+      "Você foi contratado como mecânico do gerador. Parece um trabalho pequeno. Não é. Aqui, o gerador dá luz, dá calor e, como você vai descobrir, dá até a água.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "point",
+         "x": 0.32,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "A equipe de inverno são quatro pessoas. O Tomás, o chefe, que já passou seis invernos no gelo. A Nina, médica. O Bento, cozinheiro e operador de rádio. E você.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, warm light",
+      "DIA 1",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.22
+        },
+        {
+         "who": "nina",
+         "action": "wave",
+         "x": 0.4
+        },
+        {
+         "who": "bento",
+         "action": "cheer",
+         "x": 0.58
+        },
+        {
+         "who": "you",
+         "action": "wave",
+         "x": 0.76
+        }
+       ]
+      }
+     ],
+     [
+      "No primeiro jantar, o Tomás explica a regra mais importante: em meados de fevereiro, o último avião vai embora. E o próximo só pousa em novembro.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, a paper wall calendar with February and November circled in red",
+      "DIA 1",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "point",
+         "x": 0.32,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.72,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Não é falta de vontade de vir buscar vocês. No inverno, o frio é tanto que o próprio combustível do avião pode gelar dentro do tanque.",
+      "simple cutaway illustration of an airplane fuel tank with the fuel turning into thick ice crystals, a thermometer far below zero",
+      "DIA 1"
+     ],
+     [
+      "Você ri, achando que é exagero de veterano. Ainda não sabe que ele está sendo gentil.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, dinner plates on the table",
+      "DIA 1",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "talk",
+         "x": 0.35
+        },
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.66,
+         "facing": -1
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "O último avião",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Os meses de verão passam rápido. O sol gira em volta do céu sem nunca descer, e você aprende a dormir com uma toalha em cima do rosto.",
+      "a small bunk room of a polar station, metal bunk beds and a small window, bright sunlight coming through the window, a wall clock showing 2 a.m.",
+      "DIA 40",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sleep",
+         "x": 0.5
+        }
+       ]
+      }
+     ],
+     [
+      "O Tomás te ensina as regras do gelo. Nunca sair sozinho sem avisar pelo rádio. Nunca tirar a luva lá fora, nem por um segundo. E sempre, sempre, saber onde fica a porta mais próxima.",
+      "outside a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau, sunny, a radio antenna",
+      "DIA 45",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.34
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Você também aprende o segredo da água. Não existe rio, não existe chuva. Existe gelo. E o gelo só vira água se alguém esquentar.",
+      "a station window looking out onto endless ice, a small table with a glass of water",
+      "DIA 52",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.42,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "O calor que sobra do gerador desce por um cano até um buraco fundo no gelo, derrete tudo lá embaixo e forma um poço. É a mesma ideia usada na estação do Polo Sul.",
+      "cutaway diagram of a polar station: hot pipe from the generator going down into the ice, melting a deep round water well, a pump bringing water back up",
+      "DIA 52"
+     ],
+     [
+      "Ou seja: se o gerador para, para o calor. E se para o calor, o seu poço começa a virar gelo de novo.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, a water tap next to it",
+      "DIA 53",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.42
+        }
+       ]
+      }
+     ],
+     [
+      "Dia cento e dois. O último avião da temporada. Quarenta pessoas do verão embarcam rindo, abraçando, prometendo mandar fotos.",
+      "a crowd of stick figures with luggage boarding a cargo plane on the ice, waving goodbye",
+      "DIA 102"
+     ],
+     [
+      "Vocês quatro ficam na pista, vendo o avião virar um ponto e depois sumir.",
+      "an ice runway marked with small red flags on a flat white plateau, a tiny plane far away in the bright sky",
+      "DIA 102",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "look_up",
+         "x": 0.2,
+         "facing": 1
+        },
+        {
+         "who": "nina",
+         "action": "look_up",
+         "x": 0.38,
+         "facing": 1
+        },
+        {
+         "who": "bento",
+         "action": "look_up",
+         "x": 0.56,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.74,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "O silêncio que vem depois tem peso. Daqui até novembro, não entra ninguém. Não sai ninguém. Se algo der errado, quem resolve são vocês.",
+      "wide view of a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau, empty and silent, wind lines in the snow",
+      "DIA 102",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.3
+        }
+       ]
+      }
+     ],
+     [
+      "Na despensa, comida para oito meses. No tanque, diesel contado para o inverno, com uma margem pequena. Bem pequena.",
+      "a station pantry full of food boxes next to a big fuel tank with a round gauge",
+      "DIA 103",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "work",
+         "x": 0.3
+        },
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.66
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "O último pôr do sol",
+    "source_ids": [
+     "src1",
+     "src2"
+    ],
+    "shots": [
+     [
+      "Então o sol começa a descer. Pela primeira vez desde que você chegou.",
+      "the sun very low on the horizon over an ice plateau, long orange shadows, a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in silhouette",
+      "DIA 120"
+     ],
+     [
+      "Aqui não existe pôr do sol todo dia. Existe um por ano. E, depois dele, seis meses de escuridão.",
+      "a flat ice plateau at sunset, the sun touching the horizon, pink and purple sky",
+      "DIA 135",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.38,
+         "facing": 1
+        },
+        {
+         "who": "tomas",
+         "action": "look_up",
+         "x": 0.56,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Vocês quatro saem para assistir. Ninguém fala nada. O Bento grava um vídeo que ninguém vai poder mandar para lugar nenhum.",
+      "a flat ice plateau at sunset, the sun touching the horizon, pink and purple sky",
+      "DIA 135",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.2
+        },
+        {
+         "who": "nina",
+         "action": "look_up",
+         "x": 0.38
+        },
+        {
+         "who": "bento",
+         "action": "point",
+         "x": 0.56
+        },
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.74
+        }
+       ]
+      }
+     ],
+     [
+      "Dias depois, só sobra uma faixa azul no horizonte. Depois, nem ela.",
+      "a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau under a dark blue sky with a thin pale line on the horizon, first stars",
+      "DIA 150"
+     ],
+     [
+      "O frio despenca. Menos cinquenta. Menos sessenta. Nas piores noites de inverno, perto dos setenta e cinco negativos.",
+      "a big outdoor thermometer on the station wall with the needle falling to minus 75, frost covering everything",
+      "DIA 165"
+     ],
+     [
+      "O Tomás conta que a temperatura mais baixa já medida no Polo Sul foi de oitenta e dois graus negativos. Você não sabe se ele contou para assustar ou para consolar.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, frost covering the window, a mug on the table, night",
+      "DIA 166",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.34
+        },
+        {
+         "who": "you",
+         "action": "scared",
+         "x": 0.66,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "E aí, numa noite qualquer, o céu se acende. Faixas verdes, enormes, dançando em cima da estação.",
+      "green aurora australis waving across a starry night sky above a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau",
+      "DIA 171",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.3,
+         "facing": 1
+        }
+       ],
+       "fx": "snow"
+      }
+     ],
+     [
+      "Por alguns minutos, você esquece o frio, o escuro e o calendário.",
+      "a huge starry night sky with green aurora over a flat ice plateau, wide and empty",
+      "DIA 171",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.5,
+         "scale": 0.85
+        }
+       ],
+       "fx": "snow"
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "Hibernação",
+    "source_ids": [
+     "src4"
+    ],
+    "shots": [
+     [
+      "Mas a aurora não dura. O escuro dura.",
+      "the cramped interior of a small polar station: a narrow corridor, a tiny kitchen with a long table, bunk rooms and a loud generator room, dim lights, frost on the small windows, the clock showing noon but darkness outside",
+      "DIA 180"
+     ],
+     [
+      "Você começa a dormir mal. Acorda cansado. Coisas que antes eram engraçadas não têm mais graça.",
+      "a small bunk room of a polar station, metal bunk beds and a small window, dim light, dark window",
+      "DIA 186",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.46
+        }
+       ]
+      }
+     ],
+     [
+      "Você acha que é só com você. Até ver a Nina olhando para a parede por vinte minutos seguidos, com o café esfriando na mão.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, dim light, a cold coffee mug on the table",
+      "DIA 189",
+      {
+       "actors": [
+        {
+         "who": "nina",
+         "action": "sit",
+         "x": 0.36,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.76,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Ela conhece o fenômeno. Numa estação chamada Concordia, pesquisadores acompanharam equipes durante o inverno inteiro. O sono piorava, as emoções boas iam sumindo, e as pessoas faziam cada vez menos esforço para resolver os problemas.",
+      "a small table with a laptop showing a simple line chart, dim station room",
+      "DIA 190",
+      {
+       "actors": [
+        {
+         "who": "nina",
+         "action": "talk",
+         "x": 0.34
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.66,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Os cientistas deram um nome a isso: hibernação psicológica. Como se a cabeça desligasse o que não precisa, para aguentar até o sol voltar.",
+      "symbolic illustration of a stick figure curled up like a sleeping bear inside a snow cave, a small sun waiting outside",
+      "DIA 190"
+     ],
+     [
+      "Então vocês combinam: ninguém hiberna sozinho. Todo domingo, o Bento faz pizza. Toda quarta, filme. E ninguém pula o jantar.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, a small oven with a pizza, warm light",
+      "DIA 194",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "work",
+         "x": 0.2
+        },
+        {
+         "who": "tomas",
+         "action": "cheer",
+         "x": 0.44
+        },
+        {
+         "who": "nina",
+         "action": "cheer",
+         "x": 0.62
+        },
+        {
+         "who": "you",
+         "action": "cheer",
+         "x": 0.8
+        }
+       ]
+      }
+     ],
+     [
+      "Funciona mais ou menos. Até a noite do dia cento e noventa e seis.",
+      "a small cozy station room with a glowing screen on the left wall and blankets",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sit",
+         "x": 0.4,
+         "facing": -1
+        },
+        {
+         "who": "nina",
+         "action": "sit",
+         "x": 0.55,
+         "facing": -1
+        },
+        {
+         "who": "bento",
+         "action": "sit",
+         "x": 0.7,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.85,
+         "facing": -1
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "O gerador",
+    "source_ids": [
+     "src2",
+     "src3"
+    ],
+    "shots": [
+     [
+      "Três e dez da manhã. O barulho que você ouve todos os dias, o tempo todo, para. E o silêncio te acorda.",
+      "a small bunk room of a polar station, metal bunk beds and a small window, total darkness, only a faint red light",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "scared",
+         "x": 0.5
+        }
+       ]
+      }
+     ],
+     [
+      "As luzes de emergência piscam. Lá fora, setenta e um graus negativos. Dentro, o aquecimento acabou de morrer.",
+      "red emergency lights flashing in the cramped interior of a small polar station: a narrow corridor, a tiny kitchen with a long table, bunk rooms and a loud generator room, a thermometer outside the window showing minus 71",
+      "DIA 196"
+     ],
+     [
+      "Você corre para a sala do gerador de lanterna na boca. O Tomás chega logo atrás, ainda vestindo a jaqueta.",
+      "a narrow dark station corridor lit by red emergency lights",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "run",
+         "x": 0.18,
+         "to": 0.72
+        },
+        {
+         "who": "tomas",
+         "action": "run",
+         "x": 0.04,
+         "to": 0.46,
+         "delay": 0.6
+        }
+       ]
+      }
+     ],
+     [
+      "O motor está frio. E você faz a conta que não queria fazer: em poucas horas, a estação congela. E o poço, sem calor, começa a fechar.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, frost forming on the pipes, a wall clock showing 3:20",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.36
+        }
+       ]
+      }
+     ],
+     [
+      "O problema está no filtro de combustível. O diesel ficou grosso, cheio de cristais, e entupiu a passagem. O mesmo frio que impede o avião de vir agora está tentando matar o seu motor.",
+      "close-up of a fuel filter clogged with thick waxy crystals, the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka holding it under a flashlight",
+      "DIA 196"
+     ],
+     [
+      "Tem um filtro reserva. Mas ele fica no contêiner do lado de fora. Cinquenta metros de escuro, a setenta graus negativos.",
+      "a dark snowy path between a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau and a small storage container, only a flashlight beam, strong wind",
+      "DIA 196"
+     ],
+     [
+      "O Tomás vai. Você fica no motor, aquecendo a linha de combustível com um soprador de ar quente, centímetro por centímetro.",
+      "split image: an older stick figure with a round white head, a grey beard and a red parka walking into the dark wind holding a rope, and the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a thick green hooded parka heating a fuel pipe with a hot air gun",
+      "DIA 196"
+     ],
+     [
+      "Você conta os minutos no relógio da parede. Cinco. Oito. Dez. Pelo rádio, só a respiração dele, curta e pesada, e o vento batendo no microfone.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, a wall clock, a radio on a shelf, red light",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "shiver",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Doze minutos depois, ele volta com o filtro na mão. E com as pontas dos dedos brancas.",
+      "the inside of a station door covered in frost, snow blowing in",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "shiver",
+         "x": 0.5
+        }
+       ],
+       "fx": "snow"
+      }
+     ],
+     [
+      "Você troca a peça. Gira a chave. O motor tosse, falha, tosse de novo. E pega.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, a control panel with a key, lights turning on",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.36,
+         "beats": [
+          [
+           "work",
+           3.0
+          ],
+          [
+           "cheer",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "O barulho volta. O calor volta. E a água volta a correr. Mas o preço daquela noite ainda não chegou.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, warm light, the generator running",
+      "DIA 196",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.36
+        },
+        {
+         "who": "bento",
+         "action": "walk",
+         "x": 0.9,
+         "to": 0.58,
+         "beats": [
+          [
+           "walk",
+           2.0,
+           0.58
+          ],
+          [
+           "idle",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "Os dedos do Tomás",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Os dedos do Tomás ficam vermelhos, depois roxos, depois cheios de bolhas.",
+      "a tiny medical room with a cot, a lamp and shelves of bandages",
+      "DIA 198",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.4
+        },
+        {
+         "who": "nina",
+         "action": "work",
+         "x": 0.6,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "A Nina aquece as mãos dele devagar em água morna, troca os curativos duas vezes por dia, e passa as noites acordada vigiando a cor da pele.",
+      "a tiny medical room with a cot, a lamp and shelves of bandages, night, a basin of warm water on a small table, a wall clock",
+      "DIA 202",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sit",
+         "x": 0.4
+        },
+        {
+         "who": "nina",
+         "action": "work",
+         "x": 0.58,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Num hospital, ela teria um especialista do lado. Aqui, tem um rádio, uma ligação ruim e um médico do outro lado do continente dando conselhos.",
+      "a radio desk with an old radio and a microphone in a small station room",
+      "DIA 205",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "talk",
+         "x": 0.34
+        },
+        {
+         "who": "nina",
+         "action": "idle",
+         "x": 0.6,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Nenhum avião pode vir. Não em julho. Não com esse frio.",
+      "a wall calendar showing July with a red X over a small airplane drawing",
+      "DIA 210"
+     ],
+     [
+      "O Tomás, que nunca reclama, passa a ficar calado. Uma noite, ele te chama e diz: se eu perder os dedos, a culpa não é sua. Fui eu que decidi ir.",
+      "a small bunk room of a polar station, metal bunk beds and a small window, a dim lamp",
+      "DIA 214",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sad",
+         "x": 0.4
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.66,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Três semanas depois, a Nina tira o último curativo. Dois dedos ficaram escuros na ponta. Mas a mão foi salva.",
+      "a tiny medical room with a cot, a lamp and shelves of bandages",
+      "DIA 221",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "cheer",
+         "x": 0.2
+        },
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.4
+        },
+        {
+         "who": "nina",
+         "action": "idle",
+         "x": 0.58,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "cheer",
+         "x": 0.78
+        }
+       ]
+      }
+     ],
+     [
+      "Naquela noite, o Bento faz pizza fora do domingo. É a primeira regra que vocês quebram de propósito.",
+      "the small kitchen of a polar research station, a long table with chairs, shelves and a small frosty window, pizza on the table, warm light, laughter",
+      "DIA 221",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.2
+        },
+        {
+         "who": "nina",
+         "action": "talk",
+         "x": 0.38
+        },
+        {
+         "who": "bento",
+         "action": "talk",
+         "x": 0.56
+        },
+        {
+         "who": "you",
+         "action": "talk",
+         "x": 0.74
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "Primeira luz",
+    "source_ids": [
+     "src1",
+     "src4"
+    ],
+    "shots": [
+     [
+      "Agosto chega com um problema novo: o diesel. A noite do gerador gastou parte da margem. E a margem já era pequena.",
+      "a cramped machine room with a big diesel generator, pipes and gauges on the walls, a big fuel gauge pointing near the red zone",
+      "DIA 280",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "point",
+         "x": 0.38,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Vocês fecham um dos módulos e passam a viver em dois. Banho a cada três dias. Luz só onde tem gente.",
+      "a station corridor with a closed door with a sign, mattresses on the floor",
+      "DIA 285",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.62,
+         "to": 0.4
+        }
+       ]
+      }
+     ],
+     [
+      "Você passa as noites refazendo a conta no caderno. Litros por dia, dias até novembro. Cada vez que a conta fecha, você confere de novo, porque não acredita.",
+      "a small desk with a lamp and a notebook full of crossed out numbers",
+      "DIA 290",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Até que, ao meio-dia, alguém grita do corredor. O Bento, apontando para a janela.",
+      "a station corridor with a small window at the end",
+      "DIA 300",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "point",
+         "x": 0.66,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "run",
+         "x": 0.1,
+         "to": 0.46
+        }
+       ]
+      }
+     ],
+     [
+      "No horizonte, uma linha vermelha. Fraca. Mas é ela.",
+      "a thin red glow on a dark horizon over the ice plateau, a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau still in darkness",
+      "DIA 300"
+     ],
+     [
+      "Dia após dia, a linha fica mais forte. Até que o sol inteiro sobe de novo, pela primeira vez em seis meses.",
+      "the sun rising slowly over the ice plateau, golden light hitting a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau, long shadows",
+      "DIA 320"
+     ],
+     [
+      "E acontece exatamente o que a pesquisa da Concordia mostrou: o sono volta. O apetite volta. As piadas voltam a ter graça.",
+      "outside a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau in golden sunlight, long shadows",
+      "DIA 322",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "cheer",
+         "x": 0.2
+        },
+        {
+         "who": "nina",
+         "action": "cheer",
+         "x": 0.38
+        },
+        {
+         "who": "bento",
+         "action": "cheer",
+         "x": 0.56
+        },
+        {
+         "who": "you",
+         "action": "cheer",
+         "x": 0.74
+        }
+       ]
+      }
+     ],
+     [
+      "Você percebe que passou meses meio adormecido por dentro. E só nota agora, que acordou.",
+      "a sunny station window with warm light pouring in",
+      "DIA 325",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.5,
+         "facing": 1
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "O avião de novembro",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Começo de novembro. Dia trezentos e sessenta e cinco. Vocês quatro estão na pista desde cedo, de olho no céu.",
+      "an ice runway marked with small red flags on a flat white plateau, bright blue sky",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "look_up",
+         "x": 0.2,
+         "facing": 1
+        },
+        {
+         "who": "nina",
+         "action": "look_up",
+         "x": 0.38,
+         "facing": 1
+        },
+        {
+         "who": "bento",
+         "action": "look_up",
+         "x": 0.56,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.74,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Primeiro vem o som. Um zumbido distante. Depois, um ponto preto que cresce.",
+      "an ice runway marked with small red flags on a flat white plateau, a tiny airplane in a bright blue sky",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "point_up",
+         "x": 0.4
+        }
+       ]
+      }
+     ],
+     [
+      "Você sente o coração bater forte. Um ano inteiro com as mesmas três caras, o mesmo corredor, o mesmo barulho de motor. E agora, o mundo vindo te buscar.",
+      "an ice runway marked with small red flags on a flat white plateau, a plane approaching in the sky",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.3,
+         "facing": 1
+        },
+        {
+         "who": "nina",
+         "action": "cheer",
+         "x": 0.6
+        },
+        {
+         "who": "bento",
+         "action": "cheer",
+         "x": 0.76
+        }
+       ]
+      }
+     ],
+     [
+      "O avião pousa, a porta abre, e sai gente nova, de casaco limpo, olhando tudo com a mesma cara que você tinha um ano atrás.",
+      "new stick figures in clean parkas stepping out of a plane onto the snow, amazed faces",
+      "DIA 365"
+     ],
+     [
+      "Laranjas. Alguém trouxe laranjas. E você descobre que fruta fresca, depois de oito meses, pode fazer um adulto chorar.",
+      "a crate of fresh oranges on the snow next to a parked plane",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "bento",
+         "action": "cheer",
+         "x": 0.35
+        },
+        {
+         "who": "you",
+         "action": "jump",
+         "x": 0.6,
+         "beats": [
+          [
+           "jump",
+           1.1
+          ],
+          [
+           "cheer",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Aí o piloto te chama de lado. A equipe do próximo inverno está sem mecânico. O substituto desistiu na última hora.",
+      "the side of a parked ski-equipped plane on an ice runway, open door",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "extra",
+         "action": "talk",
+         "x": 0.4
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.66,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Se você embarcar agora, volta para casa, para o calor, para a sua família. Se ficar, a Kestrel passa mais um inverno com luz, calor e água.",
+      "split image: on the left a warm city with a family waiting, on the right a tiny Antarctic research station made of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, alone on a flat endless white ice plateau in the polar night",
+      "DIA 365"
+     ],
+     [
+      "O Tomás já disse que fica. A Nina vai embora. O Bento ainda não decidiu. E todo mundo está olhando para você.",
+      "an ice runway marked with small red flags on a flat white plateau, a parked plane with an open door on the right, a tiny Antarctic research station of three connected boxy orange modules on stilts, a fuel tank and a tall radio antenna, on a flat endless white ice plateau far on the left",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.15
+        },
+        {
+         "who": "bento",
+         "action": "idle",
+         "x": 0.35
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.55,
+         "facing": -1
+        },
+        {
+         "who": "nina",
+         "action": "walk",
+         "x": 0.7,
+         "to": 0.9
+        }
+       ]
+      }
+     ],
+     [
+      "Agora me conta nos comentários: você embarcaria nesse avião, ou ficaria mais um ano preso no gelo?",
+      "an open plane door on the left and a tiny orange polar station on the right, bright sun on the snow",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.5,
+         "beats": [
+          [
+           "look_up",
+           2.0
+          ],
+          [
+           "idle",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  ]
+ }
+}

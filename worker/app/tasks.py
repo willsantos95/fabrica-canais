@@ -13,7 +13,7 @@ from pathlib import Path
 
 import httpx
 
-from . import align, commons, images, media, motion, newsvideo, storage, thumbnail, tts
+from . import align, commons, images, media, motion, newsvideo, stickman, storage, thumbnail, tts
 from .settings import settings
 
 log = logging.getLogger("fabrica.worker")
@@ -146,10 +146,16 @@ def h_images(job: dict, inp: dict, wd: Path) -> dict:
             p += f"\n\nAvoid: {negative}."
         return p + "\nNo text, letters or watermarks in the image."
 
+    def empty_extra(shot: dict) -> str:
+        return ("\nEmpty background only, for animation: no people, no characters, no stick figures, "
+                "no animals, open floor space in the lower third.") if shot.get("actors") else ""
+
     def one(shot: dict) -> dict:
         out = wd / "img" / f"{shot['order']:03d}-{shot['shot_id']}.jpg"
+        # plano com stickman animado: o cenário sai vazio, o personagem é desenhado por código depois
+        extra = empty_extra(shot)
         try:
-            raw, used = images.generate(prompt_for(shot), model)
+            raw, used = images.generate(prompt_for(shot, extra), model)
             images.to_jpeg(raw, out)
             return {"shot": shot, "path": out, "model": used, "error": None}
         except Exception as exc:
@@ -167,7 +173,7 @@ def h_images(job: dict, inp: dict, wd: Path) -> dict:
         h = images.ahash(r["path"])
         if any(images.hamming(h, prev) <= 4 for prev, _ in seen):
             try:
-                raw, used = images.generate(prompt_for(r["shot"], " Different camera angle and composition."), model)
+                raw, used = images.generate(prompt_for(r["shot"], empty_extra(r["shot"]) + " Different camera angle and composition."), model)
                 images.to_jpeg(raw, r["path"])
                 h = images.ahash(r["path"])
                 r["model"] = used
@@ -234,6 +240,9 @@ def _render_shot(shot: dict, seconds: float, wd: Path, motion_cfg: dict | None =
     if not image_url:
         raise ValueError(f"plano {sid} sem imagem")
     img = storage.download(image_url, wd / "src" / f"{sid}.img")
+    if shot.get("actors"):
+        return stickman.render_scene(img, out, seconds, shot["actors"], overlay, motion_cfg,
+                                     seed=int(shot["order"]), fx=shot.get("fx"))
     mode = shot["motion"].get("kenburns") or ("push_in" if shot["order"] % 2 else "pan_right")
     if (motion_cfg or {}).get("style") == "dynamic":
         return motion.render_shot(img, out, seconds, mode, overlay, motion_cfg, seed=int(shot["order"]))

@@ -40,6 +40,27 @@ class Look:
     sleeve_w: float = 22
     leg_w: float = 8
     outline: float = 4.5
+    hat_on: bool = True
+    beard: str | None = None     # cor da barba (ex.: "#9E9E9E") ou None
+    glasses: bool = False
+    hair: str | None = None      # cor do cabelo quando não há gorro
+    body: float = 1.0            # largura do tronco (1.0 normal, 1.25 mais cheinho)
+
+
+# personagens prontos (roteiro usa "who": "you" | "tomas" | "nina" | "bento" | "kid" | "extra")
+LOOKS = {
+    "you":   dict(jacket="#2E7D32", jacket_dark="#1F5E24", hat="#E65100", hat_dark="#B33F00"),
+    "tomas": dict(jacket="#C62828", jacket_dark="#8E1B1B", hat_on=False, beard="#9E9E9E", hair="#9E9E9E", head_r=47),
+    "nina":  dict(jacket="#ECEFF1", jacket_dark="#B0BEC5", hat="#6A1B9A", hat_dark="#4A126B"),
+    "bento": dict(jacket="#1565C0", jacket_dark="#0D47A1", hat_on=False, glasses=True, hair="#3E2723", body=1.3),
+    "kid":   dict(jacket="#FBC02D", jacket_dark="#C49000", hat_on=False, hair="#4E342E", head_r=40, torso=70,
+                  thigh=62, shin=58, upper_arm=42, forearm=40),
+    "extra": dict(jacket="#546E7A", jacket_dark="#37474F", hat_on=False, hair="#212121"),
+}
+
+
+def look_for(who: str, scale: float) -> "Look":
+    return Look(scale=scale, **LOOKS.get(who, LOOKS["extra"]))
 
 
 # ---------------------------------------------------------------- pose -------
@@ -128,8 +149,74 @@ def act_wave(t: float, **_) -> Pose:
                 sh_b=-6, el_b=10, eye_x=0.0, eye_y=0.0)
 
 
-ACTIONS = {"idle": act_idle, "walk": act_walk, "shiver": act_shiver,
-           "point_up": act_point_up, "jump": act_jump, "wave": act_wave}
+def act_run(t: float, **_) -> Pose:
+    p = act_walk(t, speed=2.8)
+    p.lean = 16
+    p.hip_f, p.hip_b = p.hip_f * 1.5, p.hip_b * 1.5
+    p.kn_f, p.kn_b = p.kn_f * 1.6, p.kn_b * 1.6
+    p.sh_f, p.sh_b = p.sh_f * 1.6, p.sh_b * 1.6
+    p.el_f = p.el_b = 80
+    p.lift = abs(math.sin(t * 2 * math.pi * 2.8)) * 10
+    return p
+
+
+def act_talk(t: float, **_) -> Pose:
+    g = math.sin(t * 2 * math.pi * 0.9)
+    h = math.sin(t * 2 * math.pi * 1.7 + 0.6)
+    return Pose(lean=2 + g, head=2 * h, sh_f=38 + 14 * g, el_f=70 + 18 * h, sh_b=-4, el_b=12, eye_x=0.35)
+
+
+def act_work(t: float, **_) -> Pose:
+    k = math.sin(t * 2 * math.pi * 2.2)
+    return Pose(lean=14, head=10, sh_f=62 + 6 * k, el_f=34 - 6 * k, sh_b=54 - 5 * k, el_b=40 + 6 * k,
+                hip_f=8, hip_b=-6, kn_f=10, kn_b=6, eye_x=0.4, eye_y=0.5)
+
+
+def act_sad(t: float, **_) -> Pose:
+    b = math.sin(t * 2 * math.pi * 0.25)
+    return Pose(lean=10 + b, head=22, sh_f=4, el_f=6, sh_b=-2, el_b=6, eye_x=0.2, eye_y=0.9)
+
+
+def act_cheer(t: float, **_) -> Pose:
+    b = abs(math.sin(t * 2 * math.pi * 1.6))
+    return Pose(lean=-3, head=-6, sh_f=150 + 10 * b, el_f=-10, sh_b=140 + 10 * b, el_b=-10,
+                hip_f=6, hip_b=-6, kn_f=10 + 20 * (1 - b), kn_b=10 + 20 * (1 - b), lift=22 * b, eye_y=-0.4)
+
+
+def act_sit(t: float, **_) -> Pose:
+    b = math.sin(t * 2 * math.pi * 0.3)
+    return Pose(lean=4 + b, head=2, hip_f=84, hip_b=78, kn_f=84, kn_b=78, sh_f=30, el_f=50,
+                sh_b=24, el_b=55, eye_x=0.3)
+
+
+def act_look_up(t: float, **_) -> Pose:
+    k = _ease(t / 0.5)
+    b = math.sin(t * 2 * math.pi * 0.4)
+    return Pose(lean=-5 * k, head=-16 * k + b, sh_f=6, el_f=10, sh_b=-6, el_b=10, eye_x=0.3, eye_y=-1.0 * k)
+
+
+def act_point(t: float, **_) -> Pose:
+    k = _ease(t / 0.3)
+    return Pose(lean=3, head=-2, sh_f=8 + 82 * k, el_f=4, sh_b=-8, el_b=12, eye_x=0.9 * k)
+
+
+def act_scared(t: float, **_) -> Pose:
+    j = math.sin(t * 2 * math.pi * 9)
+    return Pose(lean=-8, head=-6 + j, sh_f=118 + 4 * j, el_f=100, sh_b=110 - 4 * j, el_b=104,
+                hip_f=10, hip_b=-14, kn_f=18, kn_b=14, dx=j * 2.2, eye_x=0.6, eye_y=-0.2)
+
+
+def act_sleep(t: float, **_) -> Pose:
+    p = act_sit(t)
+    p.head, p.lean, p.blink = 26, 14, True
+    p.eye_y = 0.6
+    return p
+
+
+ACTIONS = {"idle": act_idle, "walk": act_walk, "run": act_run, "shiver": act_shiver,
+           "point_up": act_point_up, "point": act_point, "jump": act_jump, "wave": act_wave,
+           "talk": act_talk, "work": act_work, "sad": act_sad, "cheer": act_cheer, "sit": act_sit,
+           "look_up": act_look_up, "scared": act_scared, "sleep": act_sleep}
 
 
 @dataclass
@@ -151,7 +238,7 @@ class Timeline:
         self.blend = blend
         self.rnd = random.Random(seed)
         self.blinks = []
-        t = 1.2
+        t = self.rnd.uniform(0.5, 2.6)
         while t < beats[-1].end:
             self.blinks.append(t)
             t += self.rnd.uniform(2.2, 4.0)
@@ -168,7 +255,7 @@ class Timeline:
             p = self._raw(prev, prev.end - 1e-3).lerp(p, _ease((t - b.start) / self.blend))
         u = (t - b.start) / max(b.end - b.start, 1e-6)
         x = b.x0 if b.x1 is None else b.x0 + (b.x1 - b.x0) * max(0.0, min(1.0, u))
-        p.blink = any(0 <= t - bt < 0.12 for bt in self.blinks)
+        p.blink = p.blink or any(0 <= t - bt < 0.12 for bt in self.blinks)
         return p, x, b.facing
 
 
@@ -248,7 +335,7 @@ def draw_character(p: Pose, L: Look, f: int) -> tuple[Image.Image, tuple[float, 
         d.ellipse([fx - 6 * s + 7 * s * f, fy - 5 * s, fx + 9 * s + 7 * s * f, fy + 6 * s], fill=L.line)
     # tronco (parka)
     bottom = (j["hip"][0] + (j["neck"][0] - j["hip"][0]) * -0.12, j["hip"][1] + (j["neck"][1] - j["hip"][1]) * -0.12)
-    _seg(d, bottom, j["neck"], L.torso_w * s, L.jacket, L.line, o)
+    _seg(d, bottom, j["neck"], L.torso_w * L.body * s, L.jacket, L.line, o)
     zx = (bottom[0] + j["neck"][0]) / 2 + 6 * s * f
     d.line([(zx, j["neck"][1] + 10 * s), (zx - 2 * s * f, bottom[1] - 6 * s)], fill=L.jacket_dark, width=int(3 * s))
     # cabeça
@@ -256,14 +343,19 @@ def draw_character(p: Pose, L: Look, f: int) -> tuple[Image.Image, tuple[float, 
     r = L.head_r * s
     d.ellipse([hx - r - o, hy - r - o, hx + r + o, hy + r + o], fill=L.line)
     d.ellipse([hx - r, hy - r, hx + r, hy + r], fill=L.skin)
+    if L.beard:
+        _beard(d, (hx, hy), r, p, f, L, s, o)
     _eyes(d, (hx, hy), r, p, f, L, s)
-    _beanie(d, (hx, hy), r, p, f, L, s, o)
+    if L.hat_on:
+        _beanie(d, (hx, hy), r, p, f, L, s, o)
+    elif L.hair:
+        _hair(d, (hx, hy), r, p, f, L, s, o)
     # braço da frente por cima
     _seg(d, j["sh"], j["el_f"], L.sleeve_w * s, L.jacket, L.line, o)
     _seg(d, j["el_f"], j["ha_f"], L.sleeve_w * s * 0.92, L.jacket, L.line, o)
     _hand(d, j["ha_f"], L, s)
 
-    small = img.resize((w // SS, h // SS), Image.LANCZOS)
+    small = img.reduce(SS)
     return small, (-x0 / SS, -y0 / SS)
 
 
@@ -285,6 +377,30 @@ def _eyes(d, c, r, p, f, L, s):
         else:
             er = 5.5 * s
             d.ellipse([x - er, ey - er * 1.2, x + er, ey + er * 1.2], fill=L.line)
+        if L.glasses:
+            gr = 0.21 * r
+            gx = ex + k * gap
+            d.ellipse([gx - gr, ey - gr, gx + gr, ey + gr], outline=L.line, width=int(3 * s))
+    if L.glasses:
+        d.line([(ex - gap + 0.21 * r, ey), (ex + gap - 0.21 * r, ey)], fill=L.line, width=int(3 * s))
+
+
+def _beard(d, c, r, p, f, L, s, o):
+    ang = math.radians(-(p.lean + p.head) * f)
+    cx, cy = c
+    pts = [(cx + r * 1.0 * math.cos(a), cy + r * 1.0 * math.sin(a)) for a in [math.radians(x) for x in range(28, 153, 6)]]
+    pts += [(cx - r * 0.82, cy + r * 0.47), (cx - r * 0.25, cy + r * 0.40), (cx + r * 0.25, cy + r * 0.40), (cx + r * 0.82, cy + r * 0.47)]
+    d.polygon(_rot(pts, c, ang), fill=L.beard, outline=L.line, width=int(o * 0.7))
+
+
+def _hair(d, c, r, p, f, L, s, o):
+    ang = math.radians(-(p.lean + p.head) * f)
+    cx, cy = c
+    pts = [(cx + r * 1.03 * math.cos(a), cy - r * 1.03 * math.sin(a)) for a in [math.radians(x) for x in range(22, 159, 6)]]
+    fringe = cy - 0.36 * r
+    pts += [(cx - r * 0.93, fringe), (cx - r * 0.35, fringe - 0.06 * r), (cx + r * 0.1 * f, fringe - 0.16 * r),
+            (cx + r * 0.6, fringe - 0.04 * r), (cx + r * 0.93, fringe)][::-1]
+    d.polygon(_rot(pts, c, ang), fill=L.hair, outline=L.line, width=int(o * 0.8))
 
 
 def _beanie(d, c, r, p, f, L, s, o):
@@ -390,6 +506,99 @@ def badge(d: ImageDraw.ImageDraw, text: str, font_path: str):
     pad = 22
     d.rectangle([l - pad, t - pad, r + pad, b + pad], fill=(20, 22, 28, 225))
     d.text((x, y), text, font=font, fill="white")
+
+
+# ---------------------------------------------------------------- cena da fábrica
+def _actor_timeline(a: dict, seconds: float) -> Timeline:
+    """actor = {who, action, x, to?, facing?, beats?: [[action, segundos, x_final?], ...]}."""
+    x = float(a.get("x", 0.5))
+    face = int(a.get("facing") or (1 if float(a.get("to", x)) >= x else -1))
+    beats, t = [], float(a.get("delay", 0))
+    if t > 0:
+        beats.append(Beat(0, t, "idle", x, facing=face))
+    if a.get("beats"):
+        for i, b in enumerate(a["beats"]):
+            act, dur = b[0], float(b[1]) if len(b) > 1 else seconds
+            end = seconds if i == len(a["beats"]) - 1 else min(seconds, t + dur)
+            x1 = float(b[2]) if len(b) > 2 and b[2] is not None else None
+            if x1 is not None and abs(x1 - x) > 1e-3:
+                face = 1 if x1 > x else -1
+            beats.append(Beat(t, max(end, t + 0.05), act if act in ACTIONS else "idle", x, x1, face))
+            x = x1 if x1 is not None else x
+            t = end
+            if t >= seconds:
+                break
+    else:
+        act = a.get("action", "idle")
+        to = a.get("to")
+        beats.append(Beat(t, max(seconds, t + 0.05), act if act in ACTIONS else "idle", x,
+                          float(to) if to is not None else None, face))
+    if beats[-1].end < seconds:
+        beats[-1].end = seconds
+    return Timeline(beats, seed=sum(map(ord, str(a.get("who", "x")))) * 7 + int(x * 100))
+
+
+def render_scene(image, out, seconds: float, actors: list[dict], overlay: str | None, cfg: dict | None,
+                 seed: int = 0, fx: str | None = None):
+    """Plano da fábrica: cenário da IA (sem personagem) com câmera lenta + stickmen animados por cima."""
+    from .settings import settings
+    from . import media
+    cfg = cfg or {}
+    w, h, fps = settings.width, settings.height, settings.fps
+    n = max(1, round(seconds * fps))
+    zoom = float(cfg.get("stick_zoom", 0.06))
+    bg = Image.open(image).convert("RGB")
+    bw, bh = int(w * (1 + zoom)), int(h * (1 + zoom))
+    sc = max(bw / bg.width, bh / bg.height)
+    bg = bg.resize((int(bg.width * sc) + 1, int(bg.height * sc) + 1), Image.LANCZOS)
+    bg = bg.crop(((bg.width - bw) // 2, (bg.height - bh) // 2, (bg.width - bw) // 2 + bw, (bg.height - bh) // 2 + bh))
+    rnd = random.Random(seed)
+    sx, sy = rnd.choice([(0, 0), (1, 0), (0, 1), (1, 1), (0.5, 0.5)])
+    ex, ey = 1 - sx, 1 - sy
+    base_scale = float(cfg.get("stick_scale", 1.45))
+    cast = []
+    for a in (actors or [])[:5]:
+        L = look_for(a.get("who", "you"), base_scale * float(a.get("scale", 1.0)))
+        cast.append((a, L, _actor_timeline(a, seconds), h * float(a.get("y", cfg.get("stick_ground", 0.93)))))
+    cast.sort(key=lambda c: c[3])  # quem está mais embaixo (mais perto) é desenhado por último
+    snow = Snow(n=110, seed=seed) if (fx or cfg.get("fx")) == "snow" else None
+    font = settings.font_path
+    out.parent.mkdir(parents=True, exist_ok=True)
+    proc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+                             "-s", f"{w}x{h}", "-r", str(fps), "-i", "-", *media._x264(), "-an", str(out)],
+                            stdin=subprocess.PIPE)
+    try:
+        for i in range(n):
+            t = i / fps
+            u = _ease(i / max(n - 1, 1))
+            ox = int((bw - w) * (sx + (ex - sx) * u))
+            oy = int((bh - h) * (sy + (ey - sy) * u))
+            frame = bg.crop((ox, oy, ox + w, oy + h)).convert("RGBA")
+            for a, L, tl, ground in cast:
+                p, x, f = tl.at(t)
+                place(frame, p, L, f, x * w, ground)
+            d = ImageDraw.Draw(frame, "RGBA")
+            if snow:
+                snow.draw(d, t, 1 / fps)
+            if overlay:
+                if cfg.get("hud", "badge") == "badge":
+                    badge(d, overlay, font)
+                else:
+                    _top_text(d, overlay, font, w)
+            proc.stdin.write(frame.convert("RGB").tobytes())
+    finally:
+        proc.stdin.close()
+        proc.wait()
+    if proc.returncode:
+        raise RuntimeError(f"stickman: ffmpeg saiu com {proc.returncode}")
+    return out
+
+
+def _top_text(d, text, font_path, w):
+    font = ImageFont.truetype(font_path, int(H / 14))
+    l, t, r, b = d.textbbox((0, 0), text, font=font)
+    x = (w - (r - l)) // 2
+    d.text((x, int(H * 0.06)), text, font=font, fill="white", stroke_width=5, stroke_fill="black")
 
 
 # ---------------------------------------------------------------- render -----

@@ -1,7 +1,7 @@
 """Monta o corpo do factory.preparar no formato compacto e confere o tamanho.
 
 Uso num roteiro:  from _compact import save;  save(__file__, CHANNEL, TITLE, PRIORITY, META, SOURCES, BLOCKS, min_words=...)
-BLOCKS = [(block_id, title, [source_ids], [(narração, prompt visual em inglês, texto na tela ou None), ...]), ...]
+BLOCKS = [(block_id, title, [source_ids], [(narração, prompt visual em inglês, texto na tela ou None[, {actors, fx}]), ...]), ...]
 Grava <arquivo>.json com {channel_slug, title, priority, author, compact} pronto para POST em
 /webhook/fabrica-preparar?k=CHAVE_DO_PAINEL.
 """
@@ -16,7 +16,8 @@ def save(path, channel, title, priority, meta, sources, blocks, min_words=1500, 
     out_blocks = []
     for bid, btitle, src, items in blocks:
         assert set(src) <= ids, f"{bid}: fonte desconhecida {set(src) - ids}"
-        for n, p, o in items:
+        for it in items:
+            n, p = it[0], it[1]
             assert n.strip() and p.strip(), f"{bid}: trecho vazio"
             words += len(n.split())
             shots += 1
