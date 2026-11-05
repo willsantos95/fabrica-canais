@@ -101,3 +101,83 @@ def legibility(img: Image.Image, boxes: list, factor: float = 0.2) -> dict:
         contrasts.append(round(contrast(fill, bg), 2))
     ok = bool(boxes) and min(small_h) >= 14 and min(contrasts) >= 3.0
     return {"passed": ok, "min_line_height_px_at_20pct": round(min(small_h or [0]), 1), "contrast": contrasts}
+
+
+# ---------------------------------------------------------------------------
+# Formato "antes e depois" (DIA 1 x DIA 30): tela dividida na diagonal por um raio,
+# lado esquerdo claro e tranquilo, lado direito escuro e perigoso, números grandes no topo.
+# ---------------------------------------------------------------------------
+DISPLAY_FONT = str(Path(__file__).parent / "assets" / "fonts" / "LuckiestGuy-Regular.ttf")
+
+
+def _cover(path: Path, w: int, h: int) -> Image.Image:
+    img = Image.open(path).convert("RGB")
+    s = max(w / img.width, h / img.height)
+    img = img.resize((round(img.width * s) + 1, round(img.height * s) + 1), Image.LANCZOS)
+    l, t = (img.width - w) // 2, (img.height - h) // 2
+    return img.crop((l, t, l + w, t + h))
+
+
+def _bolt(top_x: float, bottom_x: float, seed: int = 4) -> list[tuple[float, float]]:
+    """Linha em zigue-zague de cima a baixo (o 'raio' que divide a tela)."""
+    import random
+    r = random.Random(seed)
+    pts, n = [], 7
+    for i in range(n + 1):
+        y = H * i / n
+        x = top_x + (bottom_x - top_x) * i / n
+        if 0 < i < n:
+            x += (28 if i % 2 else -28) + r.uniform(-8, 8)
+        pts.append((x, y))
+    return pts
+
+
+def _label(draw: ImageDraw.ImageDraw, cx: float, y: int, word: str, number: str, size: int, num_color: str):
+    font = ImageFont.truetype(DISPLAY_FONT, size)
+    stroke = max(6, size // 9)
+    gap = size // 5
+    wb = draw.textbbox((0, 0), word, font=font, stroke_width=stroke)
+    nb = draw.textbbox((0, 0), number, font=font, stroke_width=stroke)
+    total = (wb[2] - wb[0]) + gap + (nb[2] - nb[0])
+    x = cx - total / 2
+    boxes = []
+    for txt, fill, bb in ((word, "#FFFFFF", wb), (number, num_color, nb)):
+        # sombra deslocada para dar volume
+        draw.text((x + size * 0.05, y + size * 0.06), txt, font=font, fill=(0, 0, 0), stroke_width=stroke, stroke_fill=(0, 0, 0))
+        draw.text((x, y), txt, font=font, fill=fill, stroke_width=stroke, stroke_fill=(0, 0, 0))
+        boxes.append((draw.textbbox((x, y), txt, font=font, stroke_width=stroke), _hex(fill)))
+        x += (bb[2] - bb[0]) + gap
+    return boxes
+
+
+def render_split(left_bg: Path, right_bg: Path, left_label: str, right_label: str, out: Path,
+                 left_color: str = "#FFD21F", right_color: str = "#FF2D2D", seed: int = 4) -> dict:
+    """left_label/right_label no formato 'DIA 1' / 'DIA 30' (palavra + número)."""
+    split_top, split_bottom = W * 0.56, W * 0.46
+    left = _cover(left_bg, int(W * 0.62), H)
+    right = _cover(right_bg, int(W * 0.62), H)
+    canvas = Image.new("RGB", (W, H))
+    canvas.paste(right, (W - right.width, 0))
+    bolt = _bolt(split_top, split_bottom, seed)
+    mask = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(mask).polygon([(0, 0), *bolt, (0, H)], fill=255)
+    big_left = Image.new("RGB", (W, H))
+    big_left.paste(left, (0, 0))
+    canvas = Image.composite(big_left, canvas, mask)
+    # leve vinheta no lado escuro e brilho no claro
+    d = ImageDraw.Draw(canvas)
+    d.line(bolt, fill=(0, 0, 0), width=22, joint="curve")
+    d.line(bolt, fill=(255, 255, 255), width=12, joint="curve")
+
+    def parts(lbl: str):
+        bits = lbl.strip().upper().split()
+        return (" ".join(bits[:-1]) or bits[0], bits[-1] if len(bits) > 1 else "")
+
+    size = int(H * 0.18)
+    lw, ln = parts(left_label)
+    rw, rn = parts(right_label)
+    boxes = _label(d, W * 0.25, int(H * 0.05), lw, ln, size, left_color)
+    boxes += _label(d, W * 0.76, int(H * 0.05), rw, rn, size, right_color)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out, "JPEG", quality=92)
+    return legibility(canvas, boxes)

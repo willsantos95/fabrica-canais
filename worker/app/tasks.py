@@ -397,6 +397,50 @@ def _thumb_backgrounds(spec: dict, style: str, wd: Path, n: int) -> list[tuple[P
     return out
 
 
+def _split_plan(spec: dict, cfg: dict) -> dict | None:
+    """Thumbnail 'DIA 1 x DIA N': spec.thumbnail.split ou channels.config.thumbnail.style == 'split'."""
+    th = spec.get("thumbnail") or {}
+    sp = dict(th.get("split") or {})
+    if not sp and ((cfg.get("thumbnail") or {}).get("style") != "split"):
+        return None
+    base = th.get("image_prompt") or spec.get("topic") or ""
+    days = [s.get("text_overlay") for b in spec["blocks"] for s in b["shots"] if s.get("text_overlay")]
+    days = [d for d in days if d and d.split()[-1].isdigit()]
+    sp.setdefault("left_label", "DIA 1" if not days else f"{days[0].split()[0]} {max(1, int(days[0].split()[-1]))}")
+    sp.setdefault("right_label", days[-1] if days else "DIA 30")
+    sp.setdefault("left_prompt", f"{base}. Version BEFORE: bright cheerful daylight, clean and safe, "
+                                 "the main character calm and smiling, waving")
+    sp.setdefault("right_prompt", f"{base}. Version AFTER: dark night, damaged and dirty, danger close behind, "
+                                  "the main character scared and exhausted, sweating, ragged clothes, holding a flashlight")
+    return sp
+
+
+SPLIT_FRAMING = ("\nFraming: the main character centered, upper body and big expressive face, close to the camera, "
+                 "top quarter of the image kept simple (sky or wall) for big text. No text, letters or watermarks.")
+
+
+def _split_thumbs(job: dict, spec: dict, style: str, sp: dict, wd: Path, n: int) -> list[dict]:
+    out = []
+    for i in range(n):
+        var = THUMB_VARIATIONS[i % len(THUMB_VARIATIONS)]
+        paths = []
+        for side in ("left", "right"):
+            path = wd / "thumb_bg" / f"{side}{i + 1}.jpg"
+            try:
+                raw, _ = images.generate(f"{style}\n\nScene: {sp[side + '_prompt']}{var}{SPLIT_FRAMING}")
+                images.to_jpeg(raw, path)
+                paths.append(path)
+            except Exception as exc:
+                log.warning("thumbnail dividida %d: lado %s falhou (%s)", i + 1, side, exc)
+        if len(paths) < 2:
+            continue
+        dest = wd / f"thumb{i + 1}.jpg"
+        check = thumbnail.render_split(paths[0], paths[1], sp["left_label"], sp["right_label"], dest, seed=i + 3)
+        out.append({"n": len(out) + 1, "url": storage.upload(dest, _key(job, f"thumbs/thumb{i + 1}.jpg"), "image/jpeg"),
+                    "lines": [sp["left_label"], sp["right_label"]], "background": "split", "check": check})
+    return out
+
+
 def h_package(job: dict, inp: dict, wd: Path) -> dict:
     """Shorts, thumbnails e metadados do YouTube a partir do vídeo montado (sem IA de texto)."""
     from . import package
@@ -433,7 +477,10 @@ def h_package(job: dict, inp: dict, wd: Path) -> dict:
         prof = package.profession(spec)
         lines = [prof.upper() if prof else spec.get("chosen_title", "")[:20], "EVERY LEVEL"]
     thumbs = []
-    for i, (bg, used) in enumerate(_thumb_backgrounds(spec, visual.get("style_block", ""), wd, n_thumbs), 1):
+    split = _split_plan(spec, cfg)
+    if split:
+        thumbs = _split_thumbs(job, spec, visual.get("style_block", ""), split, wd, n_thumbs)
+    for i, (bg, used) in enumerate([] if thumbs else _thumb_backgrounds(spec, visual.get("style_block", ""), wd, n_thumbs), 1):
         out = wd / f"thumb{i}.jpg"
         check = thumbnail.render(bg, lines, out, settings.font_path, accent=brand.get("secondary", "#F2B705"))
         thumbs.append({"n": i, "url": storage.upload(out, _key(job, f"thumbs/thumb{i}.jpg"), "image/jpeg"),
