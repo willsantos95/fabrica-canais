@@ -1,0 +1,1151 @@
+{
+ "channel_slug": "um-ano-preso",
+ "title": "Fiquei Preso 1 Ano numa Ilha Deserta (e Não Estava Sozinho)",
+ "priority": 10,
+ "author": "claude",
+ "compact": {
+  "meta": {
+   "titles": [
+    "Fiquei Preso 1 Ano numa Ilha Deserta (e Não Estava Sozinho)",
+    "365 Dias numa Ilha Deserta: as Pegadas Não Eram Minhas",
+    "1 Ano Preso numa Ilha: Quem Bebe Água do Mar Perde",
+    "E Se Você Ficasse 1 Ano numa Ilha Deserta?",
+    "Sobrevivi 365 Dias numa Ilha e Descobri um Segredo"
+   ],
+   "chosen_title": "Fiquei Preso 1 Ano numa Ilha Deserta (e Não Estava Sozinho)",
+   "hook_options": [
+    "Você acorda numa praia. O barco sumiu. E no dia sessenta e oito, aparecem pegadas que não são suas.",
+    "O oceano inteiro na sua frente, e você não pode beber uma gota.",
+    "Três fogueiras em triângulo. É assim que se pede socorro de uma ilha."
+   ],
+   "subject": "1 ano preso numa ilha deserta",
+   "tags": [
+    "ilha deserta",
+    "1 ano numa ilha",
+    "sobrevivência",
+    "e se fosse você",
+    "365 dias",
+    "náufrago",
+    "história animada",
+    "um ano preso",
+    "sobreviver na ilha",
+    "historia de sobrevivencia"
+   ],
+   "hashtags": [
+    "IlhaDeserta",
+    "365Dias",
+    "Sobrevivência"
+   ],
+   "thumbnail": {
+    "phrases": [
+     "365 DIAS",
+     "NA ILHA"
+    ],
+    "image_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green jacket, on a small tropical island beach",
+    "split": {
+     "left_label": "DIA 1",
+     "right_label": "DIA 365",
+     "left_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, an orange knit beanie and a green jacket, smiling and waving on a sunny tropical beach with palm trees and turquoise sea, clean and happy",
+     "right_prompt": "the survivor, a stick figure with a round white head, small black dot eyes, a torn orange knit beanie and a ragged green jacket, thin and scared, sweating, on a dark stormy island beach at night, broken palm trees, three signal fires burning behind, a mysterious shadowy figure watching from the jungle"
+    }
+   }
+  },
+  "sources": [
+   {
+    "id": "src1",
+    "title": "Can humans drink seawater? — NOAA Ocean Service",
+    "url": "https://oceanservice.noaa.gov/facts/drinksw.html",
+    "claim": "Os rins só produzem urina menos salgada que a água do mar; para eliminar o sal de um gole, o corpo gasta mais água do que bebeu, e a desidratação piora."
+   },
+   {
+    "id": "src2",
+    "title": "Emergency Signaling — Be Ready Utah",
+    "url": "https://beready.utah.gov/?p=4067",
+    "claim": "Três de qualquer coisa em sequência é sinal internacional de socorro; três fogueiras em triângulo, em lugar aberto visível do alto; folhas verdes fazem fumaça grossa de dia; reflexo de espelho é visto a quilômetros."
+   },
+   {
+    "id": "src3",
+    "title": "Scurvy — NHS factsheet (AXA Health)",
+    "url": "https://axahealth.co.uk/staying-healthy/nhs-factsheets/scurvy",
+    "claim": "O escorbuto aparece depois de pelo menos 3 meses sem vitamina C suficiente: cansaço, gengiva inchada e sangrando, dor nas pernas, manchas na pele; frutas e verduras são a principal fonte."
+   }
+  ],
+  "blocks": [
+   {
+    "block_id": "b01",
+    "title": "O naufrágio",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "A tempestade dura a noite inteira. Quando o mastro quebra, você só tem tempo de agarrar uma mochila e pular.",
+      "a small sailboat broken in a huge storm at night, giant waves, lightning, a broken mast",
+      "DIA 0"
+     ],
+     [
+      "Você acorda com sol no rosto e areia na boca. O barco sumiu. Os outros dois tripulantes também. Na sua frente, uma praia branca, coqueiros, e um silêncio que dá medo.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, morning light, a backpack lying on the sand, pieces of wood in the water",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.35,
+         "beats": [
+          [
+           "sleep",
+           2.0
+          ],
+          [
+           "sit",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Você anda a praia inteira. Em quarenta minutos, está de volta ao mesmo ponto. É uma ilha. Pequena.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, wide view, the whole small island visible",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.1,
+         "to": 0.8
+        }
+       ]
+      }
+     ],
+     [
+      "Na mochila: um canivete, um isqueiro, uma garrafa vazia, uma lona azul e um espelhinho de barbear.",
+      "items laid out on the sand: a pocket knife, a lighter, an empty plastic bottle, a folded blue tarp and a small shaving mirror",
+      "DIA 0"
+     ],
+     [
+      "Nenhum telefone, nenhuma comida, nenhum rádio. Só você, o que coube numa mochila, e uma ilha que ninguém escolheu.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, a lonely backpack on the sand, long shadow",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.55,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "O sol bate forte. Em poucas horas, a sede vira a única coisa em que você consegue pensar.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, harsh midday sun, heat waves",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "E a água está ali, na sua frente. O oceano inteiro. É aqui que muita gente erra.",
+      "the edge of the turquoise sea on white sand, gentle waves, endless horizon",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.4,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "A água do mar é muito mais salgada do que o seu corpo aguenta. Os rins só conseguem fazer urina menos salgada que ela. Para jogar fora o sal de um gole, o corpo gasta mais água do que você bebeu.",
+      "simple cartoon diagram of a kidney filtering salty seawater, salt crystals, arrows showing water leaving the body",
+      "DIA 0"
+     ],
+     [
+      "Quem bebe água do mar, seca mais rápido. Você fecha a garrafa vazia e vai procurar outro jeito.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, afternoon",
+      "DIA 0",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.6,
+         "to": 0.2
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b02",
+    "title": "Água e fogo",
+    "source_ids": [
+     "src1"
+    ],
+    "shots": [
+     [
+      "Os coqueiros salvam o primeiro dia. Coco verde tem água dentro. Você leva uma hora para abrir o primeiro com o canivete.",
+      "a green coconut cut open with a pocket knife on the sand, coconut water inside",
+      "DIA 1"
+     ],
+     [
+      "Você aprende do jeito difícil que subir num coqueiro é muito mais complicado do que parece nos filmes. Na terceira tentativa, a casca arranha os braços inteiros.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, a tall palm tree with coconuts high up",
+      "DIA 1",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.45,
+         "beats": [
+          [
+           "jump",
+           1.1
+          ],
+          [
+           "sad",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Mas coco não chove do céu todo dia. Então você estica a lona entre duas árvores, com uma ponta mais baixa, e coloca a garrafa embaixo.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, a blue tarp tied between two palm trees with a low corner above an empty bottle",
+      "DIA 2",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.4
+        }
+       ]
+      }
+     ],
+     [
+      "Três dias depois, chove. Você fica parado na chuva, de boca aberta, rindo sozinho. Em meia hora, a garrafa enche. É a melhor água que você já bebeu na vida.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, heavy tropical rain, water pouring from the tarp into a bottle",
+      "DIA 5",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "cheer",
+         "x": 0.5
+        }
+       ]
+      }
+     ],
+     [
+      "Depois vem o fogo. O isqueiro é precioso demais para gastar à toa. Você só acende quando junta folha seca, galhinho e paciência.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, a small new campfire starting in a ring of stones, evening",
+      "DIA 6",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Fogo é calor, é comida cozida, é luz. E, você descobre logo, também é um jeito de falar com quem está longe.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, a strong campfire at night, sparks rising, stars",
+      "DIA 6",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.38,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Você monta uma rotina: de manhã, água. Ao meio-dia, sombra. À tarde, comida. À noite, fogo.",
+      "a sand calendar with lines scratched in the sand next to a stick, a tropical beach",
+      "DIA 12"
+     ],
+     [
+      "Peixe pego com lança de bambu, caranguejo, coco. O corpo emagrece, mas segura.",
+      "a shallow lagoon with clear water and small fish, a sharpened bamboo spear stuck in the sand",
+      "DIA 20",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "point",
+         "x": 0.35,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "À noite, deitado perto do fogo, você conversa com as estrelas. Primeiro em pensamento. Depois em voz alta. Ninguém responde, mas ajuda a dormir.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, night, a small fire and a sky full of stars",
+      "DIA 25",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sleep",
+         "x": 0.45
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b03",
+    "title": "O sinal",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "No dia trinta e um, você ouve um motor. Um avião, alto, cruzando o céu de uma ponta à outra.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, a tiny airplane far up in the blue sky",
+      "DIA 31",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.4,
+         "beats": [
+          [
+           "look_up",
+           1.5
+          ],
+          [
+           "wave",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Você grita, pula, balança os braços. Lá de cima, você é um pontinho numa ilha cheia de pontinhos.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, the airplane getting smaller in the distance",
+      "DIA 31",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "jump",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "O avião some. E você entende que gritar não adianta. Você precisa de um sinal que alguém lá de cima reconheça na hora, mesmo passando rápido.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, empty sky, sunset",
+      "DIA 31",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.5
+        }
+       ]
+      }
+     ],
+     [
+      "Existe uma regra conhecida no mundo inteiro: três de qualquer coisa, repetidos, querem dizer socorro. Três apitos. Três flashes. Três fogueiras.",
+      "three campfires arranged in a triangle seen from above, on an open grassy hilltop, simple illustration",
+      "DIA 32"
+     ],
+     [
+      "Você sobe o morro e prepara três montes de lenha em triângulo, num lugar aberto, longe das árvores, onde dá para ver do alto.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, three piles of firewood arranged in a triangle on the grass",
+      "DIA 33",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.3
+        }
+       ]
+      }
+     ],
+     [
+      "De dia, folha verde por cima, para a fumaça sair grossa. E o espelhinho de barbear vira a sua lanterna: reflexo de sol se vê a quilômetros.",
+      "a small mirror flashing a bright beam of sunlight toward the sky, thick white smoke rising from green leaves on a fire",
+      "DIA 34"
+     ],
+     [
+      "Você passa a vigiar o céu e o mar todos os dias. Ninguém vem.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, calm sea, endless horizon, afternoon",
+      "DIA 45",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.55,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Um barco de pesca aparece no dia cinquenta e dois. Você acende as fogueiras, mas a lenha está úmida da chuva e a fumaça demora. Quando ela sobe, o barco já é um ponto.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, a tiny fishing boat far away on the sea, weak grey smoke",
+      "DIA 52",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "run",
+         "x": 0.15,
+         "to": 0.5,
+         "beats": [
+          [
+           "run",
+           1.8,
+           0.5
+          ],
+          [
+           "sad",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Daquele dia em diante, você guarda lenha seca embaixo da lona, sempre. Erro na ilha não se repete duas vezes.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, firewood stacked under a blue tarp",
+      "DIA 53",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.5
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b04",
+    "title": "As pegadas",
+    "source_ids": [],
+    "shots": [
+     [
+      "Dia sessenta e oito. A maré baixa mais do que nunca e abre uma passagem pelas pedras até o outro lado da ilha.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, very low tide, a path of wet rocks",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.15,
+         "to": 0.5
+        }
+       ]
+      }
+     ],
+     [
+      "E lá, na areia molhada, tem pegadas. Grandes. Recentes. E não são suas.",
+      "close-up of fresh human footprints in wet sand leading toward dark rocks",
+      "DIA 68"
+     ],
+     [
+      "Você congela. Numa ilha deserta, a única coisa mais assustadora do que estar sozinho é descobrir que não está.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, shadows, tense atmosphere",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "scared",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Você segue as pegadas até uma caverna. Na entrada, um varal de peixe seco e um calendário riscado na pedra. Muitos riscos.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, a cave entrance with dried fish hanging on a line and many tally marks carved on the rock",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.2,
+         "to": 0.42,
+         "beats": [
+          [
+           "walk",
+           2.0,
+           0.42
+          ],
+          [
+           "point",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "Uma voz rouca sai lá de dentro: pode sair daí, garoto. Eu te vi chegar faz dois meses.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, the dark cave entrance",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "scared",
+         "x": 0.3,
+         "facing": 1
+        },
+        {
+         "who": "tomas",
+         "action": "walk",
+         "x": 0.85,
+         "to": 0.62,
+         "beats": [
+          [
+           "walk",
+           2.5,
+           0.62
+          ],
+          [
+           "talk",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     [
+      "O nome dele é Ari. Pescador. Está na ilha há seis anos. O barco dele afundou na mesma corrente que trouxe você.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, evening, a small fire at the cave entrance",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.36,
+         "facing": 1
+        },
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Por que ele nunca apareceu? Ari dá de ombros: quis ver se você durava. A maioria não dura.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, night, firelight",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.6,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.36,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Naquela noite, você quase não dorme. Fica olhando para o velho do outro lado do fogo, tentando decidir se ele é a sua salvação ou o seu maior problema.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, night, a fire between two sleeping spots",
+      "DIA 68",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sleep",
+         "x": 0.65,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.35,
+         "facing": 1
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b05",
+    "title": "Gengivas",
+    "source_ids": [
+     "src3"
+    ],
+    "shots": [
+     [
+      "Com dois na ilha, a vida melhora. Ari conhece cada pedra, cada maré, cada peixe que dá para comer.",
+      "a shallow lagoon at sunrise with fish traps made of sticks",
+      "DIA 80",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.35
+        },
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.6
+        }
+       ]
+      }
+     ],
+     [
+      "Ele te ensina a fazer armadilha de peixe com galho, a achar ovo de tartaruga sem matar a tartaruga, e a nunca, nunca, nadar quando a maré está virando.",
+      "a fish trap made of sticks in shallow clear water, sea turtle tracks on the sand",
+      "DIA 85"
+     ],
+     [
+      "Mas no terceiro mês, alguma coisa começa a dar errado com você. Um cansaço que não passa com sono.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, afternoon",
+      "DIA 95",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Depois, as pernas doem. A gengiva incha e sangra quando você morde o peixe. Aparecem manchinhas roxas na canela.",
+      "simple cartoon close-up of a stick figure leg with small purple spots and a red swollen gum drawing, medical illustration style",
+      "DIA 98"
+     ],
+     [
+      "Ari olha e já sabe. Escorbuto. Falta de vitamina C. Acontece com quem passa uns três meses sem comer fruta ou verdura.",
+      "a castaway camp on a tropical beach: a small palm-leaf shelter, a fire pit with stones and a rain-catching tarp, a fire, evening",
+      "DIA 98",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.36
+        },
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Era a doença dos marinheiros antigos. E, numa ilha onde você só come peixe e coco, ela chega devagar e sem barulho.",
+      "an old wooden sailing ship on the sea, vintage illustration style, sailors on deck",
+      "DIA 99"
+     ],
+     [
+      "Ari te leva para o meio do mato, até uma árvore que você nunca tinha visto. Goiabas. Pequenas, verdes, azedas.",
+      "dense green tropical jungle with big leaves and vines, a narrow dirt path, a guava tree with small green fruits",
+      "DIA 100",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "point",
+         "x": 0.6,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "walk",
+         "x": 0.15,
+         "to": 0.4
+        }
+       ]
+      }
+     ],
+     [
+      "Ele guardava aquela árvore só para ele. Agora divide. Em duas semanas, a gengiva para de sangrar.",
+      "dense green tropical jungle with big leaves and vines, a narrow dirt path, a guava tree, sunlight through the leaves",
+      "DIA 114",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "cheer",
+         "x": 0.4
+        },
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Você entende uma coisa ali: o Ari não é perigoso. Ele só está acostumado a cuidar de tudo sozinho.",
+      "dense green tropical jungle with big leaves and vines, a narrow dirt path, late afternoon light",
+      "DIA 115",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.4
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b06",
+    "title": "A tempestade",
+    "source_ids": [],
+    "shots": [
+     [
+      "Em outubro, o céu fica verde no fim da tarde. Ari para de falar e começa a amarrar tudo.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, strange green stormy sky at dusk, palm trees bending",
+      "DIA 190",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.4
+        },
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.62
+        }
+       ]
+      }
+     ],
+     [
+      "Vocês levam a lona, a lenha seca e a garrafa para dentro da caverna, e rolam pedra na frente da entrada.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, the cave entrance with heavy wind and rain starting",
+      "DIA 190",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "run",
+         "x": 0.1,
+         "to": 0.45
+        },
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.6
+        }
+       ]
+      }
+     ],
+     [
+      "A noite inteira, o vento grita. O mar entra até o pé das pedras. Ari reza baixinho. Você nunca tinha ouvido ele rezar.",
+      "inside a dark cave lit by a tiny fire, huge waves and storm visible outside the entrance",
+      "DIA 190",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sit",
+         "x": 0.4,
+         "facing": 1
+        },
+        {
+         "who": "you",
+         "action": "scared",
+         "x": 0.6,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "De manhã, o acampamento da praia não existe mais. O abrigo, o varal, a lança de bambu, os três montes de lenha no morro. Tudo levado pelo mar. Você senta na areia e fica um tempão sem conseguir falar.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, destroyed after a storm, broken palm trees, debris everywhere",
+      "DIA 191",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Ari ri, cansado: na ilha, nada é seu. Tudo é emprestado. E você começa tudo de novo.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, destroyed, morning sun coming out",
+      "DIA 191",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.35
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.6,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Três montes de lenha. Folha verde. Espelho. Todo dia, mesmo sem esperança.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, three new piles of firewood in a triangle",
+      "DIA 200",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.3
+        },
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.7
+        }
+       ]
+      }
+     ],
+     [
+      "O Ari sobe o morro todos os dias com você. Carrega lenha, junta folha verde. Mas nunca, nem uma vez, é ele quem acende o fogo.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, afternoon, piles of firewood",
+      "DIA 220",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "walk",
+         "x": 0.8,
+         "to": 0.6
+        },
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.3
+        }
+       ]
+      }
+     ]
+    ]
+   },
+   {
+    "block_id": "b07",
+    "title": "O segredo do Ari",
+    "source_ids": [],
+    "shots": [
+     [
+      "Numa noite de lua cheia, Ari conta por que nunca acendeu fogueira de sinal em seis anos.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, full moon night, a small fire at the cave entrance",
+      "DIA 260",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.4
+        },
+        {
+         "who": "you",
+         "action": "sit",
+         "x": 0.62,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "No continente, ele tinha uma dívida, uma briga feia, e um irmão que não fala mais com ele. Aqui, ninguém cobra nada.",
+      "a symbolic illustration of an old fishing village on the mainland at night, a small boat leaving the harbor",
+      "DIA 260"
+     ],
+     [
+      "Para ele, a ilha não é prisão. É esconderijo. E cada fogueira que você acende no morro é, para o Ari, uma ameaça de ser encontrado.",
+      "the rocky other side of a tropical island, dark rocks, waves crashing, a cave entrance, full moon reflected on the sea",
+      "DIA 260",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "sad",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Você não sabe o que responder. Só sabe que, do outro lado do mar, alguém ainda deve estar procurando por você.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, night, the moon over the sea",
+      "DIA 261",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "look_up",
+         "x": 0.5,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "No dia seguinte, ele age como se a conversa não tivesse acontecido. Pesca, assobia, conserta a armadilha. Você também não toca no assunto.",
+      "a shallow lagoon at sunrise with fish traps made of sticks",
+      "DIA 262",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "work",
+         "x": 0.35
+        },
+        {
+         "who": "you",
+         "action": "work",
+         "x": 0.65
+        }
+       ]
+      }
+     ],
+     [
+      "Os meses passam. Você conta os dias riscando o mesmo pedaço de pedra que Ari usava. Duzentos e noventa. Trezentos. Trezentos e trinta.",
+      "a rock wall full of tally marks, some old and faded, some fresh",
+      "DIA 330"
+     ]
+    ]
+   },
+   {
+    "block_id": "b08",
+    "title": "Fumaça",
+    "source_ids": [
+     "src2"
+    ],
+    "shots": [
+     [
+      "Dia trezentos e sessenta e cinco. Meio da manhã. Um barulho diferente, baixo e constante. Um navio.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, a cargo ship far away on the horizon",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "point",
+         "x": 0.4,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Você corre para o morro, joga o isqueiro nos três montes e cobre de folha verde. A fumaça sobe grossa, branca, em três colunas.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, three columns of thick white smoke rising from fires in a triangle",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "run",
+         "x": 0.1,
+         "to": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Com o espelho, você manda flashes para o navio. Três. Pausa. Três. Pausa. Três.",
+      "a small mirror flashing three beams of sunlight toward a ship on the horizon",
+      "DIA 365"
+     ],
+     [
+      "O navio diminui a velocidade. Vira devagar. E solta três apitos longos de volta. Alguém viu. Depois de um ano inteiro, alguém finalmente viu.",
+      "a cargo ship turning toward a small tropical island, steam from its horn",
+      "DIA 365"
+     ],
+     [
+      "Você grita e pula como um louco. Depois olha para trás. Ari está parado na beira da mata, sem se mexer.",
+      "the grassy top of a hill on a small tropical island, open sky, the sea all around below, the edge of the jungle behind",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "jump",
+         "x": 0.4,
+         "beats": [
+          [
+           "jump",
+           1.1
+          ],
+          [
+           "look_up",
+           99
+          ]
+         ]
+        },
+        {
+         "who": "tomas",
+         "action": "idle",
+         "x": 0.8,
+         "facing": -1
+        }
+       ]
+      }
+     ],
+     [
+      "Ele diz que não vai. Que alguém precisa cuidar da goiabeira. E pede uma coisa: não contar para ninguém que ele está aqui.",
+      "dense green tropical jungle with big leaves and vines, a narrow dirt path, the edge of the jungle, morning light",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "tomas",
+         "action": "talk",
+         "x": 0.6,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "sad",
+         "x": 0.35,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "O bote do navio já está na água, vindo na sua direção.",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, a small rescue boat coming from a big ship",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "wave",
+         "x": 0.45
+        }
+       ]
+      }
+     ],
+     [
+      "Os marinheiros pulam na areia, te enrolam num cobertor e perguntam a primeira coisa que qualquer um perguntaria: você estava sozinho aqui?",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, a small rescue boat pulled onto the sand",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "extra",
+         "action": "talk",
+         "x": 0.62,
+         "facing": -1
+        },
+        {
+         "who": "you",
+         "action": "idle",
+         "x": 0.38,
+         "facing": 1
+        }
+       ]
+      }
+     ],
+     [
+      "Agora me conta nos comentários: você guardava o segredo do Ari, ou contava para a tripulação que ainda tem alguém na ilha?",
+      "a small tropical island beach with white sand, palm trees and calm turquoise sea, a small rescue boat on the left and the jungle edge on the right",
+      "DIA 365",
+      {
+       "actors": [
+        {
+         "who": "you",
+         "action": "x",
+         "x": 0.5,
+         "beats": [
+          [
+           "look_up",
+           2.0
+          ],
+          [
+           "idle",
+           99
+          ]
+         ]
+        }
+       ]
+      }
+     ]
+    ]
+   }
+  ]
+ }
+}
