@@ -443,3 +443,104 @@ def finish_clip(video: Path, audio_src: Path, start: float, dur: float, ass: Pat
          "-af", "afade=t=out:st=" + f"{max(0.0, dur - 0.6):.3f}" + ":d=0.6",
          "-shortest", "-movflags", "+faststart", str(out)])
     return out
+
+
+# ---------------------------------------------------------------------------
+# Short no formato "cartão": fundo escuro liso, série em vermelho e título grande no topo,
+# vídeo numa faixa no meio e legenda em grupos de palavras embaixo (sem fundo desfocado).
+# ---------------------------------------------------------------------------
+FONTS_DIR = Path(__file__).parent / "assets" / "fonts"
+
+
+def _title_lines(text: str, max_chars: int = 18) -> list[str]:
+    words = text.upper().split()
+    if len(" ".join(words)) <= max_chars:
+        return [" ".join(words)]
+    best = None
+    for i in range(1, len(words)):
+        a, b = " ".join(words[:i]), " ".join(words[i:])
+        score = max(len(a), len(b))
+        if best is None or score < best[0]:
+            best = (score, [a, b])
+    return best[1]
+
+
+def _title_ass(lines: list[str], yellow: str, white: str) -> list[str]:
+    """Destaque em amarelo: a 2ª linha (até 2 palavras do começo) ou a última palavra."""
+    out = [_ass_escape(ln) for ln in lines]
+    if len(lines) == 1:
+        ws = lines[0].split()
+        if len(ws) > 1:
+            out[0] = _ass_escape(" ".join(ws[:-1])) + " {\\c" + yellow + "}" + _ass_escape(ws[-1]) + "{\\c" + white + "}"
+        return out
+    ws = lines[1].split()
+    k = len(ws) if len(ws) <= 3 else 2
+    out[1] = "{\\c" + yellow + "}" + _ass_escape(" ".join(ws[:k])) + "{\\c" + white + "}" + (
+        " " + _ass_escape(" ".join(ws[k:])) if ws[k:] else "")
+    return out
+
+
+def write_card_ass(words: list[dict], title: str, series: str, dur: float, out: Path,
+                   group: int = 3, font: str = "Anton") -> Path:
+    white, yellow, red = "&H00F2F2F2&", "&H0030C8F5&", "&H003539E5&"
+    head = (
+        "[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\n\n"
+        "[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, "
+        "Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
+        "Alignment, MarginL, MarginR, MarginV, Encoding\n"
+        f"Style: S,{font},52,{red},{red},&H00000000,&H00000000,0,0,0,0,100,100,1,0,1,0,0,8,40,40,0,1\n"
+        f"Style: T,{font},118,{white},{white},&H00000000,&H96000000,0,0,0,0,100,100,1,0,1,4,3,8,40,40,0,1\n"
+        f"Style: C,{font},104,{white},{white},&H00000000,&H96000000,0,0,0,0,100,100,1,0,1,5,3,8,40,40,0,1\n\n"
+        "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+    )
+    end = _ts(dur, ".")[1:-1]
+    lines = _title_lines(title)
+    size = 118 if max(len(x) for x in lines) <= 18 else max(70, int(118 * 18 / max(len(x) for x in lines)))
+    ev = []
+    if series:
+        ev.append(f"Dialogue: 0,0:00:00.00,{end},S,,0,0,0,,{{\\an8\\pos(540,70)}}{_ass_escape(series.upper())}")
+    t_lines = _title_ass(lines, yellow, white)
+    y0 = 135 if len(lines) == 2 else 200
+    for i, ln in enumerate(t_lines):
+        ev.append(f"Dialogue: 0,0:00:00.00,{end},T,,0,0,0,,{{\\an8\\fs{size}\\pos(540,{y0 + i * int(size * 1.0)})}}{ln}")
+    # legenda: grupos de até 3 palavras, a palavra mais longa do grupo em amarelo
+    chunks, cur = [], []
+    for w in words:
+        cur.append(w)
+        if len(cur) == group or re.search(r"[.!?,;:]$", w["w"]):
+            chunks.append(cur)
+            cur = []
+    if cur:
+        chunks.append(cur)
+    for ci, chunk in enumerate(chunks):
+        s = chunk[0]["s"]
+        e = chunks[ci + 1][0]["s"] if ci + 1 < len(chunks) else min(dur, chunk[-1]["e"] + 0.4)
+        clean = [re.sub(r"[.,;:!?…\"“”]+$", "", x["w"]).upper() for x in chunk]
+        hi = max(range(len(clean)), key=lambda j: len(clean[j]))
+        txt = " ".join(("{\\c" + yellow + "}" + _ass_escape(c) + "{\\c" + white + "}") if j == hi and len(clean) > 1
+                       else _ass_escape(c) for j, c in enumerate(clean))
+        ev.append(f"Dialogue: 0,{_ts(s, '.')[1:-1]},{_ts(max(e, s + 0.2), '.')[1:-1]},C,,0,0,0,,{{\\an8\\pos(540,1610)}}{txt}")
+    out.write_text(head + "\n".join(ev) + "\n", encoding="utf-8")
+    return out
+
+
+def card_short(final: Path, start: float, end: float, words: list[dict], out: Path,
+               title: str, series: str = "") -> Path:
+    """Corta um trecho e monta o Short 1080x1920 no formato cartão."""
+    dur = end - start
+    local = [{"w": w["w"], "s": max(0.0, w["s"] - start), "e": min(dur, w["e"] - start)}
+             for w in words if w["s"] >= start - 0.05 and w["e"] <= end + 0.05]
+    ass = write_card_ass(local, title, series, dur, out.with_suffix(".ass"))
+    ass_path = str(ass).replace(":", r"\:")
+    fonts = str(FONTS_DIR).replace(":", r"\:")
+    band_y, band_h = 430, 1000
+    fc = (f"color=c=0x0E1014:s=1080x1920:r={settings.fps}:d={dur:.3f}[bg];"
+          f"[0:v]scale=-2:{band_h},crop=1080:{band_h}[fg];"
+          f"[bg][fg]overlay=0:{band_y}:shortest=1,"
+          f"drawbox=x=0:y={band_y - 3}:w=1080:h=3:color=0x2B2F38:t=fill,"
+          f"drawbox=x=0:y={band_y + band_h}:w=1080:h=3:color=0x2B2F38:t=fill,"
+          f"ass='{ass_path}':fontsdir='{fonts}'[v]")
+    run(["ffmpeg", "-y", "-v", "error", "-ss", f"{start:.3f}", "-t", f"{dur:.3f}", "-i", str(final),
+         "-filter_complex", fc, "-map", "[v]", "-map", "0:a", *_x264(), "-c:a", "aac", "-b:a", "160k",
+         "-movflags", "+faststart", str(out)])
+    return out

@@ -3,6 +3,7 @@ baixa o que precisa, processa, sobe o resultado e avisa o n8n pelo callback."""
 from __future__ import annotations
 
 import json
+import re
 import logging
 import os
 import shutil
@@ -460,7 +461,12 @@ def h_package(job: dict, inp: dict, wd: Path) -> dict:
         words += [{"w": w["w"], "s": w["s"] + off, "e": w["e"] + off} for w in (b.get("audio") or {}).get("words") or []]
     shorts = []
     for i, c in enumerate(package.select_shorts(spec, n_shorts), 1):
-        out = media.vertical_short(final, c["start_s"], c["end_s"], words, wd / f"short{i}.mp4")
+        if (cfg.get("shorts") or {}).get("style", "card") == "blur":
+            out = media.vertical_short(final, c["start_s"], c["end_s"], words, wd / f"short{i}.mp4")
+        else:  # cartão: fundo escuro, série + título no topo, vídeo no meio, legenda embaixo
+            series = re.sub(r"\s*\(.*?\)\s*", " ", spec.get("chosen_title") or "").strip()
+            out = media.card_short(final, c["start_s"], c["end_s"], words, wd / f"short{i}.mp4",
+                                   title=c.get("hook") or "", series=series)
         dur = media.duration(out)
         meta = package.short_metadata(c, spec, cfg, i)
         shorts.append({
